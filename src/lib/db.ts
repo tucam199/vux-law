@@ -25,12 +25,13 @@ export async function ensureSchema() {
   if (isSchemaInitialized) return;
   const client = await pool.connect();
   try {
+    // Create tables if not exist
     await client.query(`
       CREATE TABLE IF NOT EXISTS regulations (
         id VARCHAR(255) PRIMARY KEY,
         category VARCHAR(255) NOT NULL,
         violation TEXT NOT NULL,
-        penalty TEXT NOT NULL,
+        penalty JSONB NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
 
@@ -44,6 +45,32 @@ export async function ensureSchema() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Schema Migration: Ensure regulations.penalty column is of type JSONB
+    try {
+      await client.query(`
+        ALTER TABLE regulations ALTER COLUMN penalty TYPE JSONB USING (
+          CASE 
+            WHEN penalty::text LIKE '{%' THEN penalty::jsonb 
+            ELSE jsonb_build_object('type', 'fine', 'amount', 0)
+          END
+        );
+      `);
+    } catch (e) {
+      // Ignore if already JSONB
+    }
+
+    // Clean up any corrupted [object Object] records from previous insertions
+    try {
+      await client.query(`
+        UPDATE regulations 
+        SET penalty = jsonb_build_object('type', 'fine', 'amount', 50000) 
+        WHERE penalty::text LIKE '%object%' OR penalty::text = '"{}"';
+      `);
+    } catch (e) {
+      // Ignore
+    }
+
     isSchemaInitialized = true;
     console.log('[PostgreSQL] Database schema initialized successfully.');
   } finally {
@@ -51,12 +78,30 @@ export async function ensureSchema() {
   }
 }
 
+// Helper to safely parse JSON object or string
+function parseJson<T>(value: any): T {
+  if (!value) return {} as T;
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      return {} as T;
+    }
+  }
+  return value as T;
+}
+
 // --- REGULATIONS CRUD HANDLERS ---
 
 export async function fetchRegulations(): Promise<Regulation[]> {
   await ensureSchema();
   const res = await pool.query('SELECT id, category, violation, penalty FROM regulations ORDER BY created_at DESC');
-  return res.rows;
+  return res.rows.map((row) => ({
+    id: row.id,
+    category: row.category,
+    violation: row.violation,
+    penalty: parseJson(row.penalty),
+  }));
 }
 
 export async function createRegulation(data: Omit<Regulation, 'id'> & { id?: string }): Promise<Regulation> {
@@ -69,9 +114,11 @@ export async function createRegulation(data: Omit<Regulation, 'id'> & { id?: str
     penalty: data.penalty,
   };
 
+  const penaltyJson = JSON.stringify(record.penalty);
+
   await pool.query(
     'INSERT INTO regulations (id, category, violation, penalty) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET category = $2, violation = $3, penalty = $4',
-    [record.id, record.category, record.violation, record.penalty]
+    [record.id, record.category, record.violation, penaltyJson]
   );
 
   return record;
@@ -93,7 +140,7 @@ export async function updateRegulationRecord(id: string, data: Partial<Omit<Regu
   }
   if (data.penalty !== undefined) {
     fields.push(`penalty = $${index++}`);
-    values.push(data.penalty);
+    values.push(JSON.stringify(data.penalty));
   }
 
   if (fields.length > 0) {
@@ -117,7 +164,7 @@ export async function fetchPenalties(): Promise<ViolationRecord[]> {
     personName: row.personName,
     date: row.date,
     notes: row.notes,
-    regulation: typeof row.regulation === 'string' ? JSON.parse(row.regulation) : row.regulation,
+    regulation: parseJson(row.regulation),
     isCompleted: Boolean(row.isCompleted),
   }));
 }
