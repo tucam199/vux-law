@@ -12,6 +12,9 @@ RUN npm ci
 # Copy full source code
 COPY . .
 
+# Ensure public directory exists
+RUN mkdir -p public
+
 # Set environment variables for production build
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
