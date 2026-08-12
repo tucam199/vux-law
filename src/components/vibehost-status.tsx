@@ -55,6 +55,36 @@ export function VibeHostStatus() {
     }
   };
 
+  const selectToolWithTemplate = (tool: McpTool) => {
+    setSelectedTool(tool.name);
+    setExecutionResult(null);
+
+    // Auto-populate sample JSON template for tool parameters
+    let template: Record<string, any> = {};
+    if (tool.inputSchema?.properties) {
+      Object.keys(tool.inputSchema.properties).forEach((key) => {
+        const prop = tool.inputSchema?.properties[key];
+        if (key === 'projectId') {
+          template[key] = 'cmspu5cn4034i0i5f33xd6vuf';
+        } else if (key === 'stackId') {
+          template[key] = 'nhap_stack_id_tu_list_stacks';
+        } else if (key === 'action') {
+          template[key] = prop?.enum ? prop.enum[0] : 'start';
+        } else if (prop?.default !== undefined) {
+          template[key] = prop.default;
+        } else if (prop?.type === 'string') {
+          template[key] = '';
+        } else if (prop?.type === 'integer' || prop?.type === 'number') {
+          template[key] = 0;
+        } else if (prop?.type === 'boolean') {
+          template[key] = false;
+        }
+      });
+    }
+
+    setToolArgs(JSON.stringify(template, null, 2));
+  };
+
   const handleCallTool = async (toolName: string) => {
     setExecuting(true);
     setExecutionResult(null);
@@ -157,7 +187,7 @@ export function VibeHostStatus() {
                         ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20'
                         : 'border-slate-200 hover:border-slate-300 dark:border-slate-800'
                     }`}
-                    onClick={() => setSelectedTool(tool.name)}
+                    onClick={() => selectToolWithTemplate(tool)}
                   >
                     <div className="font-semibold text-slate-900 dark:text-slate-100 flex items-center justify-between">
                       <span>{tool.name}</span>
@@ -167,7 +197,7 @@ export function VibeHostStatus() {
                         className="h-7 text-xs gap-1 text-indigo-600"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedTool(tool.name);
+                          selectToolWithTemplate(tool);
                         }}
                       >
                         Select
@@ -191,7 +221,7 @@ export function VibeHostStatus() {
                 <div>
                   <label className="text-xs text-slate-500 block mb-1">Arguments (JSON format):</label>
                   <textarea
-                    rows={3}
+                    rows={4}
                     value={toolArgs}
                     onChange={(e) => setToolArgs(e.target.value)}
                     className="w-full font-mono text-xs p-2 border rounded-md bg-white dark:bg-slate-950 dark:border-slate-800"
