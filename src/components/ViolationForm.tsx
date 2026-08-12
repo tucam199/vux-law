@@ -32,6 +32,7 @@ import { useEffect } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 const singleViolationSchema = z.object({
   personName: z.string({ required_error: "Vui lòng chọn người vi phạm." }),
@@ -53,10 +54,12 @@ interface ViolationFormProps {
   regulations: Regulation[];
   onSave: (data: Omit<ViolationRecord, 'id'>[]) => Promise<void>;
   onClose: () => void;
-  toast: (options: { title: string; description: string; variant?: "default" | "destructive" }) => void;
+  toast?: (options: { title: string; description: string; variant?: "default" | "destructive" }) => void;
 }
 
-export function ViolationForm({ people, regulations, onSave, onClose, toast }: ViolationFormProps) {
+export function ViolationForm({ people, regulations, onSave, onClose, toast: customToast }: ViolationFormProps) {
+  const { toast: hookToast } = useToast();
+  const toast = customToast || hookToast;
   const form = useForm<ViolationFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {

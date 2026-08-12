@@ -196,10 +196,15 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                         <FormLabel>Số Tiền Phạt</FormLabel>
                         <FormControl>
                             <div className="relative">
-                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} />
-                                <span className="absolute inset-y-0 right-3 flex items-center text-muted-foreground">đ</span>
+                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} className="bg-slate-950 border-slate-800" />
+                                <span className="absolute inset-y-0 right-3 flex items-center text-slate-400 font-medium">đ</span>
                             </div>
                         </FormControl>
+                        {field.value && Number(field.value) > 0 && (
+                          <p className="text-xs text-emerald-400 font-medium mt-1">
+                            Xem trước: {new Intl.NumberFormat('vi-VN').format(Number(field.value))} đ
+                          </p>
+                        )}
                         <FormMessage />
                     </FormItem>
                     )}
