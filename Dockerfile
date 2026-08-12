@@ -34,9 +34,6 @@ ENV HOSTNAME "0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Create writable directory for local data fallback
-RUN mkdir -p /app/.vux-data && chown -R nextjs:nodejs /app/.vux-data
-
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
