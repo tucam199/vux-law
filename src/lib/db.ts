@@ -1,46 +1,62 @@
 import { Pool } from 'pg';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import type { Regulation, ViolationRecord } from './types';
 
-// Ensure local backup directory exists (.vux-data)
-const DATA_DIR = path.join(process.cwd(), '.vux-data');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+// Safely determine writable directory for local JSON fallback
+const BASE_DIR = process.env.NODE_ENV === 'production' ? os.tmpdir() : process.cwd();
+const DATA_DIR = path.join(BASE_DIR, '.vux-data');
+
+function ensureDataDir() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch (err) {
+    console.warn('[DB Fallback Warning] Writable data dir creation skipped/failed:', err);
+  }
 }
 
 const REGULATIONS_FILE = path.join(DATA_DIR, 'regulations.json');
 const PENALTIES_FILE = path.join(DATA_DIR, 'penalties.json');
 
-// Initialize local JSON files if they don't exist
 function initLocalJsonFiles() {
-  if (!fs.existsSync(REGULATIONS_FILE)) {
-    fs.writeFileSync(REGULATIONS_FILE, JSON.stringify([], null, 2));
-  }
-  if (!fs.existsSync(PENALTIES_FILE)) {
-    fs.writeFileSync(PENALTIES_FILE, JSON.stringify([], null, 2));
+  ensureDataDir();
+  try {
+    if (!fs.existsSync(REGULATIONS_FILE)) {
+      fs.writeFileSync(REGULATIONS_FILE, JSON.stringify([], null, 2));
+    }
+    if (!fs.existsSync(PENALTIES_FILE)) {
+      fs.writeFileSync(PENALTIES_FILE, JSON.stringify([], null, 2));
+    }
+  } catch (err) {
+    console.warn('[DB Fallback Warning] Local JSON file init skipped:', err);
   }
 }
 
-initLocalJsonFiles();
+// In-memory fallback if file system is read-only
+let memoryRegulations: Regulation[] = [];
+let memoryPenalties: ViolationRecord[] = [];
 
 // Local JSON Helpers
-function readLocalJson<T>(filePath: string): T[] {
+function readLocalJson<T>(filePath: string, inMemoryFallback: T[]): T[] {
   try {
-    if (!fs.existsSync(filePath)) return [];
+    if (!fs.existsSync(filePath)) return inMemoryFallback;
     const content = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(content || '[]');
   } catch (error) {
-    console.error(`[DB Fallback] Failed reading ${filePath}:`, error);
-    return [];
+    console.warn(`[DB Fallback Warning] Failed reading ${filePath}, using memory fallback:`, error);
+    return inMemoryFallback;
   }
 }
 
 function writeLocalJson<T>(filePath: string, data: T[]) {
   try {
+    ensureDataDir();
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
   } catch (error) {
-    console.error(`[DB Fallback] Failed writing ${filePath}:`, error);
+    console.warn(`[DB Fallback Warning] Failed writing ${filePath}:`, error);
   }
 }
 
@@ -54,9 +70,13 @@ if (connectionString) {
     connectionString,
     connectionTimeoutMillis: 5000,
   });
+
+  pool.on('error', (err) => {
+    console.error('[DB Pool Error]:', err);
+    isPgConnected = false;
+  });
 }
 
-// Automatic Schema Initialization for PostgreSQL
 let isSchemaInitialized = false;
 
 async function ensureSchema() {
@@ -95,7 +115,7 @@ async function ensureSchema() {
   }
 }
 
-// Initial connection check
+// Initial connection attempt
 ensureSchema().catch(() => {});
 
 // --- REGULATIONS CRUD HANDLERS ---
@@ -106,14 +126,14 @@ export async function fetchRegulations(): Promise<Regulation[]> {
     try {
       const res = await pool.query('SELECT id, category, violation, penalty FROM regulations ORDER BY created_at DESC');
       const rows: Regulation[] = res.rows;
-      // Sync to local JSON backup
+      memoryRegulations = rows;
       writeLocalJson(REGULATIONS_FILE, rows);
       return rows;
     } catch (error) {
       console.error('[DB Error] fetchRegulations PG failed, using local JSON fallback:', error);
     }
   }
-  return readLocalJson<Regulation>(REGULATIONS_FILE);
+  return readLocalJson<Regulation>(REGULATIONS_FILE, memoryRegulations);
 }
 
 export async function createRegulation(data: Omit<Regulation, 'id'> & { id?: string }): Promise<Regulation> {
@@ -125,7 +145,6 @@ export async function createRegulation(data: Omit<Regulation, 'id'> & { id?: str
     penalty: data.penalty,
   };
 
-  // Dual save: PostgreSQL + Local JSON Backup
   if (pool) {
     try {
       await ensureSchema();
@@ -140,10 +159,8 @@ export async function createRegulation(data: Omit<Regulation, 'id'> & { id?: str
     }
   }
 
-  // Backup to local JSON
-  const current = readLocalJson<Regulation>(REGULATIONS_FILE);
-  const updated = [record, ...current.filter((r) => r.id !== record.id)];
-  writeLocalJson(REGULATIONS_FILE, updated);
+  memoryRegulations = [record, ...memoryRegulations.filter((r) => r.id !== record.id)];
+  writeLocalJson(REGULATIONS_FILE, memoryRegulations);
 
   return record;
 }
@@ -180,10 +197,8 @@ export async function updateRegulationRecord(id: string, data: Partial<Omit<Regu
     }
   }
 
-  // Backup to local JSON
-  const current = readLocalJson<Regulation>(REGULATIONS_FILE);
-  const updated = current.map((r) => (r.id === id ? { ...r, ...data } : r));
-  writeLocalJson(REGULATIONS_FILE, updated);
+  memoryRegulations = memoryRegulations.map((r) => (r.id === id ? { ...r, ...data } : r));
+  writeLocalJson(REGULATIONS_FILE, memoryRegulations);
 }
 
 export async function removeRegulationRecord(id: string): Promise<void> {
@@ -198,10 +213,8 @@ export async function removeRegulationRecord(id: string): Promise<void> {
     }
   }
 
-  // Backup to local JSON
-  const current = readLocalJson<Regulation>(REGULATIONS_FILE);
-  const updated = current.filter((r) => r.id !== id);
-  writeLocalJson(REGULATIONS_FILE, updated);
+  memoryRegulations = memoryRegulations.filter((r) => r.id !== id);
+  writeLocalJson(REGULATIONS_FILE, memoryRegulations);
 }
 
 // --- PENALTIES CRUD HANDLERS ---
@@ -220,13 +233,14 @@ export async function fetchPenalties(): Promise<ViolationRecord[]> {
         isCompleted: Boolean(row.isCompleted),
       }));
 
+      memoryPenalties = rows;
       writeLocalJson(PENALTIES_FILE, rows);
       return rows;
     } catch (error) {
       console.error('[DB Error] fetchPenalties PG failed, using local JSON fallback:', error);
     }
   }
-  return readLocalJson<ViolationRecord>(PENALTIES_FILE);
+  return readLocalJson<ViolationRecord>(PENALTIES_FILE, memoryPenalties);
 }
 
 export async function createPenalty(data: Omit<ViolationRecord, 'id'> & { id?: string }): Promise<ViolationRecord> {
@@ -254,9 +268,8 @@ export async function createPenalty(data: Omit<ViolationRecord, 'id'> & { id?: s
     }
   }
 
-  const current = readLocalJson<ViolationRecord>(PENALTIES_FILE);
-  const updated = [record, ...current.filter((p) => p.id !== record.id)];
-  writeLocalJson(PENALTIES_FILE, updated);
+  memoryPenalties = [record, ...memoryPenalties.filter((p) => p.id !== record.id)];
+  writeLocalJson(PENALTIES_FILE, memoryPenalties);
 
   return record;
 }
@@ -307,9 +320,8 @@ export async function updatePenaltyRecord(id: string, data: Partial<Omit<Violati
     }
   }
 
-  const current = readLocalJson<ViolationRecord>(PENALTIES_FILE);
-  const updated = current.map((p) => (p.id === id ? { ...p, ...data } : p));
-  writeLocalJson(PENALTIES_FILE, updated);
+  memoryPenalties = memoryPenalties.map((p) => (p.id === id ? { ...p, ...data } : p));
+  writeLocalJson(PENALTIES_FILE, memoryPenalties);
 }
 
 export async function removePenaltyRecord(id: string): Promise<void> {
@@ -324,7 +336,6 @@ export async function removePenaltyRecord(id: string): Promise<void> {
     }
   }
 
-  const current = readLocalJson<ViolationRecord>(PENALTIES_FILE);
-  const updated = current.filter((p) => p.id !== id);
-  writeLocalJson(PENALTIES_FILE, updated);
+  memoryPenalties = memoryPenalties.filter((p) => p.id !== id);
+  writeLocalJson(PENALTIES_FILE, memoryPenalties);
 }
