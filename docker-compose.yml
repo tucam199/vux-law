@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vux-law-app
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: vux-law-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user_c4ad325efb0a
+      POSTGRES_PASSWORD: jfNK0JtRncHrtZX2xHSXvmM4Os86MRdh
+      POSTGRES_DB: vux_law
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
