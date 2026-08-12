@@ -1,59 +1,62 @@
-import { db } from "./firebase";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-  DocumentData,
-  QueryDocumentSnapshot,
-  writeBatch,
-} from "firebase/firestore";
-import type { ViolationRecord } from "./types";
-
-const penaltiesCollection = collection(db, "penalties");
-
-const fromFirestore = (snapshot: QueryDocumentSnapshot<DocumentData>): ViolationRecord => {
-    const data = snapshot.data();
-    return {
-        id: snapshot.id,
-        personName: data.personName,
-        date: data.date,
-        notes: data.notes,
-        regulation: data.regulation,
-        isCompleted: data.isCompleted || false,
-    };
-};
+import type { ViolationRecord } from './types';
 
 export const getPenalties = async (): Promise<ViolationRecord[]> => {
-  const snapshot = await getDocs(penaltiesCollection);
-  return snapshot.docs.map(fromFirestore).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  try {
+    const res = await fetch('/api/penalties', { cache: 'no-store' });
+    const data = await res.json();
+    if (data.success) {
+      return data.data;
+    }
+    throw new Error(data.error || 'Failed to fetch penalties');
+  } catch (error) {
+    console.error('Error fetching penalties:', error);
+    return [];
+  }
 };
 
 export const addPenalty = async (penalty: Omit<ViolationRecord, 'id'>): Promise<ViolationRecord> => {
-    const dataToSave = { ...penalty, isCompleted: false };
-    const docRef = await addDoc(penaltiesCollection, dataToSave);
-    return { id: docRef.id, ...dataToSave };
+  const res = await fetch('/api/penalties', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(penalty),
+  });
+  const data = await res.json();
+  if (data.success) {
+    return data.data;
+  }
+  throw new Error(data.error || 'Failed to add penalty');
 };
 
 export const addMultiplePenalties = async (penalties: Omit<ViolationRecord, 'id'>[]): Promise<void> => {
-    const batch = writeBatch(db);
-    penalties.forEach(penalty => {
-        const docRef = doc(penaltiesCollection);
-        const dataToSave = { ...penalty, isCompleted: false };
-        batch.set(docRef, dataToSave);
-    });
-    await batch.commit();
+  const res = await fetch('/api/penalties', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ penalties }),
+  });
+  const data = await res.json();
+  if (!data.success) {
+    throw new Error(data.error || 'Failed to add multiple penalties');
+  }
 };
 
-
 export const updatePenalty = async (id: string, data: Partial<Omit<ViolationRecord, 'id'>>): Promise<void> => {
-    const penaltyDoc = doc(db, "penalties", id);
-    await updateDoc(penaltyDoc, data);
+  const res = await fetch('/api/penalties', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, ...data }),
+  });
+  const resData = await res.json();
+  if (!resData.success) {
+    throw new Error(resData.error || 'Failed to update penalty');
+  }
 };
 
 export const deletePenalty = async (id: string): Promise<void> => {
-    const penaltyDoc = doc(db, "penalties", id);
-    await deleteDoc(penaltyDoc);
+  const res = await fetch(`/api/penalties?id=${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+  });
+  const data = await res.json();
+  if (!data.success) {
+    throw new Error(data.error || 'Failed to delete penalty');
+  }
 };
