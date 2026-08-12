@@ -21,7 +21,6 @@ export function VibeHostStatus() {
     setLoading(true);
     setErrorMsg(null);
     try {
-      // Step 1: Handshake
       const initRes = await fetch('/api/vibehost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -33,7 +32,6 @@ export function VibeHostStatus() {
         throw new Error(initData.error || 'Failed to initialize connection');
       }
 
-      // Step 2: Fetch tools
       const toolsRes = await fetch('/api/vibehost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -59,7 +57,6 @@ export function VibeHostStatus() {
     setSelectedTool(tool.name);
     setExecutionResult(null);
 
-    // Auto-populate sample JSON template for tool parameters
     let template: Record<string, any> = {};
     if (tool.inputSchema?.properties) {
       Object.keys(tool.inputSchema.properties).forEach((key) => {
@@ -118,83 +115,84 @@ export function VibeHostStatus() {
   };
 
   return (
-    <Card className="w-full shadow-md border border-slate-200 dark:border-slate-800">
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
+    <Card className="w-full bg-slate-900/40 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-white/10 gap-4">
         <div className="space-y-1">
-          <CardTitle className="text-xl font-bold flex items-center gap-2">
-            <Server className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <CardTitle className="text-xl font-bold flex items-center gap-2 text-white">
+            <Server className="w-5 h-5 text-emerald-400" />
             VibeHost MCP Service Connection
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-slate-400 text-xs">
             MatBao VibeHost Agent MCP Server integration (`/api/agent/mcp`)
           </CardDescription>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {status === 'connected' && (
-            <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-300 flex gap-1 items-center">
-              <CheckCircle2 className="w-3.5 h-3.5" />
+            <Badge variant="outline" className="bg-emerald-500/15 text-emerald-300 border-emerald-500/40 flex gap-1.5 items-center px-3 py-1 font-bold rounded-full">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
               Connected
             </Badge>
           )}
           {status === 'error' && (
-            <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-300 flex gap-1 items-center">
-              <XCircle className="w-3.5 h-3.5" />
+            <Badge variant="outline" className="bg-rose-500/15 text-rose-300 border-rose-500/40 flex gap-1.5 items-center px-3 py-1 font-bold rounded-full">
+              <XCircle className="w-3.5 h-3.5 text-rose-400" />
               Disconnected
             </Badge>
           )}
+          {/* Emerald Gradient CTA button */}
           <Button
             onClick={testConnection}
             disabled={loading}
             size="sm"
-            className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-slate-950 font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all rounded-xl border-0"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin stroke-[3]" />
             ) : (
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4 stroke-[3]" />
             )}
             Test Connection
           </Button>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 pt-2">
+      <CardContent className="space-y-6 pt-6">
         {errorMsg && (
-          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded-md text-sm">
+          <div className="p-4 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-sm backdrop-blur-md">
             <strong>Error:</strong> {errorMsg}
           </div>
         )}
 
         {status === 'connected' && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Wrench className="w-4 h-4 text-indigo-500" />
+              <h4 className="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                <Wrench className="w-4 h-4 text-emerald-400" />
                 Available MCP Tools ({tools.length})
               </h4>
             </div>
 
             {tools.length === 0 ? (
-              <p className="text-sm text-slate-500 italic">No tools returned by server yet or server has 0 tools registered.</p>
+              <p className="text-sm text-slate-400 italic">No tools returned by server yet or server has 0 tools registered.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {tools.map((tool) => (
                   <div
                     key={tool.name}
-                    className={`p-3 rounded-lg border text-sm transition-all cursor-pointer ${
+                    className={`p-4 rounded-2xl border text-sm transition-all cursor-pointer backdrop-blur-xl ${
                       selectedTool === tool.name
-                        ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20'
-                        : 'border-slate-200 hover:border-slate-300 dark:border-slate-800'
+                        ? 'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
+                        : 'border-white/10 bg-slate-950/40 hover:border-emerald-500/30 hover:bg-slate-950/60'
                     }`}
                     onClick={() => selectToolWithTemplate(tool)}
                   >
-                    <div className="font-semibold text-slate-900 dark:text-slate-100 flex items-center justify-between">
-                      <span>{tool.name}</span>
+                    <div className="font-bold text-slate-100 flex items-center justify-between gap-2">
+                      <span className="font-mono text-emerald-400">{tool.name}</span>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-7 text-xs gap-1 text-indigo-600"
+                        className="h-7 text-xs gap-1 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg"
                         onClick={(e) => {
                           e.stopPropagation();
                           selectToolWithTemplate(tool);
@@ -204,7 +202,7 @@ export function VibeHostStatus() {
                       </Button>
                     </div>
                     {tool.description && (
-                      <p className="text-xs text-slate-500 mt-1 line-clamp-2">{tool.description}</p>
+                      <p className="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">{tool.description}</p>
                     )}
                   </div>
                 ))}
@@ -212,19 +210,19 @@ export function VibeHostStatus() {
             )}
 
             {selectedTool && (
-              <div className="mt-4 p-4 border border-indigo-200 bg-slate-50 dark:bg-slate-900 rounded-lg space-y-3">
-                <h5 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                  <Play className="w-4 h-4 text-indigo-600" />
-                  Execute Tool: <code className="text-indigo-600">{selectedTool}</code>
+              <div className="mt-6 p-5 border border-emerald-500/30 bg-slate-950/60 backdrop-blur-2xl rounded-2xl space-y-4">
+                <h5 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                  <Play className="w-4 h-4 text-emerald-400" />
+                  Execute Tool: <code className="text-emerald-400 font-mono">{selectedTool}</code>
                 </h5>
 
                 <div>
-                  <label className="text-xs text-slate-500 block mb-1">Arguments (JSON format):</label>
+                  <label className="text-xs text-slate-400 block mb-1.5 font-medium">Arguments (JSON format):</label>
                   <textarea
                     rows={4}
                     value={toolArgs}
                     onChange={(e) => setToolArgs(e.target.value)}
-                    className="w-full font-mono text-xs p-2 border rounded-md bg-white dark:bg-slate-950 dark:border-slate-800"
+                    className="w-full font-mono text-xs p-3 border border-white/10 rounded-xl bg-slate-950 text-slate-200 focus:outline-none focus:border-emerald-500"
                     placeholder="{}"
                   />
                 </div>
@@ -233,16 +231,16 @@ export function VibeHostStatus() {
                   size="sm"
                   onClick={() => handleCallTool(selectedTool)}
                   disabled={executing}
-                  className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+                  className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-slate-950 font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all rounded-xl border-0"
                 >
-                  {executing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                  {executing ? <Loader2 className="w-4 h-4 animate-spin stroke-[3]" /> : <Play className="w-4 h-4 stroke-[3]" />}
                   Execute {selectedTool}
                 </Button>
 
                 {executionResult && (
-                  <div className="mt-3">
-                    <label className="text-xs text-slate-500 block mb-1">Response Result:</label>
-                    <pre className="p-3 bg-slate-950 text-emerald-400 font-mono text-xs rounded-md overflow-x-auto max-h-60">
+                  <div className="mt-4 space-y-1">
+                    <label className="text-xs text-slate-400 block font-medium">Response Result:</label>
+                    <pre className="p-4 bg-slate-950 text-emerald-400 font-mono text-xs rounded-xl border border-white/10 overflow-x-auto max-h-60 leading-relaxed">
                       {JSON.stringify(executionResult, null, 2)}
                     </pre>
                   </div>

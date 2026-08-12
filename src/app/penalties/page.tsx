@@ -2,18 +2,15 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Home, ListFilter, Search, Plus, CalendarIcon, Users, CircleDollarSign, CheckCircle2, Clock, Sparkles, Filter, X } from "lucide-react";
+import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, Sparkles } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PenaltyList } from "@/components/PenaltyList";
 import type { ViolationRecord, Regulation } from "@/lib/types";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
-import { cn } from "@/lib/utils";
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ViolationForm } from "@/components/ViolationForm";
@@ -216,15 +213,18 @@ export default function PenaltiesPage() {
   const noRegulations = regulations.length === 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-slate-950 font-sans">
+      {/* Ambient Emerald Glowing Background Effects */}
+      <div className="fixed top-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
+
       {/* Header Bar */}
-      <header className="sticky top-0 z-20 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+      <header className="sticky top-0 z-30 bg-[#070b12]/70 backdrop-blur-2xl border-b border-white/10 shadow-lg shadow-black/20">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between gap-4">
             <Logo />
             <Link href="/">
-              <Button variant="outline" size="sm" className="gap-2 border-slate-700 hover:bg-slate-800">
-                <Home className="h-4 w-4 text-indigo-400" />
+              <Button variant="outline" size="sm" className="gap-2 border-white/10 hover:bg-white/5 rounded-xl backdrop-blur-md">
+                <Home className="h-4 w-4 text-emerald-400" />
                 Trang Chủ Quy Định
               </Button>
             </Link>
@@ -233,77 +233,79 @@ export default function PenaltiesPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 lg:px-8 py-10 max-w-7xl space-y-8">
+      <main className="container mx-auto px-6 lg:px-8 py-10 max-w-7xl space-y-8 relative z-10">
         {/* Header Hero Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-slate-800 shadow-xl">
-          <div className="space-y-1">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-slate-900/40 backdrop-blur-2xl p-8 rounded-3xl border border-white/10 shadow-2xl">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs px-2.5 py-0.5">
-                Nhật Ký Vi Phạm
+              <Badge variant="outline" className="bg-emerald-500/15 text-emerald-300 border-emerald-500/40 text-xs px-3 py-1 font-bold rounded-full">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400 mr-1" />
+                Nhật Ký Vi Phạm Nhân Sự
               </Badge>
             </div>
-            <h1 className="text-3xl font-black tracking-tight text-white">Danh Sách Bị Phạt</h1>
-            <p className="text-sm text-slate-400">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">Danh Sách Bị Phạt</h1>
+            <p className="text-sm text-slate-400 max-w-xl">
               Duyệt, theo dõi và đánh dấu hoàn thành nghĩa vụ cho tất cả các trường hợp vi phạm quy định.
             </p>
           </div>
 
+          {/* Primary Emerald Gradient CTA */}
           <Button
             onClick={handleAddViolation}
             disabled={noRegulations}
-            className="gap-2 bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 shrink-0"
+            className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-slate-950 font-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all rounded-xl border-0 shrink-0"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4 stroke-[3]" />
             Ghi Nhận Vi Phạm Mới
           </Button>
         </div>
 
-        {/* Stats Grid */}
+        {/* Liquid Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-slate-900/40 border-slate-800">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400">
+          <Card className="bg-slate-900/40 border-white/10 backdrop-blur-xl rounded-2xl">
+            <CardContent className="p-5 flex items-center gap-3.5">
+              <div className="p-3 rounded-2xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase">Tổng Lượt Phạt</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tổng Lượt Phạt</p>
                 <p className="text-2xl font-black text-white">{stats.totalCount}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/40 border-slate-800">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400">
+          <Card className="bg-slate-900/40 border-white/10 backdrop-blur-xl rounded-2xl">
+            <CardContent className="p-5 flex items-center gap-3.5">
+              <div className="p-3 rounded-2xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase">Đã Hoàn Thành</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đã Hoàn Thành</p>
                 <p className="text-2xl font-black text-emerald-400">{stats.completedCount}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/40 border-slate-800">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-amber-500/10 text-amber-400">
+          <Card className="bg-slate-900/40 border-white/10 backdrop-blur-xl rounded-2xl">
+            <CardContent className="p-5 flex items-center gap-3.5">
+              <div className="p-3 rounded-2xl bg-amber-500/15 text-amber-400 border border-amber-500/30">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase">Chưa Nộp/Thực Hiện</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Chưa Nộp/Thực Hiện</p>
                 <p className="text-2xl font-black text-amber-400">{stats.pendingCount}</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-900/40 border-slate-800">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-teal-500/10 text-teal-400">
+          <Card className="bg-slate-900/40 border-white/10 backdrop-blur-xl rounded-2xl">
+            <CardContent className="p-5 flex items-center gap-3.5">
+              <div className="p-3 rounded-2xl bg-lime-500/15 text-lime-400 border border-lime-500/30">
                 <CircleDollarSign className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase">Tổng Tiền Phạt</p>
-                <p className="text-xl font-black text-teal-300">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tổng Tiền Phạt</p>
+                <p className="text-xl font-black bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">
                   {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
                 </p>
               </div>
@@ -312,16 +314,16 @@ export default function PenaltiesPage() {
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-md">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/40 border border-white/10 backdrop-blur-2xl">
           {/* Search bar */}
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400/80" />
             <Input
               type="text"
               placeholder="Tìm theo tên cá nhân, quy định..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-slate-950 border-slate-800 text-sm text-slate-100"
+              className="pl-10 bg-slate-950/60 border-white/10 text-sm text-slate-100 rounded-xl"
             />
           </div>
 
@@ -330,16 +332,16 @@ export default function PenaltiesPage() {
             {/* Person Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 border-slate-800 text-xs">
-                  <Users className="w-3.5 h-3.5 text-indigo-400" />
+                <Button variant="outline" size="sm" className="gap-2 border-white/10 text-xs rounded-xl hover:bg-white/5">
+                  <Users className="w-3.5 h-3.5 text-emerald-400" />
                   {selectedPerson ? selectedPerson : "Tất cả nhân sự"}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-slate-900 border-slate-800 text-slate-200">
+              <DropdownMenuContent align="end" className="bg-slate-900/90 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl">
                 <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
                   Tất cả nhân sự
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-slate-800" />
+                <DropdownMenuSeparator className="bg-white/10" />
                 {people.map((person) => (
                   <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
                     {person}
@@ -351,12 +353,12 @@ export default function PenaltiesPage() {
             {/* Time Filter */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 border-slate-800 text-xs">
+                <Button variant="outline" size="sm" className="gap-2 border-white/10 text-xs rounded-xl hover:bg-white/5">
                   <ListFilter className="w-3.5 h-3.5 text-emerald-400" />
                   Lọc thời gian
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-slate-900 border-slate-800 text-slate-200">
+              <DropdownMenuContent align="end" className="bg-slate-900/90 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl">
                 <DropdownMenuItem onSelect={() => handleFilterChange(null)}>Tất cả</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => handleFilterChange('today')}>Hôm nay</DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => handleFilterChange('this_week')}>Tuần này</DropdownMenuItem>
@@ -374,7 +376,7 @@ export default function PenaltiesPage() {
                   setFilter(null);
                   setSearchQuery("");
                 }}
-                className="h-8 text-xs text-rose-400 hover:bg-rose-500/10"
+                className="h-8 text-xs text-rose-400 hover:bg-rose-500/10 rounded-xl"
               >
                 Xóa bộ lọc
               </Button>
@@ -384,9 +386,9 @@ export default function PenaltiesPage() {
 
         {/* Penalty List Display */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/30 py-24 text-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-            <p className="text-slate-400 text-sm">Đang tải danh sách xử phạt...</p>
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-white/10 bg-slate-900/20 backdrop-blur-xl py-24 text-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400"></div>
+            <p className="text-slate-400 text-sm font-medium">Đang tải danh sách xử phạt...</p>
           </div>
         ) : (
           <PenaltyList
@@ -399,8 +401,8 @@ export default function PenaltiesPage() {
 
       {/* Violation Form Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-slate-900 border-slate-800 text-slate-100">
-          <SheetHeader className="pr-8 pb-2 border-b border-slate-800">
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-slate-950/95 backdrop-blur-2xl border-white/10 text-slate-100">
+          <SheetHeader className="pr-8 pb-3 border-b border-white/10">
             <SheetTitle className="text-slate-100 text-xl font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
             <SheetDescription className="text-slate-400 text-xs">
               Chọn cá nhân và áp dụng quy định xử phạt tương ứng.
