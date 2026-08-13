@@ -8,49 +8,76 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 240 10% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
+    --popover-foreground: 240 10% 12%;
+    
+    /* Odoo Primary Purple & Teal Brand */
+    --odoo-purple: #714B67;
+    --odoo-teal: #017e84;
+    --odoo-green: #28a745;
+    
+    --primary: 316 20% 37%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 142.1 70.6% 45.3%;
-    --accent-foreground: 144.9 80.4% 10%;
+    --accent: 184 98% 26%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 142.1 70.6% 45.3%;
-    --radius: 0.75rem;
+    --ring: 316 20% 37%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Pure Neutral Dark Mode (Pitch Black / Pure Zinc) */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 5.9% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 5.9% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 142.1 70.6% 45.3%;
-    --primary-foreground: 144.9 80.4% 10%;
-    --secondary: 240 3.7% 15.9%;
+    /* Odoo 17 Enterprise Dark Mode Colors */
+    --background: 240 8% 12%;       /* #1e1e24 Odoo Dark Base */
+    --foreground: 0 0% 95%;
+    --card: 240 9% 16%;             /* #25252d Odoo Dark Card */
+    --card-foreground: 0 0% 95%;
+    --popover: 240 9% 16%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 316 20% 37%;         /* #714B67 Odoo Purple */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 6% 20%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 142.1 70.6% 45.3%;
-    --accent-foreground: 144.9 80.4% 10%;
-    --destructive: 0 62.8% 30.6%;
+    --muted: 240 6% 20%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 184 98% 26%;          /* #017e84 Odoo Teal */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.1 70.6% 45.3%;
+    --border: 240 10% 21%;          /* #32323d Crisp Odoo 1px Border */
+    --input: 240 10% 21%;
+    --ring: 316 20% 37%;
+  }
+}
+
+@layer components {
+  /* Odoo Buttons */
+  .btn-odoo-primary {
+    @apply bg-[#714B67] hover:bg-[#5f3e56] text-white font-medium shadow-sm transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+  }
+  .btn-odoo-secondary {
+    @apply bg-[#25252d] hover:bg-[#2d2d38] border border-[#32323d] text-zinc-200 font-medium shadow-sm transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+  }
+  .btn-odoo-teal {
+    @apply bg-[#017e84] hover:bg-[#01686d] text-white font-medium shadow-sm transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+  }
+  .btn-odoo-green {
+    @apply bg-[#28a745] hover:bg-[#218838] text-white font-medium shadow-sm transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+  }
+
+  /* Odoo Kanban Tile */
+  .odoo-kanban-card {
+    @apply bg-[#25252d] border border-[#32323d] hover:border-[#714B67] transition-all rounded-lg p-4 shadow-sm hover:shadow-md flex flex-col justify-between;
   }
 }
 

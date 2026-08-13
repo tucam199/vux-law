@@ -1,20 +1,26 @@
 import Link from 'next/link';
-import { Scale } from 'lucide-react';
+import { Grid3X3, Scale } from 'lucide-react';
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-3 group transition-transform hover:scale-[1.02] duration-300">
-      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-400 to-lime-400 p-[1.5px] shadow-md shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-all">
-        <div className="w-full h-full bg-zinc-950 rounded-[14px] flex items-center justify-center">
-          <Scale className="w-5 h-5 text-emerald-400 group-hover:rotate-12 transition-transform duration-300" />
-        </div>
+    <Link href="/" className="flex items-center gap-3 group transition-transform hover:opacity-90">
+      {/* Odoo App Switcher Matrix Menu Icon */}
+      <div className="w-9 h-9 rounded-lg bg-[#714B67] hover:bg-[#5f3e56] text-white flex items-center justify-center shadow-sm transition-colors border border-[#85587a]">
+        <Grid3X3 className="w-5 h-5 text-white/90 group-hover:rotate-90 transition-transform duration-300" />
       </div>
+
       <div className="flex flex-col">
-        <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-lime-300 bg-clip-text text-transparent">
-          VUX LAW
-        </span>
-        <span className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase -mt-1">
-          Visual User Experience
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
+            <Scale className="w-4 h-4 text-[#017e84]" />
+            VUX Law
+          </span>
+          <span className="text-[10px] font-semibold bg-[#714B67]/20 text-[#017e84] border border-[#017e84]/30 px-1.5 py-0.5 rounded uppercase">
+            Enterprise
+          </span>
+        </div>
+        <span className="text-[10px] font-medium tracking-wide text-zinc-400 -mt-0.5">
+          Quy Định & Xử Phạt ERP
         </span>
       </div>
     </Link>

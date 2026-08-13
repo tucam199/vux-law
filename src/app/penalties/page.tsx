@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, Sparkles } from "lucide-react";
+import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PenaltyList } from "@/components/PenaltyList";
 import type { ViolationRecord, Regulation } from "@/lib/types";
@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DateRange } from "react-day-picker";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
-import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ViolationForm } from "@/components/ViolationForm";
 import { getPenalties, addMultiplePenalties, deletePenalty, updatePenalty } from "@/lib/penaltyService";
@@ -213,15 +212,15 @@ export default function PenaltiesPage() {
   const noRegulations = regulations.length === 0;
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 selection:bg-emerald-500 selection:text-zinc-950 font-sans">
-      {/* Header Bar */}
-      <header className="sticky top-0 z-30 bg-[#09090b]/80 backdrop-blur-2xl border-b border-zinc-800/80">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between gap-4">
+    <div className="min-h-screen bg-[#1e1e24] text-zinc-100 font-sans">
+      {/* Odoo Top Navbar */}
+      <header className="bg-[#18181c] border-b border-[#32323d] sticky top-0 z-30">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="flex h-14 items-center justify-between gap-4">
             <Logo />
             <Link href="/">
-              <Button variant="outline" size="sm" className="gap-2 border-zinc-800 hover:bg-zinc-900 rounded-xl text-zinc-200">
-                <Home className="h-4 w-4 text-emerald-400" />
+              <Button variant="ghost" size="sm" className="h-8 text-xs text-zinc-300 hover:text-white hover:bg-[#25252d]">
+                <Home className="h-3.5 w-3.5 mr-1 text-[#017e84]" />
                 Trang Chủ Quy Định
               </Button>
             </Link>
@@ -229,163 +228,139 @@ export default function PenaltiesPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 lg:px-8 py-10 max-w-7xl space-y-8 relative z-10">
-        {/* Header Hero Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-zinc-900/60 backdrop-blur-2xl p-8 rounded-3xl border border-zinc-800/80 shadow-2xl">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-xs px-3 py-1 font-bold rounded-full">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400 mr-1" />
-                Nhật Ký Vi Phạm Nhân Sự
-              </Badge>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">Danh Sách Bị Phạt</h1>
-            <p className="text-sm text-zinc-400 max-w-xl">
-              Duyệt, theo dõi và đánh dấu hoàn thành nghĩa vụ cho tất cả các trường hợp vi phạm quy định.
-            </p>
-          </div>
-
-          {/* Primary Emerald Gradient CTA */}
-          <Button
-            onClick={handleAddViolation}
-            disabled={noRegulations}
-            className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all rounded-xl border-0 shrink-0"
-          >
-            <Plus className="h-4 w-4 stroke-[3]" />
-            Ghi Nhận Vi Phạm Mới
-          </Button>
-        </div>
-
-        {/* Pure Neutral Dark Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-zinc-900/60 border-zinc-800/80 backdrop-blur-xl rounded-2xl">
-            <CardContent className="p-5 flex items-center gap-3.5">
-              <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                <Users className="w-5 h-5" />
+      {/* Odoo Control Panel Bar */}
+      <div className="bg-[#25252d] border-b border-[#32323d] shadow-sm sticky top-14 z-20">
+        <div className="container mx-auto px-4 lg:px-6 py-3">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            {/* Odoo Breadcrumbs & Primary Action Button */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center text-sm font-medium text-zinc-300 gap-1.5">
+                <span className="text-[#017e84] font-bold">Xử phạt</span>
+                <ChevronRight className="w-4 h-4 text-zinc-500" />
+                <span className="text-zinc-100 font-semibold">Nhật Ký Vi Phạm</span>
               </div>
-              <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Tổng Lượt Phạt</p>
-                <p className="text-2xl font-black text-white">{stats.totalCount}</p>
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="bg-zinc-900/60 border-zinc-800/80 backdrop-blur-xl rounded-2xl">
-            <CardContent className="p-5 flex items-center gap-3.5">
-              <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Đã Hoàn Thành</p>
-                <p className="text-2xl font-black text-emerald-400">{stats.completedCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-900/60 border-zinc-800/80 backdrop-blur-xl rounded-2xl">
-            <CardContent className="p-5 flex items-center gap-3.5">
-              <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                <Clock className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Chưa Nộp/Thực Hiện</p>
-                <p className="text-2xl font-black text-amber-400">{stats.pendingCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-900/60 border-zinc-800/80 backdrop-blur-xl rounded-2xl">
-            <CardContent className="p-5 flex items-center gap-3.5">
-              <div className="p-3 rounded-2xl bg-lime-500/10 text-lime-400 border border-lime-500/30">
-                <CircleDollarSign className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Tổng Tiền Phạt</p>
-                <p className="text-xl font-black bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">
-                  {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filter Controls Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-2xl">
-          {/* Search bar */}
-          <div className="relative w-full md:w-80">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400" />
-            <Input
-              type="text"
-              placeholder="Tìm theo tên cá nhân, quy định..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-zinc-950 border-zinc-800 text-sm text-zinc-100 rounded-xl"
-            />
-          </div>
-
-          {/* Filter Dropdowns */}
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            {/* Person Filter */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 border-zinc-800 text-xs rounded-xl hover:bg-zinc-900 text-zinc-200">
-                  <Users className="w-3.5 h-3.5 text-emerald-400" />
-                  {selectedPerson ? selectedPerson : "Tất cả nhân sự"}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 text-zinc-200 rounded-xl">
-                <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
-                  Tất cả nhân sự
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-zinc-800" />
-                {people.map((person) => (
-                  <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
-                    {person}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Time Filter */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 border-zinc-800 text-xs rounded-xl hover:bg-zinc-900 text-zinc-200">
-                  <ListFilter className="w-3.5 h-3.5 text-emerald-400" />
-                  Lọc thời gian
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 text-zinc-200 rounded-xl">
-                <DropdownMenuItem onSelect={() => handleFilterChange(null)}>Tất cả</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleFilterChange('today')}>Hôm nay</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleFilterChange('this_week')}>Tuần này</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleFilterChange('this_month')}>Tháng này</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleFilterChange('this_year')}>Năm nay</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {(selectedPerson || filter || searchQuery) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setSelectedPerson(null);
-                  setFilter(null);
-                  setSearchQuery("");
-                }}
-                className="h-8 text-xs text-rose-400 hover:bg-rose-500/10 rounded-xl"
+              <button
+                onClick={handleAddViolation}
+                disabled={noRegulations}
+                className="btn-odoo-green"
               >
-                Xóa bộ lọc
-              </Button>
-            )}
+                <Plus className="h-4 w-4" />
+                Ghi Nhận Vi Phạm
+              </button>
+            </div>
+
+            {/* Odoo Search & Filter Control View */}
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
+                <Input
+                  type="text"
+                  placeholder="Tìm theo tên cá nhân..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 bg-[#1e1e24] border-[#32323d] text-xs text-zinc-100 h-8 rounded focus-visible:ring-[#714B67]"
+                />
+              </div>
+
+              {/* Person Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="btn-odoo-secondary">
+                    <Users className="w-3.5 h-3.5 text-[#017e84]" />
+                    {selectedPerson ? selectedPerson : "Nhân sự"}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-[#25252d] border-[#32323d] text-zinc-200 text-xs rounded-md">
+                  <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
+                    Tất cả nhân sự
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-[#32323d]" />
+                  {people.map((person) => (
+                    <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
+                      {person}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Time Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="btn-odoo-secondary">
+                    <ListFilter className="w-3.5 h-3.5 text-[#28a745]" />
+                    Thời gian
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-[#25252d] border-[#32323d] text-zinc-200 text-xs rounded-md">
+                  <DropdownMenuItem onSelect={() => handleFilterChange(null)}>Tất cả</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => handleFilterChange('today')}>Hôm nay</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => handleFilterChange('this_week')}>Tuần này</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => handleFilterChange('this_month')}>Tháng này</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => handleFilterChange('this_year')}>Năm nay</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* View Switcher Buttons */}
+              <div className="flex items-center gap-1 bg-[#1e1e24] p-0.5 rounded border border-[#32323d] shrink-0">
+                <Link href="/">
+                  <button className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded" title="Kanban View">
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                  </button>
+                </Link>
+                <button className="p-1.5 text-zinc-200 bg-[#32323d] rounded" title="List View">
+                  <List className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Odoo Content Body */}
+      <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
+        {/* Odoo Stat Buttons */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase">TỔNG LƯỢT PHẠT</p>
+              <p className="text-xl font-bold text-white">{stats.totalCount}</p>
+            </div>
+            <Users className="w-5 h-5 text-[#017e84]" />
+          </div>
+
+          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase">ĐÃ HOÀN THÀNH</p>
+              <p className="text-xl font-bold text-[#28a745]">{stats.completedCount}</p>
+            </div>
+            <CheckCircle2 className="w-5 h-5 text-[#28a745]" />
+          </div>
+
+          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase">CHƯA HOÀN THÀNH</p>
+              <p className="text-xl font-bold text-amber-400">{stats.pendingCount}</p>
+            </div>
+            <Clock className="w-5 h-5 text-amber-400" />
+          </div>
+
+          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase">TỔNG TIỀN PHẠT</p>
+              <p className="text-base font-bold text-[#28a745]">
+                {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
+              </p>
+            </div>
+            <CircleDollarSign className="w-5 h-5 text-[#28a745]" />
           </div>
         </div>
 
-        {/* Penalty List Display */}
+        {/* Odoo List View Display */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded-3xl border border-zinc-800 bg-zinc-900/30 backdrop-blur-xl py-24 text-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-400"></div>
-            <p className="text-zinc-400 text-sm font-medium">Đang tải danh sách xử phạt...</p>
+          <div className="flex flex-col items-center justify-center rounded-lg border border-[#32323d] bg-[#25252d] py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28a745]"></div>
+            <p className="text-zinc-400 text-xs font-medium">Đang tải Odoo List View...</p>
           </div>
         ) : (
           <PenaltyList
@@ -398,19 +373,26 @@ export default function PenaltiesPage() {
 
       {/* Violation Form Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-zinc-950 border-zinc-800 text-zinc-100">
-          <SheetHeader className="pr-8 pb-3 border-b border-zinc-800">
-            <SheetTitle className="text-zinc-100 text-xl font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
-            <SheetDescription className="text-zinc-400 text-xs">
-              Chọn cá nhân và áp dụng quy định xử phạt tương ứng.
-            </SheetDescription>
-          </SheetHeader>
-          <ViolationForm
-            onSave={handleSaveViolations}
-            onClose={() => setIsSheetOpen(false)}
-            regulations={regulations}
-            people={people}
-          />
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-[#25252d] border-[#32323d] text-zinc-100 p-0">
+          <div className="bg-[#1e1e24] px-6 py-4 border-b border-[#32323d] flex items-center justify-between">
+            <div className="space-y-0.5">
+              <SheetTitle className="text-zinc-100 text-lg font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
+              <SheetDescription className="text-zinc-400 text-xs">
+                Odoo Form View
+              </SheetDescription>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#28a745]/20 text-[#28a745] border border-[#28a745]/30 px-2 py-0.5 rounded">
+              Bản nháp
+            </div>
+          </div>
+          <div className="p-6 flex-1 flex flex-col overflow-hidden">
+            <ViolationForm
+              onSave={handleSaveViolations}
+              onClose={() => setIsSheetOpen(false)}
+              regulations={regulations}
+              people={people}
+            />
+          </div>
         </SheetContent>
       </Sheet>
     </div>

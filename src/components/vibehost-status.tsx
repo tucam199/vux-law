@@ -115,84 +115,82 @@ export function VibeHostStatus() {
   };
 
   return (
-    <Card className="w-full bg-zinc-900/60 backdrop-blur-2xl border border-zinc-800/80 shadow-2xl rounded-3xl overflow-hidden">
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-zinc-800/80 gap-4">
-        <div className="space-y-1">
-          <CardTitle className="text-xl font-bold flex items-center gap-2 text-white">
-            <Server className="w-5 h-5 text-emerald-400" />
-            VibeHost MCP Service Connection
+    <Card className="w-full bg-[#25252d] border border-[#32323d] shadow-sm rounded-lg overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-[#32323d] gap-3">
+        <div className="space-y-0.5">
+          <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
+            <Server className="w-4 h-4 text-[#017e84]" />
+            VibeHost MCP Technical Integration
           </CardTitle>
           <CardDescription className="text-zinc-400 text-xs">
             MatBao VibeHost Agent MCP Server integration (`/api/agent/mcp`)
           </CardDescription>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {status === 'connected' && (
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 flex gap-1.5 items-center px-3 py-1 font-bold rounded-full">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <Badge variant="outline" className="bg-[#28a745]/15 text-[#28a745] border-[#28a745]/30 flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
+              <CheckCircle2 className="w-3.5 h-3.5" />
               Connected
             </Badge>
           )}
           {status === 'error' && (
-            <Badge variant="outline" className="bg-rose-500/10 text-rose-400 border-rose-500/30 flex gap-1.5 items-center px-3 py-1 font-bold rounded-full">
-              <XCircle className="w-3.5 h-3.5 text-rose-400" />
+            <Badge variant="outline" className="bg-rose-500/15 text-rose-400 border-rose-500/30 flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
+              <XCircle className="w-3.5 h-3.5" />
               Disconnected
             </Badge>
           )}
-          {/* Emerald Gradient CTA button */}
-          <Button
+          <button
             onClick={testConnection}
             disabled={loading}
-            size="sm"
-            className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all rounded-xl border-0"
+            className="btn-odoo-primary"
           >
             {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin stroke-[3]" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <RefreshCw className="w-4 h-4 stroke-[3]" />
+              <RefreshCw className="w-3.5 h-3.5" />
             )}
             Test Connection
-          </Button>
+          </button>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6 pt-6">
+      <CardContent className="space-y-5 pt-5">
         {errorMsg && (
-          <div className="p-4 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-sm backdrop-blur-md">
+          <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded text-xs">
             <strong>Error:</strong> {errorMsg}
           </div>
         )}
 
         {status === 'connected' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
-                <Wrench className="w-4 h-4 text-emerald-400" />
+              <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                <Wrench className="w-3.5 h-3.5 text-[#017e84]" />
                 Available MCP Tools ({tools.length})
               </h4>
             </div>
 
             {tools.length === 0 ? (
-              <p className="text-sm text-zinc-400 italic">No tools returned by server yet or server has 0 tools registered.</p>
+              <p className="text-xs text-zinc-400 italic">No tools returned by server yet.</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {tools.map((tool) => (
                   <div
                     key={tool.name}
-                    className={`p-4 rounded-2xl border text-sm transition-all cursor-pointer backdrop-blur-xl ${
+                    className={`p-3 rounded border text-xs transition-all cursor-pointer ${
                       selectedTool === tool.name
-                        ? 'border-emerald-500/60 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
-                        : 'border-zinc-800 bg-zinc-950/60 hover:border-emerald-500/30 hover:bg-zinc-950'
+                        ? 'border-[#714B67] bg-[#714B67]/10'
+                        : 'border-[#32323d] bg-[#1e1e24] hover:border-zinc-500'
                     }`}
                     onClick={() => selectToolWithTemplate(tool)}
                   >
                     <div className="font-bold text-zinc-100 flex items-center justify-between gap-2">
-                      <span className="font-mono text-emerald-400">{tool.name}</span>
+                      <span className="font-mono text-[#017e84]">{tool.name}</span>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-7 text-xs gap-1 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg"
+                        className="h-6 text-[11px] px-2 text-[#017e84] hover:bg-[#017e84]/10 rounded"
                         onClick={(e) => {
                           e.stopPropagation();
                           selectToolWithTemplate(tool);
@@ -202,7 +200,7 @@ export function VibeHostStatus() {
                       </Button>
                     </div>
                     {tool.description && (
-                      <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2 leading-relaxed">{tool.description}</p>
+                      <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2">{tool.description}</p>
                     )}
                   </div>
                 ))}
@@ -210,37 +208,36 @@ export function VibeHostStatus() {
             )}
 
             {selectedTool && (
-              <div className="mt-6 p-5 border border-emerald-500/30 bg-zinc-950 backdrop-blur-2xl rounded-2xl space-y-4">
-                <h5 className="text-sm font-bold text-zinc-100 flex items-center gap-2">
-                  <Play className="w-4 h-4 text-emerald-400" />
-                  Execute Tool: <code className="text-emerald-400 font-mono">{selectedTool}</code>
+              <div className="mt-4 p-4 border border-[#32323d] bg-[#1e1e24] rounded-lg space-y-3">
+                <h5 className="text-xs font-bold text-zinc-100 flex items-center gap-1.5">
+                  <Play className="w-3.5 h-3.5 text-[#714B67]" />
+                  Execute Tool: <code className="text-[#017e84] font-mono">{selectedTool}</code>
                 </h5>
 
                 <div>
-                  <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Arguments (JSON format):</label>
+                  <label className="text-[11px] text-zinc-400 block mb-1 font-medium">Arguments (JSON format):</label>
                   <textarea
                     rows={4}
                     value={toolArgs}
                     onChange={(e) => setToolArgs(e.target.value)}
-                    className="w-full font-mono text-xs p-3 border border-zinc-800 rounded-xl bg-zinc-950 text-zinc-200 focus:outline-none focus:border-emerald-500"
+                    className="w-full font-mono text-xs p-2.5 border border-[#32323d] rounded bg-[#25252d] text-zinc-200 focus:outline-none focus:border-[#714B67]"
                     placeholder="{}"
                   />
                 </div>
 
-                <Button
-                  size="sm"
+                <button
                   onClick={() => handleCallTool(selectedTool)}
                   disabled={executing}
-                  className="gap-2 bg-gradient-to-r from-emerald-500 via-teal-400 to-lime-400 text-zinc-950 font-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all rounded-xl border-0"
+                  className="btn-odoo-teal"
                 >
-                  {executing ? <Loader2 className="w-4 h-4 animate-spin stroke-[3]" /> : <Play className="w-4 h-4 stroke-[3]" />}
+                  {executing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
                   Execute {selectedTool}
-                </Button>
+                </button>
 
                 {executionResult && (
-                  <div className="mt-4 space-y-1">
-                    <label className="text-xs text-zinc-400 block font-medium">Response Result:</label>
-                    <pre className="p-4 bg-zinc-950 text-emerald-400 font-mono text-xs rounded-xl border border-zinc-800 overflow-x-auto max-h-60 leading-relaxed">
+                  <div className="mt-3 space-y-1">
+                    <label className="text-[11px] text-zinc-400 block font-medium">Response Result:</label>
+                    <pre className="p-3 bg-[#25252d] text-[#28a745] font-mono text-[11px] rounded border border-[#32323d] overflow-x-auto max-h-60">
                       {JSON.stringify(executionResult, null, 2)}
                     </pre>
                   </div>

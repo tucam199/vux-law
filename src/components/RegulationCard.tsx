@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Ban, CircleDollarSign, FilePenLine, Trash2, ShieldAlert } from "lucide-react";
+import { Ban, CircleDollarSign, FilePenLine, Trash2, Tag } from "lucide-react";
 import type { Regulation } from "@/lib/types";
 import {
   AlertDialog,
@@ -34,99 +34,95 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
   const isFine = regulation.penalty.type === 'fine';
   
   return (
-    <Card className="flex flex-col bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-emerald-500/10 group rounded-2xl overflow-hidden relative">
-      <CardHeader className="pb-3 pt-5 px-5">
-        <div className="flex justify-between items-start gap-3">
-          <div className="space-y-1.5">
-            <span className="text-[11px] font-bold tracking-wider text-emerald-400 uppercase flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
+    <Card className="odoo-kanban-card group">
+      <CardHeader className="p-0 pb-3">
+        <div className="flex justify-between items-start gap-2">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#017e84] bg-[#017e84]/10 border border-[#017e84]/20 px-2 py-0.5 rounded">
+              <Tag className="w-3 h-3" />
               {regulation.category}
             </span>
-            <CardTitle className="text-lg font-bold text-zinc-100 group-hover:text-white transition-colors leading-snug">
+            <CardTitle className="text-base font-bold text-zinc-100 group-hover:text-white leading-snug pt-1">
               {regulation.violation}
             </CardTitle>
           </div>
 
           <Badge
             variant="outline"
-            className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full shrink-0 ${
+            className={`flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded shrink-0 border ${
               isFine
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                ? 'bg-[#28a745]/15 text-[#28a745] border-[#28a745]/30'
+                : 'bg-rose-500/15 text-rose-400 border-rose-500/30'
             }`}
           >
             {isFine ? (
-              <CircleDollarSign className="h-3.5 w-3.5 text-emerald-400" />
+              <CircleDollarSign className="h-3.5 w-3.5" />
             ) : (
-              <Ban className="h-3.5 w-3.5 text-rose-400" />
+              <Ban className="h-3.5 w-3.5" />
             )}
             {isFine ? 'Phạt tiền' : 'Hạn chế'}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-grow pt-1 px-5">
-        <Separator className="bg-zinc-800/80 mb-4" />
+      <CardContent className="p-0 py-2 flex-grow">
+        <Separator className="bg-[#32323d] mb-3" />
         <div>
-          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">
-            Hình Thức Xử Phạt
+          <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wide mb-1">
+            HÌNH THỨC XỬ PHẠT ODOO
           </p>
           {isFine ? (
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-lime-300 bg-clip-text text-transparent">
-                {formatCurrency(regulation.penalty.amount ?? 0)}
-              </span>
-            </div>
+            <span className="text-xl font-bold text-[#28a745]">
+              {formatCurrency(regulation.penalty.amount ?? 0)}
+            </span>
           ) : (
-            <p className="text-sm text-zinc-200 bg-zinc-950/80 p-3 rounded-xl border border-zinc-800/80 italic leading-relaxed">
-              "{regulation.penalty.details || 'Không có thông tin chi tiết'}"
+            <p className="text-xs text-zinc-300 bg-[#1e1e24] p-2.5 rounded border border-[#32323d] italic leading-relaxed">
+              "{regulation.penalty.details || 'Không có chi tiết'}"
             </p>
           )}
         </div>
       </CardContent>
 
-      <CardFooter className="pt-3 pb-4 px-5 border-t border-zinc-800/80 bg-zinc-950/60">
-        <div className="flex w-full justify-end gap-2">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 gap-1.5 rounded-xl"
+      <CardFooter className="p-0 pt-3 border-t border-[#32323d] flex justify-end gap-1.5">
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 px-2 rounded"
+            >
+              <Trash2 className="h-3.5 w-3.5 mr-1" />
+              Xóa
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-[#25252d] border-[#32323d] rounded-lg">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-zinc-100">Xác nhận xóa quy định?</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-400 text-xs">
+                Hành động này sẽ xóa quy định khỏi hệ thống Odoo ERP.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-[#1e1e24] text-zinc-200 hover:bg-zinc-800 border-[#32323d] text-xs h-8">Hủy</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={onDelete}
+                className="bg-rose-600 hover:bg-rose-500 text-white text-xs h-8"
               >
-                <Trash2 className="h-3.5 w-3.5" />
-                Xóa
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-zinc-900 border-zinc-800 rounded-2xl">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-zinc-100">Xác nhận xóa quy định?</AlertDialogTitle>
-                <AlertDialogDescription className="text-zinc-400">
-                  Hành động này không thể hoàn tác. Quy định sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="bg-zinc-800 text-zinc-200 hover:bg-zinc-700 rounded-xl border-zinc-700">Hủy</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={onDelete}
-                  className="bg-rose-600 hover:bg-rose-500 text-white rounded-xl"
-                >
-                  Xóa Quy Định
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                Xóa Quy Định
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onEdit}
-            className="h-8 text-xs text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-300 gap-1.5 rounded-xl"
-          >
-            <FilePenLine className="h-3.5 w-3.5" />
-            Sửa
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onEdit}
+          className="h-7 text-xs text-zinc-200 border-[#32323d] hover:bg-[#32323d] px-2 rounded"
+        >
+          <FilePenLine className="h-3.5 w-3.5 mr-1 text-[#017e84]" />
+          Sửa
+        </Button>
       </CardFooter>
     </Card>
   );

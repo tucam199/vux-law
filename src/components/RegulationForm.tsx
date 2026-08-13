@@ -227,13 +227,13 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 )}
             </div>
         </ScrollArea>
-        <div className="flex-shrink-0 pt-6 border-t flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+        <div className="flex-shrink-0 pt-4 border-t border-[#32323d] flex justify-end gap-2">
+            <button type="button" className="btn-odoo-secondary" onClick={onClose}>
                 Hủy
-            </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Đang lưu..." : "Lưu Quy Định"}
-            </Button>
+            </button>
+            <button type="submit" disabled={form.formState.isSubmitting} className="btn-odoo-primary">
+                {form.formState.isSubmitting ? "Đang lưu Odoo..." : "Lưu Quy Định"}
+            </button>
         </div>
       </form>
     </Form>
