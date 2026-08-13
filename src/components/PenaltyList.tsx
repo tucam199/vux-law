@@ -71,7 +71,7 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
   }
 
   return (
-    <div className="border border-[#DEE2E6] rounded bg-white shadow-xs overflow-x-auto">
+    <div className="border border-[#DEE2E6] rounded bg-white shadow-sm overflow-x-auto">
       <Table className="text-xs">
         <TableHeader className="bg-[#F1F3F5] border-b border-[#DEE2E6]">
           <TableRow className="hover:bg-transparent border-b border-[#DEE2E6]">

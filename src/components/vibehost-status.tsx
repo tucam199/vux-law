@@ -115,7 +115,7 @@ export function VibeHostStatus() {
   };
 
   return (
-    <Card className="w-full bg-white border border-[#DEE2E6] shadow-xs rounded overflow-hidden">
+    <Card className="w-full bg-white border border-[#DEE2E6] shadow-sm rounded overflow-hidden">
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3.5 border-b border-[#DEE2E6] gap-3">
         <div className="space-y-0.5">
           <CardTitle className="text-base font-bold flex items-center gap-2 text-[#212529]">

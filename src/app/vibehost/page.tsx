@@ -8,7 +8,7 @@ export default function VibeHostPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#212529] font-sans">
       {/* Odoo Top Navbar */}
-      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
+      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-sm">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex h-12 items-center justify-between">
             <Logo />
@@ -23,7 +23,7 @@ export default function VibeHostPage() {
       </header>
 
       {/* Odoo Control Panel Bar */}
-      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+      <div className="bg-white border-b border-[#DEE2E6] shadow-sm sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex items-center text-xs font-semibold text-[#212529] gap-1">
             <span className="text-[#017E84] font-bold">Kỹ thuật</span>

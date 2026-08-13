@@ -59,7 +59,7 @@ body {
 
   /* Odoo Kanban Tile */
   .odoo-kanban-card {
-    @apply bg-white border border-[#DEE2E6] hover:border-[#714B67] transition-all rounded-md p-4 flex flex-col justify-between relative overflow-hidden shadow-xs;
+    @apply bg-white border border-[#DEE2E6] hover:border-[#714B67] transition-all rounded-md p-4 flex flex-col justify-between relative overflow-hidden shadow-sm;
   }
 }
 

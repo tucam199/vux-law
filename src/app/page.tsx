@@ -146,7 +146,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#212529]">
       {/* Header Bar */}
-      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
+      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-sm">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex h-12 items-center justify-between gap-4">
             <Logo />
@@ -170,7 +170,7 @@ export default function Home() {
       </header>
 
       {/* Odoo 17 Light Mode Control Panel Bar */}
-      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+      <div className="bg-white border-b border-[#DEE2E6] shadow-sm sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Left Controls: Breadcrumbs & Primary Purple Button */}
@@ -191,7 +191,7 @@ export default function Home() {
             </div>
 
             {/* Central Odoo Search Bar */}
-            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
+            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-sm">
               <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
               
               {activeFilter !== "all" && (
