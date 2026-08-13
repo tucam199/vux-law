@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X } from "lucide-react";
+import { Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X, UserCheck, AlertOctagon } from "lucide-react";
 import { PenaltyList } from "@/components/PenaltyList";
 import { HeaderNav } from "@/components/HeaderNav";
 import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
 import type { ViolationRecord, Regulation, Employee } from "@/lib/types";
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DateRange } from "react-day-picker";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -17,6 +16,11 @@ import { getPenalties, addMultiplePenalties, deletePenalty, updatePenalty } from
 import { getRegulations } from "@/lib/regulationService";
 import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "motion/react";
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("vi-VN").format(amount) + " đ";
+}
 
 export default function PenaltiesPage() {
   const [penalties, setPenalties] = useState<ViolationRecord[]>([]);
@@ -61,17 +65,6 @@ export default function PenaltiesPage() {
   const peopleNames = useMemo(() => {
     return employees.map(e => e.name);
   }, [employees]);
-
-  const handleFilterChange = (newFilter: string | null) => {
-    setFilter(newFilter);
-    if (newFilter !== 'custom') {
-      setDateRange(undefined);
-    }
-  };
-
-  const handlePersonSelect = (person: string | null) => {
-    setSelectedPerson(person);
-  };
 
   const handleAddViolation = () => {
     setIsSheetOpen(true);
@@ -200,155 +193,129 @@ export default function PenaltiesPage() {
     const totalCount = filteredPenalties.length;
     const completedCount = filteredPenalties.filter(p => p.isCompleted).length;
     const pendingCount = totalCount - completedCount;
-    const totalFinesSum = filteredPenalties.reduce((acc, p) => {
+    const totalFineApproved = filteredPenalties.reduce((acc, p) => {
       if (p.regulation?.penalty?.type === 'fine') {
         return acc + (p.regulation.penalty.amount || 0);
       }
       return acc;
     }, 0);
 
-    return { totalCount, completedCount, pendingCount, totalFinesSum };
+    return { totalCount, completedCount, pendingCount, totalFineApproved };
   }, [filteredPenalties]);
 
   const noRegulations = regulations.length === 0;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main,#FAFAFA)] text-[var(--text-primary,#2F3438)]">
-      {/* Unified Notion Header Bar */}
+    <div className="min-h-screen bg-white text-[#1F1F1F]">
+      {/* Unified Module Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingCount} />
 
-      {/* Control Panel Bar */}
-      <div className="bg-white border-b border-[#E9E9E7] shadow-2xs sticky top-12 z-20">
-        <div className="container mx-auto px-4 lg:px-6 py-2.5">
+      {/* Control Panel Bar (§8.5 & §9) */}
+      <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] sticky top-14 z-[90]">
+        <div className="container mx-auto px-4 lg:px-6 py-3">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Left Controls: Breadcrumbs & Primary Action Button */}
+            {/* Left Controls: Breadcrumbs & Primary Action */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center text-xs font-medium text-[#2F3438] gap-1 mr-1">
-                <span className="text-[#2F3438] font-semibold">Xử phạt</span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#787774]" />
-                <span className="text-[#2F3438] font-bold">Nhật Ký Vi Phạm</span>
+              <div className="flex items-center text-xs font-medium text-[#1F1F1F] gap-1 mr-2">
+                <span className="text-[#1E74E8] font-semibold">Xử Phạt</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#6B6B6B]" />
+                <span className="text-[#1F1F1F] font-bold">Nhật Ký Vi Phạm</span>
               </div>
 
-              <button
+              {/* SINGLE PRIMARY CTA PER SCREEN: #7FCA27 Green */}
+              <motion.button
+                whileTap={{ scale: 0.96 }}
                 onClick={handleAddViolation}
                 disabled={noRegulations}
-                className="btn-token-green text-xs font-bold"
+                className="btn-ds-primary text-xs py-2 px-3.5"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-4 w-4" />
                 Ghi Nhận Vi Phạm
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setIsEmpModalOpen(true)}
-                className="btn-token-outline text-xs font-medium"
+                className="btn-ds-secondary text-xs py-2 px-3.5"
               >
-                <Users className="w-3.5 h-3.5 text-[#2F3438]" />
+                <Users className="w-4 h-4 text-[#1E74E8]" />
                 <span>Quản Lý Nhân Sự ({employees.length})</span>
-              </button>
+              </motion.button>
             </div>
 
-            {/* Central Search & Filter View */}
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#D3D3D0] focus-within:border-[#2F3438] rounded px-2.5 py-1 shadow-2xs transition-colors">
-                <Search className="w-3.5 h-3.5 text-[#787774] mr-1.5 shrink-0" />
-                {selectedPerson && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2F3438] bg-[#F0F0EF] border border-[#E0E0DE] px-1.5 py-0.5 rounded mr-1 shrink-0">
-                    {selectedPerson}
-                    <button onClick={() => setSelectedPerson(null)} className="hover:text-black">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
-                )}
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-xs text-[#2F3438] focus:outline-none placeholder-[#787774]"
-                />
+            {/* Central Controls: Filter by Person Select */}
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <div className="relative flex items-center bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
+                <UserCheck className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
+                <select
+                  value={selectedPerson || "ALL"}
+                  onChange={(e) => setSelectedPerson(e.target.value === "ALL" ? null : e.target.value)}
+                  className="bg-transparent text-xs text-[#1F1F1F] font-medium focus:outline-none cursor-pointer pr-4"
+                >
+                  <option value="ALL">Tất cả nhân sự ({peopleNames.length})</option>
+                  {peopleNames.map((name) => (
+                    <option key={name} value={name}>
+                      👤 {name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* Dynamic Person Select Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="btn-token-outline text-xs font-medium">
-                    <Users className="w-3.5 h-3.5 text-[#2F3438]" />
-                    {selectedPerson ? selectedPerson : "Nhân sự"}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white border-[#E9E9E7] text-[#2F3438] text-xs rounded shadow-md">
-                  <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
-                    Tất cả nhân sự
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-[#E9E9E7]" />
-                  {peopleNames.map((person) => (
-                    <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
-                      {person}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* View Switcher */}
-              <div className="flex items-center border border-[#D3D3D0] rounded bg-white overflow-hidden shrink-0">
-                <Link href="/">
-                  <button className="p-1.5 text-[#787774] hover:text-[#2F3438]" title="Kanban View">
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                  </button>
-                </Link>
-                <button className="p-1.5 bg-[#F0F0EF] text-[#2F3438]" title="List View">
-                  <List className="w-3.5 h-3.5" />
+              {selectedPerson && (
+                <button
+                  onClick={() => setSelectedPerson(null)}
+                  className="btn-ds-secondary text-xs py-1.5 px-2.5"
+                  title="Xóa lọc nhân sự"
+                >
+                  Xóa lọc
                 </button>
+              )}
+            </div>
+
+            {/* Right Controls: Stats & Quick Count */}
+            <div className="flex items-center gap-3">
+              <div className="text-xs text-[#6B6B6B] font-medium">
+                Hiển thị: <strong className="text-[#1F1F1F]">{filteredPenalties.length}</strong> bản ghi
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Body */}
-      <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
-        {/* KPI Stat Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
-            <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">TỔNG LƯỢT PHẠT</p>
-              <p className="text-xl font-bold text-[#2F3438]">{stats.totalCount}</p>
+      {/* Main Content Body */}
+      <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
+        {/* KPI STAT CARDS (§8.5 & §9.4) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="card-ds p-4 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">TỔNG LẦN VI PHẠM</p>
+              <p className="text-2xl font-bold text-[#1F1F1F]">{stats.totalCount}</p>
             </div>
-            <Users className="w-5 h-5 text-[#2F3438]" />
+            <AlertOctagon className="w-6 h-6 text-[#1E74E8]" />
           </div>
 
-          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
-            <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">ĐÃ HOÀN THÀNH</p>
-              <p className="text-xl font-bold text-[#2F3438]">{stats.completedCount}</p>
+          <div className="card-ds p-4 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">TỔNG TIỀN PHẠT DUYỆT</p>
+              <p className="text-2xl font-bold text-[#1F1F1F]">{formatCurrency(stats.totalFineApproved)}</p>
             </div>
-            <CheckCircle2 className="w-5 h-5 text-[#2F3438]" />
+            <CircleDollarSign className="w-6 h-6 text-[#7FCA27]" />
           </div>
 
-          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
-            <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">CHƯA NỘP/THỰC HIỆN</p>
-              <p className="text-xl font-bold text-[#2F3438]">{stats.pendingCount}</p>
+          <div className="card-ds p-4 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">VI PHẠM CHỜ XỬ LÝ</p>
+              <p className="text-2xl font-bold text-[#1F1F1F]">{stats.pendingCount}</p>
             </div>
-            <Clock className="w-5 h-5 text-[#787774]" />
-          </div>
-
-          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
-            <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">TỔNG TIỀN PHẠT</p>
-              <p className="text-lg font-bold text-[#2F3438]">
-                {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
-              </p>
-            </div>
-            <CircleDollarSign className="w-5 h-5 text-[#2F3438]" />
+            <Clock className="w-6 h-6 text-[#FF8832]" />
           </div>
         </div>
 
-        {/* Data Table Display */}
+        {/* PENALTY LIST TABLE (§8.6 & §9.5) */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded border border-[#E9E9E7] bg-white py-20 text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2F3438]"></div>
-            <p className="text-[#787774] text-xs font-medium">Đang tải danh sách xử phạt...</p>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-[#E0E0E0] bg-white py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E74E8]"></div>
+            <p className="text-[#6B6B6B] text-xs font-medium">Đang tải danh sách xử phạt...</p>
           </div>
         ) : (
           <PenaltyList
@@ -359,20 +326,21 @@ export default function PenaltiesPage() {
         )}
       </main>
 
-      {/* Violation Form Sheet */}
+      {/* CREATE VIOLATION SHEET FORM */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#E9E9E7] text-[#2F3438] p-0 shadow-xl">
-          <div className="bg-[#F7F7F5] px-6 py-3.5 border-b border-[#E9E9E7] flex items-center justify-between">
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#E0E0E0] text-[#1F1F1F] p-0 shadow-md">
+          <div className="bg-[#F8F8F8] px-6 py-4 border-b border-[#E0E0E0] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-[#2F3438] text-base font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
-              <SheetDescription className="text-[#787774] text-xs">
-                Biểu mẫu ghi nhận vi phạm
+              <SheetTitle className="text-[#1F1F1F] text-lg font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
+              <SheetDescription className="text-[#6B6B6B] text-xs">
+                Chọn nhân sự vi phạm và quy định tương ứng
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#F0F0EF] text-[#2F3438] border border-[#E0E0DE] px-2 py-0.5 rounded">
-              Bản nháp
+            <div className="badge-ds-info font-medium text-xs px-2.5 py-0.5">
+              Tự động lưu
             </div>
           </div>
+
           <div className="p-6 flex-1 flex flex-col overflow-hidden">
             <ViolationForm
               onSave={handleSaveViolations}

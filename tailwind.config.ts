@@ -71,9 +71,11 @@ export default {
         },
       },
       borderRadius: {
-        lg: '8px',
+        sm: '4px',
         md: '8px',
-        sm: '8px',
+        lg: '12px',
+        xl: '16px',
+        full: '9999px',
       },
       keyframes: {
         'accordion-down': {

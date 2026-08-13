@@ -39,49 +39,40 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
   
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ y: -3, transition: { duration: 0.2 } }}
-      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -2, transition: { duration: 0.15 } }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Card className="notion-card pl-5 border-[#E9E9E7] hover:border-[#D3D3D0] hover:shadow-xs transition-all duration-200 rounded-lg bg-white">
-        {/* Top Mini Accent Bar */}
+      <Card className="card-ds p-4 rounded-xl border border-[#E0E0E0] bg-white transition-all flex flex-col justify-between relative overflow-hidden">
+        {/* Top Accent Stripe */}
         <div
-          className={`absolute top-0 left-0 right-0 h-1 ${
-            isFine
-              ? "bg-[var(--token-card-stripe-fine,#2F3438)]"
-              : "bg-[var(--token-card-stripe-restriction,#787774)]"
+          className={`absolute top-0 left-0 right-0 h-1.5 ${
+            isFine ? "bg-[#7FCA27]" : "bg-[#FF8832]"
           }`}
         />
 
-        {/* Clean Left Vertical Accent Stripe */}
-        <div
-          className={`absolute left-0 top-0 bottom-0 w-1.5 transition-colors ${
-            isFine ? 'bg-[var(--token-card-stripe-fine,#2F3438)]' : 'bg-[var(--token-card-stripe-restriction,#787774)]'
-          }`}
-        />
-
-        <CardHeader className="p-0 pb-2.5 pt-1">
+        <CardHeader className="p-0 pb-3 pt-1">
           <div className="flex justify-between items-start gap-2">
-            <div className="space-y-1">
-              <span className="token-badge-category">
-                <Tag className="w-3 h-3 text-[#2F3438]" />
+            <div className="space-y-1.5">
+              <span className="badge-ds-info">
+                <Tag className="w-3 h-3 text-[#1E74E8]" />
                 {regulation.category}
               </span>
-              <CardTitle className="text-sm font-bold text-[#2F3438] leading-snug pt-1.5">
+              <CardTitle className="text-sm font-bold text-[#1F1F1F] leading-snug pt-1">
                 {regulation.violation}
               </CardTitle>
             </div>
 
             <Badge
               variant="outline"
-              className={isFine ? "token-badge-fine" : "token-badge-restriction"}
+              className={isFine ? "badge-ds-success" : "badge-ds-warning"}
             >
               {isFine ? (
-                <CircleDollarSign className="h-3 w-3" />
+                <CircleDollarSign className="h-3.5 w-3.5" />
               ) : (
-                <Ban className="h-3 w-3" />
+                <Ban className="h-3.5 w-3.5" />
               )}
               {isFine ? 'Phạt tiền' : 'Hạn chế'}
             </Badge>
@@ -89,30 +80,30 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
         </CardHeader>
 
         <CardContent className="p-0 py-2.5 flex-grow">
-          <Separator className="bg-[#E9E9E7] mb-2.5" />
-          <div className="space-y-1 bg-[#F7F7F5] p-2.5 rounded-md border border-[#E9E9E7]">
-            <span className="block text-[10px] font-bold text-[#787774] uppercase tracking-wider">
+          <Separator className="bg-[#E0E0E0] mb-2.5" />
+          <div className="space-y-1 bg-[#F8F8F8] p-3 rounded-md border border-[#E0E0E0]">
+            <span className="block text-[10px] font-bold text-[#6B6B6B] uppercase tracking-wider">
               MỨC XỬ PHẠT QUY ĐỊNH
             </span>
             {isFine ? (
-              <div className="text-lg font-extrabold text-[#2F3438] leading-tight">
+              <div className="text-lg font-extrabold text-[#1F1F1F] leading-tight">
                 {formatCurrency(regulation.penalty.amount ?? 0)}
               </div>
             ) : (
-              <p className="text-xs text-[#2F3438] font-medium italic leading-relaxed">
+              <p className="text-xs text-[#1F1F1F] font-medium italic leading-relaxed">
                 "{regulation.penalty.details || 'Không có chi tiết'}"
               </p>
             )}
           </div>
         </CardContent>
 
-        <CardFooter className="p-0 pt-3 border-t border-[#E9E9E7] flex justify-between items-center gap-2">
-          <div className="flex items-center gap-1.5">
+        <CardFooter className="p-0 pt-3 border-t border-[#E0E0E0] flex justify-between items-center gap-2">
+          <div className="flex items-center gap-2">
             {onQuickPenalty && (
               <motion.button
-                whileTap={{ scale: 0.94 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => onQuickPenalty(regulation)}
-                className="btn-token-green text-[11px] py-1 px-2.5 font-bold flex items-center gap-1 shadow-2xs"
+                className="btn-ds-primary text-xs py-1.5 px-3 font-bold flex items-center gap-1.5"
                 title="Ghi nhận vi phạm nhanh cho nhân sự với quy định này"
               >
                 <Zap className="w-3.5 h-3.5 fill-white text-white" />
@@ -122,7 +113,7 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
 
             <button
               onClick={onEdit}
-              className="btn-token-primary text-[11px] py-1 px-2.5 font-semibold"
+              className="btn-ds-secondary text-xs py-1.5 px-3 font-medium"
             >
               Sửa
             </button>
@@ -133,23 +124,23 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 text-xs text-[#787774] hover:text-[#2F3438] hover:bg-[#F7F7F5] px-1.5 rounded"
+                className="h-8 text-xs text-[#6B6B6B] hover:text-[#D32F2F] hover:bg-[#FDECEC] px-2 rounded-sm"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white border-[#E9E9E7] rounded-lg">
+            <AlertDialogContent className="bg-white border-[#E0E0E0] rounded-xl">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-[#2F3438] font-bold text-sm">Xác nhận xóa quy định?</AlertDialogTitle>
-                <AlertDialogDescription className="text-[#787774] text-xs">
-                  Hành động này sẽ xóa quy định khỏi hệ thống CSDL.
+                <AlertDialogTitle className="text-[#1F1F1F] font-bold text-base">Xác nhận xóa quy định?</AlertDialogTitle>
+                <AlertDialogDescription className="text-[#6B6B6B] text-xs">
+                  Hành động này sẽ xóa quy định khỏi CSDL hệ thống.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-[#F7F7F5] text-[#2F3438] hover:bg-[#EFEFED] border-[#E9E9E7] text-xs h-8">Hủy</AlertDialogCancel>
+                <AlertDialogCancel className="btn-ds-secondary text-xs h-9">Hủy</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={onDelete}
-                  className="bg-[#2F3438] hover:bg-[#191919] text-white text-xs h-8"
+                  className="bg-[#D32F2F] hover:bg-[#b71c1c] text-white text-xs h-9 font-bold rounded-sm"
                 >
                   Xóa Quy Định
                 </AlertDialogAction>

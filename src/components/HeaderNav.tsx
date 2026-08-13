@@ -36,12 +36,12 @@ export function HeaderNav({ pendingPenaltiesCount = 0 }: HeaderNavProps) {
   ];
 
   return (
-    <header className="bg-white/95 backdrop-blur-md border-b border-[#E9E9E7] sticky top-0 z-30 shadow-2xs">
+    <header className="bg-white border-b border-[#E0E0E0] sticky top-0 z-[100]">
       <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex h-13 items-center justify-between gap-4 py-1.5">
+        <div className="flex h-14 items-center justify-between gap-4 py-2">
           <Logo />
 
-          {/* Notion Module Nav Tabs */}
+          {/* Design System Module Nav Tabs */}
           <nav className="flex items-center gap-2 overflow-x-auto py-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -54,23 +54,19 @@ export function HeaderNav({ pendingPenaltiesCount = 0 }: HeaderNavProps) {
                 >
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap relative ${
+                    className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-sm transition-all whitespace-nowrap relative ${
                       item.active
-                        ? 'bg-[var(--token-nav-active-bg,#2F3438)] text-[var(--token-nav-active-text,#FFFFFF)] shadow-2xs'
-                        : 'text-[#2F3438] hover:bg-[#F7F7F5] hover:text-[#000000]'
+                        ? 'bg-[#EAF2FD] text-[#1E74E8] border border-[#1E74E8]'
+                        : 'text-[#1F1F1F] hover:bg-[#F8F8F8] hover:text-[#185EC0]'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${item.active ? 'text-white' : 'text-[#5A5A58]'}`} />
+                    <Icon className={`w-4 h-4 ${item.active ? 'text-[#1E74E8]' : 'text-[#6B6B6B]'}`} />
                     <span>{item.label}</span>
                     {item.badge !== undefined && (
                       <motion.span
                         initial={{ scale: 0.7 }}
                         animate={{ scale: 1 }}
-                        className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full shadow-2xs ${
-                          item.active
-                            ? 'bg-white text-zinc-900 font-extrabold'
-                            : 'bg-[#E0E0DE] text-[#2F3438] border border-[#D3D3D0]'
-                        }`}
+                        className="badge-ds-warning text-[10px] font-bold px-1.5 py-0.2 rounded-full"
                       >
                         {item.badge}
                       </motion.span>

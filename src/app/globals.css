@@ -1,201 +1,236 @@
+@import "../styles/theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html {
+  color-scheme: light only;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 13px;
-  background-color: var(--bg-main, #FAFAFA);
-  color: var(--text-primary, #2F3438);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  background-color: var(--color-bg-page, #FFFFFF);
+  color: var(--color-text-primary, #1F1F1F);
   -webkit-font-smoothing: antialiased;
 }
 
 @layer base {
   :root, .light {
-    /* Notion Monochrome Base Palette */
-    --background: 0 0% 98%;          /* #FAFAFA Notion Page Background */
-    --foreground: 0 0% 20%;          /* #2F3438 Notion Text Main */
-    --card: 0 0% 100%;               /* #FFFFFF Pure White */
-    --card-foreground: 0 0% 20%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
-
-    --primary: 0 0% 18%;             /* #2F3438 Notion Primary Black/Dark Gray */
+    --popover-foreground: 0 0% 12%;
+    --primary: 88 68% 47%;          /* #7FCA27 Primary Green CTA */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96.5%;         /* #F7F7F5 Notion Muted Gray */
-    --secondary-foreground: 0 0% 20%;
-    --muted: 0 0% 96.5%;
-    --muted-foreground: 0 0% 47%;    /* #787774 Notion Muted Text */
-    --accent: 0 0% 22%;
+    --secondary: 214 80% 51%;        /* #1E74E8 Brand Blue */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 42%;
+    --accent: 214 80% 51%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 0% 20%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 91%;              /* #E9E9E7 Notion Subtle Border */
-    --input: 0 0% 91%;
-    --ring: 0 0% 20%;
-    --radius: 0.375rem;
-
-    /* ==========================================================================
-       CENTRALIZED DESIGN TOKENS (SỬ DỤNG CHUNG TOÀN BỘ ỨNG DỤNG)
-       Khi đổi màu ở các biến dưới đây, tất cả các thành phần tương ứng sẽ đồng bộ!
-       ========================================================================== */
-
-    /* 1. Base Notion Colors */
-    --bg-main: #FAFAFA;
-    --bg-subtle: #F7F7F5;
-    --bg-hover: #EFEFED;
-    --text-primary: #2F3438;
-    --text-secondary: #787774;
-    --text-tertiary: #9B9A97;
-    --border-default: #E9E9E7;
-    --border-strong: #D3D3D0;
-
-    /* 2. Label / Badge / Tag Design Tokens */
-    --token-label-fine-bg: #F0F0EF;
-    --token-label-fine-text: #2F3438;
-    --token-label-fine-border: #E0E0DE;
-
-    --token-label-restriction-bg: #F0F0EF;
-    --token-label-restriction-text: #37352F;
-    --token-label-restriction-border: #E0E0DE;
-
-    --token-label-category-bg: #F7F7F5;
-    --token-label-category-text: #2F3438;
-    --token-label-category-border: #E0E0DE;
-
-    /* 3. Button Design Tokens */
-    --token-btn-primary-bg: #2F3438;
-    --token-btn-primary-text: #FFFFFF;
-    --token-btn-primary-hover: #191919;
-
-    --token-btn-accent-bg: #37352F;
-    --token-btn-accent-text: #FFFFFF;
-    --token-btn-accent-hover: #191919;
-
-    --token-btn-green-bg: #2F3438;
-    --token-btn-green-text: #FFFFFF;
-    --token-btn-green-hover: #000000;
-
-    --token-btn-outline-bg: #FFFFFF;
-    --token-btn-outline-text: #2F3438;
-    --token-btn-outline-border: #E0E0DE;
-    --token-btn-outline-hover: #F7F7F5;
-
-    /* 4. Status Indicator Tokens */
-    --token-status-completed-bg: #F0F0EF;
-    --token-status-completed-text: #2F3438;
-    --token-status-completed-border: #D3D3D0;
-
-    --token-status-pending-bg: #F7F7F5;
-    --token-status-pending-text: #5A5A58;
-    --token-status-pending-border: #E0E0DE;
-
-    /* 5. Header & Navigation Tokens */
-    --token-nav-active-bg: #2F3438;
-    --token-nav-active-text: #FFFFFF;
-    --token-nav-inactive-text: #2F3438;
-    --token-nav-badge-bg: #37352F;
-    --token-nav-badge-text: #FFFFFF;
-
-    /* 6. Card & Swimlane Tokens */
-    --token-card-bg: #FFFFFF;
-    --token-card-border: #E9E9E7;
-    --token-card-stripe-fine: #2F3438;
-    --token-card-stripe-restriction: #787774;
-
-    --token-swimlane-bg: #F7F7F5;
-    --token-swimlane-border: #E9E9E7;
-    --token-swimlane-badge-bg: #EFEFED;
-    --token-swimlane-badge-text: #2F3438;
+    --destructive: 0 65% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 88%;              /* #E0E0E0 */
+    --input: 0 0% 88%;
+    --ring: 214 80% 51%;
+    --radius: 0.25rem;               /* 4px radius-sm */
   }
 }
 
 @layer components {
-  /* Reusable Token Buttons */
-  .btn-token-primary {
-    background-color: var(--token-btn-primary-bg);
-    color: var(--token-btn-primary-text);
-    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
+  /* Design System Buttons — §8.1 & §9.1 */
+  .btn-ds-primary, .btn-token-primary, .btn-token-green {
+    background-color: var(--color-primary-main);
+    color: var(--color-primary-textOn);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    box-shadow: none !important;
+    transition: background-color var(--motion-fast), border-color var(--motion-fast);
   }
-  .btn-token-accent {
-    background-color: var(--token-btn-accent-bg);
-    color: var(--token-btn-accent-text);
-    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
+  .btn-ds-primary:hover:not(:disabled), .btn-token-primary:hover:not(:disabled), .btn-token-green:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
   }
-  .btn-token-green {
-    background-color: var(--token-btn-green-bg);
-    color: var(--token-btn-green-text);
-    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
+  .btn-ds-primary:active:not(:disabled), .btn-token-primary:active:not(:disabled), .btn-token-green:active:not(:disabled) {
+    background-color: var(--color-primary-pressed);
   }
-  .btn-token-outline {
-    background-color: var(--token-btn-outline-bg);
-    color: var(--token-btn-outline-text);
-    border: 1px solid var(--token-btn-outline-border);
-    @apply font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:bg-[#F7F7F5];
+  .btn-ds-primary:focus-visible, .btn-token-primary:focus-visible, .btn-token-green:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
   }
 
-  /* Backward Compatibility Aliases */
-  .btn-odoo-purple { @apply btn-token-primary; }
-  .btn-odoo-teal { @apply btn-token-accent; }
-  .btn-odoo-green { @apply btn-token-green; }
-  .btn-odoo-outline { @apply btn-token-outline; }
-
-  /* Token Badges & Labels */
-  .token-badge-fine {
-    background-color: var(--token-label-fine-bg);
-    color: var(--token-label-fine-text);
-    border: 1px solid var(--token-label-fine-border);
-    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
+  .btn-ds-secondary, .btn-token-outline {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    box-shadow: none !important;
+    transition: background-color var(--motion-fast), border-color var(--motion-fast);
   }
-  .token-badge-restriction {
-    background-color: var(--token-label-restriction-bg);
-    color: var(--token-label-restriction-text);
-    border: 1px solid var(--token-label-restriction-border);
-    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
-  }
-  .token-badge-category {
-    background-color: var(--token-label-category-bg);
-    color: var(--token-label-category-text);
-    border: 1px solid var(--token-label-category-border);
-    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
+  .btn-ds-secondary:hover:not(:disabled), .btn-token-outline:hover:not(:disabled) {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border-strong);
   }
 
-  /* Token Status Badges */
-  .token-status-completed {
-    background-color: var(--token-status-completed-bg);
-    color: var(--token-status-completed-text);
-    border: 1px solid var(--token-status-completed-border);
-    @apply px-2 py-0.5 text-[10px] font-bold rounded inline-flex items-center gap-1;
+  .btn-ds-outline, .btn-token-accent {
+    background-color: var(--color-bg-page);
+    color: var(--color-brand-main);
+    border: 1px solid var(--color-brand-main);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    box-shadow: none !important;
+    transition: background-color var(--motion-fast), border-color var(--motion-fast);
   }
-  .token-status-pending {
-    background-color: var(--token-status-pending-bg);
-    color: var(--token-status-pending-text);
-    border: 1px solid var(--token-status-pending-border);
-    @apply px-2 py-0.5 text-[10px] font-bold rounded inline-flex items-center gap-1;
+  .btn-ds-outline:hover:not(:disabled), .btn-token-accent:hover:not(:disabled) {
+    background-color: var(--color-brand-subtle);
+    border-color: var(--color-brand-hover);
+    color: var(--color-brand-hover);
   }
 
-  /* Token Card Containers */
-  .notion-card {
-    background-color: var(--token-card-bg);
-    border: 1px solid var(--token-card-border);
-    @apply hover:border-[#D3D3D0] hover:shadow-xs transition-all duration-200 rounded-lg p-4 flex flex-col justify-between relative overflow-hidden;
+  .btn-ds-ghost {
+    background-color: transparent;
+    color: var(--color-brand-main);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    box-shadow: none !important;
   }
-  .odoo-kanban-card { @apply notion-card; }
+  .btn-ds-ghost:hover:not(:disabled) {
+    background-color: var(--color-brand-subtle);
+    color: var(--color-brand-hover);
+  }
 
-  /* Notion Swimlane */
+  /* Design System Badges & Tags — §8.4 & §9.3 */
+  .badge-ds-primary {
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-ds-success, .token-badge-fine, .token-status-completed {
+    background-color: var(--color-semantic-success-subtle);
+    color: var(--color-semantic-success-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-ds-info, .token-badge-category {
+    background-color: var(--color-semantic-info-subtle);
+    color: var(--color-semantic-info-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-ds-warning, .token-badge-restriction, .token-status-pending {
+    background-color: var(--color-semantic-warning-subtle);
+    color: var(--color-semantic-warning-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-ds-error {
+    background-color: var(--color-semantic-error-subtle);
+    color: var(--color-semantic-error-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-ds-neutral {
+    background-color: var(--color-semantic-neutral-subtle);
+    color: var(--color-semantic-neutral-main);
+    border-radius: var(--radius-full);
+    height: 24px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Cards & Swimlanes — §8.5 & §9.4 */
+  .card-ds, .notion-card {
+    background-color: var(--color-bg-page);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: none !important;
+    transition: border-color var(--motion-fast);
+  }
+  .card-ds:hover, .notion-card:hover {
+    border-color: var(--color-border-strong);
+  }
+  .card-ds-selected {
+    border: 2px solid var(--color-primary-main);
+    background-color: var(--color-primary-subtle);
+  }
+
   .notion-swimlane {
-    background-color: var(--token-swimlane-bg);
-    border: 1px solid var(--token-swimlane-border);
-    @apply rounded-lg p-3.5 space-y-3 flex flex-col;
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    padding: 16px;
   }
 
-  /* Header & Control Panel */
-  .notion-glass-header {
-    background-color: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid var(--border-default);
-    @apply backdrop-blur-md sticky top-0 z-30 shadow-2xs;
+  /* Input — §8.2 & §9.2 */
+  .input-ds {
+    background-color: var(--color-bg-page);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    height: 40px;
+    padding: 12px;
+    font-size: 14px;
+    transition: border-color var(--motion-base);
   }
-  .odoo-glass-header { @apply notion-glass-header; }
+  .input-ds::placeholder {
+    color: var(--color-text-placeholder);
+  }
+  .input-ds:hover {
+    border-color: var(--color-border-strong);
+  }
+  .input-ds:focus {
+    border: 2px solid var(--color-border-focus);
+    outline: none;
+  }
+  .input-ds-error {
+    border: 2px solid var(--color-semantic-error-main);
+  }
 }
 
 @layer base {
@@ -206,4 +241,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-

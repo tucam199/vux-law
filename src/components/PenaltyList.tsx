@@ -81,20 +81,20 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
   }
 
   return (
-    <div className="border border-[#E9E9E7] rounded-lg bg-white shadow-2xs overflow-x-auto">
+    <div className="border border-[#E0E0E0] rounded-xl bg-white overflow-x-auto">
       <Table className="text-xs">
-        <TableHeader className="bg-[#F7F7F5] border-b border-[#E9E9E7]">
-          <TableRow className="hover:bg-transparent border-b border-[#E9E9E7]">
-            <TableHead className="w-[36px] py-2.5 px-3"></TableHead>
-            <TableHead className="w-[44px] text-[11px] font-bold text-[#2F3438] py-2.5 px-3">STT</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">EMPLOYEE (NGƯỜI VI PHẠM)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">DATE (NGÀY)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">CATEGORY (HẠNG MỤC)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">VIOLATION (CHI TIẾT VI PHẠM)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">LOẠI PHẠT</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">MỨC PHẠT</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#2F3438] py-2.5 px-3">STATUS (TRẠNG THÁI)</TableHead>
-            <TableHead className="text-right text-[11px] font-bold text-[#2F3438] py-2.5 px-3">ACTION</TableHead>
+        <TableHeader className="bg-[#F8F8F8] border-b border-[#E0E0E0]">
+          <TableRow className="hover:bg-transparent border-b border-[#E0E0E0]">
+            <TableHead className="w-[36px] py-3 px-3"></TableHead>
+            <TableHead className="w-[44px] text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">STT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">EMPLOYEE (NGƯỜI VI PHẠM)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">DATE (NGÀY)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">CATEGORY (HẠNG MỤC)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">VIOLATION (CHI TIẾT VI PHẠM)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">LOẠI PHẠT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">MỨC PHẠT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">STATUS (TRẠNG THÁI)</TableHead>
+            <TableHead className="text-right text-[11px] font-bold text-[#6B6B6B] uppercase py-3 px-3">ACTION</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -107,25 +107,25 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
 
             return (
               <React.Fragment key={personName}>
-                {/* Notion Grouping Accordion Row */}
-                <TableRow className="bg-[#F7F7F5] hover:bg-[#EFEFED] font-semibold text-[#2F3438] border-b border-[#E9E9E7]">
-                  <TableCell colSpan={3} className="py-2 px-3">
-                    <div className="flex items-center gap-2 font-bold text-xs text-[#2F3438]">
-                      <ChevronDown className="w-3.5 h-3.5 text-[#2F3438]" />
-                      <span className="w-6 h-6 rounded-full bg-[#2F3438] text-white text-[10px] font-bold flex items-center justify-center shadow-2xs">
+                {/* Grouping Accordion Row */}
+                <TableRow className="bg-[#F8F8F8] hover:bg-[#F2F2F2] font-semibold text-[#1F1F1F] border-b border-[#E0E0E0]">
+                  <TableCell colSpan={3} className="py-2.5 px-3">
+                    <div className="flex items-center gap-2 font-bold text-xs text-[#1F1F1F]">
+                      <ChevronDown className="w-3.5 h-3.5 text-[#1F1F1F]" />
+                      <span className="w-6 h-6 rounded-full bg-[#1E74E8] text-white text-[10px] font-bold flex items-center justify-center">
                         {initials}
                       </span>
                       <span>{personName}</span>
-                      <span className="text-[#787774] font-normal">({personList.length} lượt)</span>
+                      <span className="text-[#6B6B6B] font-normal">({personList.length} lượt)</span>
                     </div>
                   </TableCell>
-                  <TableCell colSpan={4} className="py-2 px-3 text-[11px] text-[#787774]">
+                  <TableCell colSpan={4} className="py-2.5 px-3 text-[11px] text-[#6B6B6B]">
                     Tổng lượt vi phạm của nhân sự
                   </TableCell>
-                  <TableCell className="py-2 px-3 font-bold text-[#2F3438]">
+                  <TableCell className="py-2.5 px-3 font-bold text-[#1F1F1F]">
                     {formatCurrency(groupTotalFine)}
                   </TableCell>
-                  <TableCell colSpan={2} className="py-2 px-3"></TableCell>
+                  <TableCell colSpan={2} className="py-2.5 px-3"></TableCell>
                 </TableRow>
 
                 {/* Individual Violation Rows */}
@@ -136,99 +136,99 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                   return (
                     <TableRow
                       key={penalty.id}
-                      className={`border-b border-[#E9E9E7] transition-colors ${
-                        isCompleted ? "bg-[#F7F7F5]/50 text-[#787774]" : "hover:bg-[#F7F7F5] text-[#2F3438]"
+                      className={`border-b border-[#E0E0E0] transition-colors hover:bg-[rgba(0,0,0,0.04)] ${
+                        isCompleted ? "bg-[#F8F8F8]/50 text-[#6B6B6B]" : "text-[#1F1F1F]"
                       }`}
                     >
-                      <TableCell className="py-2.5 px-3">
+                      <TableCell className="py-3 px-3">
                         <Checkbox
                           checked={isCompleted}
                           onCheckedChange={(checked) => onToggleComplete(penalty.id, !!checked)}
-                          className="border-[#D3D3D0] data-[state=checked]:bg-[#2F3438] data-[state=checked]:border-[#2F3438]"
+                          className="border-[#D1D1D1] data-[state=checked]:bg-[#7FCA27] data-[state=checked]:border-[#7FCA27] rounded-sm"
                           aria-label="Đánh dấu hoàn thành"
                         />
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 text-xs text-[#787774] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-3 px-3 text-xs text-[#6B6B6B] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {idx + 1}
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60 text-[#787774]" : "text-[#2F3438]"}`}>
+                      <TableCell className={`py-3 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60 text-[#6B6B6B]" : "text-[#1F1F1F]"}`}>
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#2F3438]" />
+                          <span className="w-2 h-2 rounded-full bg-[#1E74E8]" />
                           <span>{penalty.personName}</span>
                         </div>
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 text-xs text-[#787774] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-3 px-3 text-xs text-[#6B6B6B] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {formatDate(penalty.date)}
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 text-xs font-semibold text-[#2F3438] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-3 px-3 text-xs font-semibold text-[#1F1F1F] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {penalty.regulation.category}
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 ${isCompleted ? "line-through opacity-60" : ""}`}>
-                        <p className="font-semibold text-xs text-[#2F3438]">{penalty.regulation.violation}</p>
-                        {penalty.notes && <p className="text-[11px] text-[#787774] mt-0.5">{penalty.notes}</p>}
+                      <TableCell className={`py-3 px-3 ${isCompleted ? "line-through opacity-60" : ""}`}>
+                        <p className="font-semibold text-xs text-[#1F1F1F]">{penalty.regulation.violation}</p>
+                        {penalty.notes && <p className="text-[11px] text-[#6B6B6B] mt-0.5">{penalty.notes}</p>}
                       </TableCell>
-                      <TableCell className="py-2.5 px-3">
+                      <TableCell className="py-3 px-3">
                         <Badge
                           variant="outline"
-                          className={`${isFine ? "token-badge-fine" : "token-badge-restriction"} ${isCompleted ? "opacity-50" : ""}`}
+                          className={`${isFine ? "badge-ds-success" : "badge-ds-warning"} ${isCompleted ? "opacity-50" : ""}`}
                         >
                           {isFine ? (
-                            <CircleDollarSign className="h-3 w-3 mr-1" />
+                            <CircleDollarSign className="h-3.5 w-3.5 mr-1" />
                           ) : (
-                            <Ban className="h-3 w-3 mr-1" />
+                            <Ban className="h-3.5 w-3.5 mr-1" />
                           )}
                           {isFine ? "Phạt tiền" : "Hạn chế"}
                         </Badge>
                       </TableCell>
-                      <TableCell className={`py-2.5 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-3 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {isFine ? (
-                          <span className="text-[#2F3438] font-bold">
+                          <span className="text-[#1F1F1F] font-bold">
                             {formatCurrency(penalty.regulation.penalty.amount ?? 0)}
                           </span>
                         ) : (
-                          <span className="text-xs italic text-[#2F3438]">
+                          <span className="text-xs italic text-[#1F1F1F]">
                             "{penalty.regulation.penalty.details || 'Hạn chế'}"
                           </span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2.5 px-3">
-                        <span className={isCompleted ? "token-status-completed" : "token-status-pending"}>
+                      <TableCell className="py-3 px-3">
+                        <span className={isCompleted ? "badge-ds-success" : "badge-ds-warning"}>
                           {isCompleted ? (
                             <>
-                              <CheckCircle2 className="w-3 h-3 text-[#2F3438]" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#7FCA27]" />
                               Đã nộp phạt
                             </>
                           ) : (
                             <>
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#5A5A58]" />
+                              <Clock className="w-3.5 h-3.5 text-[#FF8832]" />
                               Chờ xử lý
                             </>
                           )}
                         </span>
                       </TableCell>
-                      <TableCell className="py-2.5 px-3 text-right">
+                      <TableCell className="py-3 px-3 text-right">
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-7 w-7 text-[#787774] hover:text-[#2F3438] hover:bg-[#F7F7F5] rounded"
+                              className="h-8 w-8 text-[#6B6B6B] hover:text-[#D32F2F] hover:bg-[#FDECEC] rounded-sm"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent className="bg-white border-[#E9E9E7] text-[#2F3438] rounded-lg">
+                          <AlertDialogContent className="bg-white border-[#E0E0E0] text-[#1F1F1F] rounded-xl">
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="text-sm font-bold">Xác nhận xóa bản ghi vi phạm?</AlertDialogTitle>
-                              <AlertDialogDescription className="text-[#787774] text-xs">
-                                Hành động này sẽ xóa bản ghi khỏi hệ thống CSDL.
+                              <AlertDialogTitle className="text-base font-bold">Xác nhận xóa bản ghi vi phạm?</AlertDialogTitle>
+                              <AlertDialogDescription className="text-[#6B6B6B] text-xs">
+                                Hành động này sẽ xóa bản ghi khỏi CSDL hệ thống.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel className="bg-[#F7F7F5] text-[#2F3438] border-[#E9E9E7] text-xs h-8">Hủy</AlertDialogCancel>
+                              <AlertDialogCancel className="btn-ds-secondary text-xs h-9">Hủy</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => onDelete(penalty.id)}
-                                className="bg-[#2F3438] hover:bg-[#191919] text-white text-xs h-8"
+                                className="bg-[#D32F2F] hover:bg-[#b71c1c] text-white text-xs h-9 font-bold rounded-sm"
                               >
                                 Xóa Bản Ghi
                               </AlertDialogAction>
