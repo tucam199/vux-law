@@ -38,27 +38,27 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
       <CardHeader className="p-0 pb-3">
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-1">
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2 py-0.5 rounded">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2 py-0.5 rounded">
               <Tag className="w-3 h-3" />
               {regulation.category}
             </span>
-            <CardTitle className="text-base font-bold text-[#212529] leading-snug pt-1">
+            <CardTitle className="text-sm font-bold text-[#212529] leading-snug pt-1">
               {regulation.violation}
             </CardTitle>
           </div>
 
           <Badge
             variant="outline"
-            className={`flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded shrink-0 border ${
+            className={`flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded shrink-0 border ${
               isFine
                 ? 'bg-[#28A745]/10 text-[#28A745] border-[#28A745]/30'
                 : 'bg-rose-500/10 text-rose-600 border-rose-500/30'
             }`}
           >
             {isFine ? (
-              <CircleDollarSign className="h-3.5 w-3.5" />
+              <CircleDollarSign className="h-3 w-3" />
             ) : (
-              <Ban className="h-3.5 w-3.5" />
+              <Ban className="h-3 w-3" />
             )}
             {isFine ? 'Phạt tiền' : 'Hạn chế'}
           </Badge>
@@ -72,7 +72,8 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
             MỨC XỬ PHẠT
           </span>
           {isFine ? (
-            <div className="text-xl font-bold text-[#28A745] leading-tight">
+            /* Circled Area in Image 2: Amount is BLACK #212529 text */
+            <div className="text-lg font-bold text-[#212529] leading-tight">
               {formatCurrency(regulation.penalty.amount ?? 0)}
             </div>
           ) : (
@@ -104,7 +105,7 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-white border-[#DEE2E6] rounded-lg">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-[#212529] font-bold">Xác nhận xóa quy định?</AlertDialogTitle>
+              <AlertDialogTitle className="text-[#212529] font-bold text-sm">Xác nhận xóa quy định?</AlertDialogTitle>
               <AlertDialogDescription className="text-[#6C757D] text-xs">
                 Hành động này sẽ xóa quy định khỏi CSDL Odoo ERP.
               </AlertDialogDescription>
