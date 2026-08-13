@@ -61,7 +61,7 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
                 <Tag className="w-3 h-3 text-[#6B6B6B]" />
                 {regulation.category}
               </span>
-              <CardTitle className="text-sm font-bold text-[#1F1F1F] leading-snug pt-1">
+              <CardTitle className="text-base font-bold text-[#1F1F1F] leading-snug pt-1">
                 {regulation.violation}
               </CardTitle>
             </div>
@@ -71,27 +71,27 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
               className={isFine ? "badge-ds-success" : "badge-ds-warning"}
             >
               {isFine ? (
-                <CircleDollarSign className="h-3.5 w-3.5" />
+                <CircleDollarSign className="h-4 w-4" />
               ) : (
-                <Ban className="h-3.5 w-3.5" />
+                <Ban className="h-4 w-4" />
               )}
               {isFine ? 'Phạt tiền' : 'Hạn chế'}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="p-0 py-2.5 flex-grow">
-          <Separator className="bg-[#E0E0E0] mb-2.5" />
-          <div className="space-y-1 bg-[#F8F8F8] p-3 rounded-md border border-[#E0E0E0]">
-            <span className="block text-[10px] font-bold text-[#6B6B6B] uppercase tracking-wider">
+        <CardContent className="p-0 py-3 flex-grow">
+          <Separator className="bg-[#E0E0E0] mb-3" />
+          <div className="space-y-1 bg-[#F8F8F8] p-3.5 rounded-md border border-[#E0E0E0]">
+            <span className="block text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">
               MỨC XỬ PHẠT QUY ĐỊNH
             </span>
             {isFine ? (
-              <div className="text-lg font-extrabold text-[#1F1F1F] leading-tight">
+              <div className="text-xl font-extrabold text-[#1F1F1F] leading-tight">
                 {formatCurrency(regulation.penalty.amount ?? 0)}
               </div>
             ) : (
-              <p className="text-xs text-[#1F1F1F] font-medium italic leading-relaxed">
+              <p className="text-sm text-[#1F1F1F] font-medium italic leading-relaxed">
                 "{regulation.penalty.details || 'Không có chi tiết'}"
               </p>
             )}
@@ -99,25 +99,25 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
         </CardContent>
 
         {/* CARD FOOTER ACTION BAR */}
-        <CardFooter className="p-0 pt-3 border-t border-[#E0E0E0] flex justify-between items-center gap-2">
+        <CardFooter className="p-0 pt-3.5 border-t border-[#E0E0E0] flex justify-between items-center gap-2">
           <div className="flex items-center gap-2">
             {onQuickPenalty && (
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => onQuickPenalty(regulation)}
-                className="btn-ds-primary text-xs py-1.5 px-3 font-bold flex items-center gap-1.5"
+                className="btn-ds-primary text-xs py-2 px-3.5 font-bold flex items-center gap-1.5"
                 title="Ghi nhận vi phạm nhanh cho nhân sự với quy định này"
               >
-                <Zap className="w-3.5 h-3.5 fill-white text-white" />
+                <Zap className="w-4 h-4 fill-white text-white" />
                 Phạt Nhanh
               </motion.button>
             )}
 
             <button
               onClick={onEdit}
-              className="btn-ds-secondary text-xs py-1.5 px-3 font-medium flex items-center gap-1"
+              className="btn-ds-secondary text-xs py-2 px-3.5 font-semibold flex items-center gap-1.5"
             >
-              <Edit3 className="w-3.5 h-3.5 text-[#1E74E8]" />
+              <Edit3 className="w-4 h-4 text-[#1E74E8]" />
               Sửa
             </button>
           </div>
