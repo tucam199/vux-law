@@ -1,5 +1,7 @@
 import { Pool } from 'pg';
-import type { Regulation, ViolationRecord } from './types';
+import type { Regulation, ViolationRecord, Employee } from './types';
+import fs from 'fs';
+import path from 'path';
 
 // Pure PostgreSQL 16 Connection Pool
 const connectionString = process.env.DATABASE_URL;
@@ -20,6 +22,40 @@ pool.on('error', (err) => {
 });
 
 let isSchemaInitialized = false;
+
+// Local JSON Backup Fallback Directory (Rule 1 compliance)
+const JSON_DATA_DIR = path.join(process.cwd(), '.vux-data');
+const EMPLOYEES_JSON_FILE = path.join(JSON_DATA_DIR, 'employees.json');
+
+function ensureLocalJsonBackup(employees: Employee[]) {
+  try {
+    if (!fs.existsSync(JSON_DATA_DIR)) {
+      fs.mkdirSync(JSON_DATA_DIR, { recursive: true });
+    }
+    fs.writeFileSync(EMPLOYEES_JSON_FILE, JSON.stringify(employees, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('[JSON Fallback Backup Error]:', err);
+  }
+}
+
+function readLocalJsonBackup(): Employee[] {
+  try {
+    if (fs.existsSync(EMPLOYEES_JSON_FILE)) {
+      const content = fs.readFileSync(EMPLOYEES_JSON_FILE, 'utf-8');
+      return JSON.parse(content);
+    }
+  } catch (err) {
+    console.error('[JSON Fallback Read Error]:', err);
+  }
+  return [];
+}
+
+const DEFAULT_EMPLOYEES: Employee[] = [
+  { id: 'emp_1', name: 'Trình Mỹ Phượng Oanh', position: 'Nhân viên HR', department: 'Phòng Hành Chính Nhân Sự' },
+  { id: 'emp_2', name: 'Trần Anh Tú', position: 'Quản Lý', department: 'Phòng Kỹ Thuật' },
+  { id: 'emp_3', name: 'Phan Huỳnh Tiến', position: 'Lập Trình Viên', department: 'Phòng Kỹ Thuật' },
+  { id: 'emp_4', name: 'Tạ Anh Khoa', position: 'Lập Trình Viên', department: 'Phòng Kỹ Thuật' },
+];
 
 export async function ensureSchema() {
   if (isSchemaInitialized) return;
@@ -44,31 +80,27 @@ export async function ensureSchema() {
         is_completed BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS employees (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        position VARCHAR(255),
+        department VARCHAR(255),
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
-    // Schema Migration: Ensure regulations.penalty column is of type JSONB
-    try {
-      await client.query(`
-        ALTER TABLE regulations ALTER COLUMN penalty TYPE JSONB USING (
-          CASE 
-            WHEN penalty::text LIKE '{%' THEN penalty::jsonb 
-            ELSE jsonb_build_object('type', 'fine', 'amount', 0)
-          END
+    // Initial Seed Employees if empty
+    const empCheck = await client.query('SELECT COUNT(*) FROM employees');
+    if (parseInt(empCheck.rows[0].count, 10) === 0) {
+      for (const emp of DEFAULT_EMPLOYEES) {
+        await client.query(
+          'INSERT INTO employees (id, name, position, department) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
+          [emp.id, emp.name, emp.position, emp.department]
         );
-      `);
-    } catch (e) {
-      // Ignore if already JSONB
-    }
-
-    // Clean up any corrupted [object Object] records from previous insertions
-    try {
-      await client.query(`
-        UPDATE regulations 
-        SET penalty = jsonb_build_object('type', 'fine', 'amount', 50000) 
-        WHERE penalty::text LIKE '%object%' OR penalty::text = '"{}"';
-      `);
-    } catch (e) {
-      // Ignore
+      }
+      ensureLocalJsonBackup(DEFAULT_EMPLOYEES);
+      console.log('[PostgreSQL] Seeded initial default employees.');
     }
 
     isSchemaInitialized = true;
@@ -89,6 +121,104 @@ function parseJson<T>(value: any): T {
     }
   }
   return value as T;
+}
+
+// --- EMPLOYEES CRUD HANDLERS (PostgreSQL + JSON Backup Fallback) ---
+
+export async function fetchEmployees(): Promise<Employee[]> {
+  try {
+    await ensureSchema();
+    const res = await pool.query('SELECT id, name, position, department, created_at as "createdAt" FROM employees ORDER BY created_at ASC');
+    const employees = res.rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      position: row.position || undefined,
+      department: row.department || undefined,
+      createdAt: row.createdAt ? new Date(row.createdAt).toISOString() : undefined,
+    }));
+    ensureLocalJsonBackup(employees);
+    return employees;
+  } catch (err) {
+    console.warn('[PostgreSQL Fetch Employees Failed - Falling back to Local JSON]:', err);
+    const local = readLocalJsonBackup();
+    return local.length > 0 ? local : DEFAULT_EMPLOYEES;
+  }
+}
+
+export async function createEmployee(data: Omit<Employee, 'id'> & { id?: string }): Promise<Employee> {
+  const newId = data.id || `emp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const record: Employee = {
+    id: newId,
+    name: data.name,
+    position: data.position || '',
+    department: data.department || '',
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    await ensureSchema();
+    await pool.query(
+      'INSERT INTO employees (id, name, position, department) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE SET name = $2, position = $3, department = $4',
+      [record.id, record.name, record.position, record.department]
+    );
+  } catch (err) {
+    console.warn('[PostgreSQL Create Employee Failed - Saving to Local JSON Fallback]:', err);
+  }
+
+  // Backup sync to Local JSON
+  const currentList = readLocalJsonBackup();
+  const updatedList = [record, ...currentList.filter(e => e.id !== record.id)];
+  ensureLocalJsonBackup(updatedList);
+
+  return record;
+}
+
+export async function updateEmployeeRecord(id: string, data: Partial<Omit<Employee, 'id'>>): Promise<void> {
+  try {
+    await ensureSchema();
+    const fields: string[] = [];
+    const values: any[] = [];
+    let index = 1;
+
+    if (data.name !== undefined) {
+      fields.push(`name = $${index++}`);
+      values.push(data.name);
+    }
+    if (data.position !== undefined) {
+      fields.push(`position = $${index++}`);
+      values.push(data.position);
+    }
+    if (data.department !== undefined) {
+      fields.push(`department = $${index++}`);
+      values.push(data.department);
+    }
+
+    if (fields.length > 0) {
+      values.push(id);
+      await pool.query(`UPDATE employees SET ${fields.join(', ')} WHERE id = $${index}`, values);
+    }
+  } catch (err) {
+    console.warn('[PostgreSQL Update Employee Failed]:', err);
+  }
+
+  // Sync to Local JSON
+  const currentList = readLocalJsonBackup();
+  const updatedList = currentList.map(e => e.id === id ? { ...e, ...data } : e);
+  ensureLocalJsonBackup(updatedList);
+}
+
+export async function removeEmployeeRecord(id: string): Promise<void> {
+  try {
+    await ensureSchema();
+    await pool.query('DELETE FROM employees WHERE id = $1', [id]);
+  } catch (err) {
+    console.warn('[PostgreSQL Delete Employee Failed]:', err);
+  }
+
+  // Sync to Local JSON
+  const currentList = readLocalJsonBackup();
+  const updatedList = currentList.filter(e => e.id !== id);
+  ensureLocalJsonBackup(updatedList);
 }
 
 // --- REGULATIONS CRUD HANDLERS ---

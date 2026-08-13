@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X } from "lucide-react";
 import { PenaltyList } from "@/components/PenaltyList";
 import { HeaderNav } from "@/components/HeaderNav";
-import type { ViolationRecord, Regulation } from "@/lib/types";
+import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
+import type { ViolationRecord, Regulation, Employee } from "@/lib/types";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DateRange } from "react-day-picker";
@@ -14,35 +15,33 @@ import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/
 import { ViolationForm } from "@/components/ViolationForm";
 import { getPenalties, addMultiplePenalties, deletePenalty, updatePenalty } from "@/lib/penaltyService";
 import { getRegulations } from "@/lib/regulationService";
+import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
-
-const people = [
-  "Trình Mỹ Phượng Oanh",
-  "Trần Anh Tú",
-  "Phan Huỳnh Tiến",
-  "Tạ Anh Khoa",
-];
 
 export default function PenaltiesPage() {
   const [penalties, setPenalties] = useState<ViolationRecord[]>([]);
   const [regulations, setRegulations] = useState<Regulation[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isEmpModalOpen, setIsEmpModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [fetchedPenalties, fetchedRegulations] = await Promise.all([
+      const [fetchedPenalties, fetchedRegulations, fetchedEmployees] = await Promise.all([
         getPenalties(),
         getRegulations(),
+        getEmployees(),
       ]);
       setPenalties(fetchedPenalties);
       setRegulations(fetchedRegulations);
+      setEmployees(fetchedEmployees);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
@@ -58,6 +57,10 @@ export default function PenaltiesPage() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const peopleNames = useMemo(() => {
+    return employees.map(e => e.name);
+  }, [employees]);
 
   const handleFilterChange = (newFilter: string | null) => {
     setFilter(newFilter);
@@ -219,8 +222,8 @@ export default function PenaltiesPage() {
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Left Controls: Breadcrumbs & Primary Action Button */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center text-xs font-medium text-[#212529] gap-1">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center text-xs font-medium text-[#212529] gap-1 mr-1">
                 <span className="text-[#017E84] font-semibold">Xử phạt</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
                 <span className="text-[#212529] font-bold">Nhật Ký Vi Phạm</span>
@@ -233,6 +236,14 @@ export default function PenaltiesPage() {
               >
                 <Plus className="h-3.5 w-3.5" />
                 Ghi Nhận Vi Phạm
+              </button>
+
+              <button
+                onClick={() => setIsEmpModalOpen(true)}
+                className="btn-odoo-outline text-xs font-medium"
+              >
+                <Users className="w-3.5 h-3.5 text-[#017E84]" />
+                <span>Quản Lý Nhân Sự ({employees.length})</span>
               </button>
             </div>
 
@@ -257,7 +268,7 @@ export default function PenaltiesPage() {
                 />
               </div>
 
-              {/* Person Select */}
+              {/* Dynamic Person Select Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="btn-odoo-outline text-xs font-medium">
@@ -270,7 +281,7 @@ export default function PenaltiesPage() {
                     Tất cả nhân sự
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-[#DEE2E6]" />
-                  {people.map((person) => (
+                  {peopleNames.map((person) => (
                     <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
                       {person}
                     </DropdownMenuItem>
@@ -367,11 +378,19 @@ export default function PenaltiesPage() {
               onSave={handleSaveViolations}
               onClose={() => setIsSheetOpen(false)}
               regulations={regulations}
-              people={people}
+              people={peopleNames}
             />
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* DYNAMIC EMPLOYEE MANAGER MODAL */}
+      <EmployeeManagerModal
+        isOpen={isEmpModalOpen}
+        onClose={() => setIsEmpModalOpen(false)}
+        employees={employees}
+        onRefresh={fetchData}
+      />
     </div>
   );
 }

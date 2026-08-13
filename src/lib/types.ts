@@ -19,3 +19,11 @@ export interface ViolationRecord {
   regulation: Regulation;
   isCompleted?: boolean;
 }
+
+export interface Employee {
+  id: string;
+  name: string;
+  position?: string;
+  department?: string;
+  createdAt?: string;
+}

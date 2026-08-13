@@ -35,9 +35,9 @@ import { Separator } from "./ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 const singleViolationSchema = z.object({
-  personName: z.string({ required_error: "Vui lòng chọn người vi phạm." }),
+  personName: z.string({ required_error: "Vui lòng chọn người vi phạm." }).min(1, "Vui lòng chọn người vi phạm."),
   date: z.date({ required_error: "Vui lòng chọn ngày vi phạm." }),
-  regulationId: z.string({ required_error: "Vui lòng chọn một quy định." }),
+  regulationId: z.string({ required_error: "Vui lòng chọn một quy định." }).min(1, "Vui lòng chọn một quy định."),
   notes: z.string().optional(),
 });
 
@@ -45,9 +45,7 @@ const formSchema = z.object({
   violations: z.array(singleViolationSchema).min(1, "Phải có ít nhất một lỗi vi phạm."),
 });
 
-
 type ViolationFormData = z.infer<typeof formSchema>;
-type SingleViolationFormData = z.infer<typeof singleViolationSchema>;
 
 interface ViolationFormProps {
   people: string[];
@@ -60,17 +58,26 @@ interface ViolationFormProps {
 export function ViolationForm({ people, regulations, onSave, onClose, toast: customToast }: ViolationFormProps) {
   const { toast: hookToast } = useToast();
   const toast = customToast || hookToast;
+
+  const defaultRegId = regulations.length > 0 ? regulations[0].id : '';
+
   const form = useForm<ViolationFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       violations: [{
         personName: '',
         date: new Date(),
-        regulationId: '',
+        regulationId: defaultRegId,
         notes: '',
       }],
     },
   });
+
+  useEffect(() => {
+    if (regulations.length === 1) {
+      form.setValue('violations.0.regulationId', regulations[0].id);
+    }
+  }, [regulations, form]);
 
   const { fields, append, remove, insert } = useFieldArray({
     control: form.control,
@@ -83,7 +90,7 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
     append({
         personName: '',
         date: new Date(),
-        regulationId: '',
+        regulationId: defaultRegId,
         notes: '',
     });
   };
@@ -99,7 +106,6 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
       }
   };
 
-
   async function onSubmit(data: ViolationFormData) {
     let submissionData = [];
     for (const [index, violation] of data.violations.entries()) {
@@ -110,7 +116,7 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
                 description: `Quy định được chọn cho Lỗi #${index + 1} không hợp lệ. Vui lòng chọn lại.`,
                 variant: "destructive",
             });
-            return; // Stop submission
+            return;
         }
         submissionData.push({
             personName: violation.personName,
@@ -123,7 +129,7 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
     try {
       await onSave(submissionData);
     } catch (error) {
-      // Parent component will show a toast
+      // Parent component will handle toast
     }
   }
 
@@ -132,149 +138,151 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0 py-2 flex-1 flex flex-col">
-        <div className="flex-grow pr-6 -mr-6">
-          <ScrollArea className="h-[calc(100vh-200px)]">
-            <div className="space-y-6 pb-6">
+        <ScrollArea className="flex-grow pr-4 -mr-4">
+          <div className="space-y-5 pb-6">
+            {fields.map((field, index) => (
+              <div key={field.id} className="space-y-4 rounded-lg border border-[#DEE2E6] bg-white p-4 relative shadow-xs">
+                 <div className="flex justify-between items-center pb-2 border-b border-[#DEE2E6]">
+                  <span className="text-xs font-bold text-[#714B67] bg-[#714B67]/10 px-2 py-0.5 rounded border border-[#714B67]/20">
+                    Lỗi Vi Phạm #{index + 1}
+                  </span>
+                  <div className="flex items-center gap-1">
+                     <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-[#6C757D] hover:text-[#212529]" onClick={() => handleDuplicate(index)} title="Nhân bản lỗi">
+                        <Copy className="h-3.5 w-3.5" />
+                     </Button>
+                     <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-rose-600 hover:bg-rose-50" onClick={() => handleDelete(index)} disabled={fields.length <= 1} title="Xóa lỗi">
+                        <Trash2 className="h-3.5 w-3.5" />
+                     </Button>
+                  </div>
+                 </div>
 
-              {fields.map((field, index) => (
-                <div key={field.id} className="space-y-6 rounded-lg border p-4 relative">
-                   <div className="flex justify-between items-center">
-                    <Badge variant="outline" className="bg-background px-2">Lỗi #{index + 1}</Badge>
-                    <div className="flex items-center gap-1">
-                       <Button type="button" variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDuplicate(index)}>
-                          <Copy className="h-4 w-4" />
-                          <span className="sr-only">Nhân bản lỗi</span>
-                       </Button>
-                       <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-white hover:text-white/80" onClick={() => handleDelete(index)} disabled={fields.length <= 1}>
-                          <Trash2 className="h-4 w-4" />
-                           <span className="sr-only">Xóa lỗi</span>
-                       </Button>
-                    </div>
-                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name={`violations.${index}.personName`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Người Vi Phạm</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Chọn một thành viên" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {people.map(person => (
-                              <SelectItem key={person} value={person}>{person}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`violations.${index}.date`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Ngày Vi Phạm</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "dd/MM/yyyy")
-                                ) : (
-                                  <span>Chọn một ngày</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`violations.${index}.regulationId`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Quy Định Áp Dụng</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value} disabled={noRegulations}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={noRegulations ? "Không có quy định nào" : "Chọn một quy định"} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {regulations.map(reg => (
-                              <SelectItem key={reg.id} value={reg.id}>
-                                {reg.category}: {reg.violation}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {noRegulations && <FormDescription>Vui lòng tạo quy định trước khi ghi lỗi.</FormDescription>}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name={`violations.${index}.notes`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ghi Chú Thêm (Tùy chọn)</FormLabel>
+                <FormField
+                  control={form.control}
+                  name={`violations.${index}.personName`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-bold text-[#212529]">Người Vi Phạm</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                         <FormControl>
-                          <Textarea placeholder="Thêm ghi chú nếu cần..." {...field} rows={2} value={field.value || ''}/>
+                          <SelectTrigger className="bg-white border-[#DEE2E6] text-xs h-9">
+                            <SelectValue placeholder="Chọn một thành viên nhân sự" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              ))}
-                <Button type="button" variant="outline" onClick={handleAddViolation} className="w-full">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Thêm Lỗi
-                </Button>
-            </div>
-          </ScrollArea>
-        </div>
-        <div className="flex-shrink-0 pt-6 border-t flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onClose}>
+                        <SelectContent className="bg-white border-[#DEE2E6] text-xs">
+                          {people.length === 0 ? (
+                            <SelectItem value="empty" disabled>Chưa có nhân sự trong CSDL</SelectItem>
+                          ) : (
+                            people.map(person => (
+                              <SelectItem key={person} value={person}>{person}</SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`violations.${index}.date`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="text-xs font-bold text-[#212529]">Ngày Vi Phạm</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal h-9 text-xs border-[#DEE2E6] bg-white",
+                                !field.value && "text-[#6C757D]"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "dd/MM/yyyy")
+                              ) : (
+                                <span>Chọn ngày</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-3.5 w-3.5 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 bg-white border-[#DEE2E6]" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`violations.${index}.regulationId`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-bold text-[#212529]">Quy Định Áp Dụng</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value} disabled={noRegulations}>
+                        <FormControl>
+                          <SelectTrigger className="bg-white border-[#DEE2E6] text-xs h-9">
+                            <SelectValue placeholder={noRegulations ? "Không có quy định nào" : "Chọn một quy định"} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white border-[#DEE2E6] text-xs">
+                          {regulations.map(reg => (
+                            <SelectItem key={reg.id} value={reg.id}>
+                              [{reg.category}] {reg.violation}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {noRegulations && <FormDescription className="text-xs text-rose-600">Vui lòng tạo quy định trước khi ghi lỗi.</FormDescription>}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name={`violations.${index}.notes`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-bold text-[#212529]">Ghi Chú Thêm (Tùy chọn)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Thêm ghi chú ngữ cảnh vi phạm..." {...field} rows={2} value={field.value || ''} className="bg-white border-[#DEE2E6] text-xs" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ))}
+
+            <button type="button" onClick={handleAddViolation} className="btn-odoo-outline w-full justify-center text-xs">
+                <Plus className="mr-1 h-3.5 w-3.5" />
+                Thêm Lỗi Vi Phạm Cho Lượt Này
+            </button>
+          </div>
+        </ScrollArea>
+
+        <div className="flex-shrink-0 pt-4 border-t border-[#DEE2E6] flex justify-end gap-2">
+          <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs border-[#DEE2E6] text-[#212529]">
             Hủy
           </Button>
-          <Button type="submit" disabled={noRegulations || form.formState.isSubmitting}>
-             {form.formState.isSubmitting ? "Đang lưu..." : `Lưu ${fields.length} Lỗi Vi Phạm`}
+          <Button type="submit" disabled={noRegulations || form.formState.isSubmitting} className="h-8 text-xs bg-[#28A745] hover:bg-[#218838] text-white font-bold">
+             {form.formState.isSubmitting ? "Đang lưu..." : `Lưu ${fields.length} Vi Phạm Mới`}
           </Button>
         </div>
       </form>
     </Form>
   );
 }
-    

@@ -2,24 +2,19 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Search, CircleDollarSign, Ban, ShieldCheck, X, LayoutGrid, List, ChevronRight, ChevronLeft, SlidersHorizontal, Zap, Filter, FolderPlus } from "lucide-react";
+import { Plus, Search, CircleDollarSign, Ban, ShieldCheck, X, LayoutGrid, List, ChevronRight, ChevronLeft, SlidersHorizontal, Zap, Filter, FolderPlus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { RegulationCard } from "@/components/RegulationCard";
 import { RegulationForm } from "@/components/RegulationForm";
 import { ViolationForm } from "@/components/ViolationForm";
+import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
 import { HeaderNav } from "@/components/HeaderNav";
-import type { Regulation, ViolationRecord } from "@/lib/types";
+import type { Regulation, ViolationRecord, Employee } from "@/lib/types";
 import { getRegulations, addRegulation, updateRegulation, deleteRegulation } from "@/lib/regulationService";
 import { addMultiplePenalties, getPenalties } from "@/lib/penaltyService";
+import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
-
-const people = [
-  "Trình Mỹ Phượng Oanh",
-  "Trần Anh Tú",
-  "Phan Huỳnh Tiến",
-  "Tạ Anh Khoa",
-];
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
@@ -28,7 +23,9 @@ function formatCurrency(amount: number) {
 export default function Home() {
   const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [penalties, setPenalties] = useState<ViolationRecord[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isEmpModalOpen, setIsEmpModalOpen] = useState(false);
   const [isQuickPenaltyOpen, setIsQuickPenaltyOpen] = useState(false);
   const [quickPenaltyRegulation, setQuickPenaltyRegulation] = useState<Regulation | null>(null);
   const [editingRegulation, setEditingRegulation] = useState<Regulation | null>(null);
@@ -41,12 +38,14 @@ export default function Home() {
   const fetchInitialData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [fetchedRegs, fetchedPens] = await Promise.all([
+      const [fetchedRegs, fetchedPens, fetchedEmps] = await Promise.all([
         getRegulations(),
         getPenalties(),
+        getEmployees(),
       ]);
       setRegulations(fetchedRegs);
       setPenalties(fetchedPens);
+      setEmployees(fetchedEmps);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
@@ -62,6 +61,10 @@ export default function Home() {
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
+
+  const peopleNames = useMemo(() => {
+    return employees.map(e => e.name);
+  }, [employees]);
 
   const handleAddNew = (defaultCategory?: string) => {
     setEditingRegulation(defaultCategory ? ({ category: defaultCategory, violation: '', penalty: { type: 'fine', amount: 50000 } } as any) : null);
@@ -201,9 +204,9 @@ export default function Home() {
       <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Left Controls: Breadcrumbs & Primary Action Button */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center text-xs font-medium text-[#212529] gap-1">
+            {/* Left Controls: Breadcrumbs, Primary Action & Dynamic Employee Manager */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center text-xs font-medium text-[#212529] gap-1 mr-1">
                 <span className="text-[#017E84] font-semibold">Quy định</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
                 <span className="text-[#212529] font-bold">Khung Xử Phạt</span>
@@ -216,10 +219,19 @@ export default function Home() {
                 <Plus className="h-3.5 w-3.5" />
                 Thêm Quy Định
               </button>
+
+              {/* Dynamic Employee Manager Modal Trigger */}
+              <button
+                onClick={() => setIsEmpModalOpen(true)}
+                className="btn-odoo-outline text-xs font-medium"
+              >
+                <Users className="w-3.5 h-3.5 text-[#017E84]" />
+                <span>Quản Lý Nhân Sự ({employees.length})</span>
+              </button>
             </div>
 
             {/* Central Odoo Search Bar */}
-            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
+            <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
               <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
               
               {activeFilter !== "all" && (
@@ -233,7 +245,7 @@ export default function Home() {
 
               <input
                 type="text"
-                placeholder="Tìm quy định hoặc nhập / để tìm kiếm..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-transparent text-xs text-[#212529] focus:outline-none placeholder-[#6C757D]"
@@ -259,7 +271,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* View Layout Toggle: Swimlanes vs Grid */}
               <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden">
                 <button
                   onClick={() => setViewMode("swimlanes")}
@@ -289,7 +300,7 @@ export default function Home() {
 
       {/* Main Content Body */}
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-6">
-        {/* UX Feature 2: INTERACTIVE KPI STAT CARDS (Click card to filter view!) */}
+        {/* INTERACTIVE KPI STAT CARDS */}
         <div className="space-y-1">
           <div className="flex justify-between items-center px-1">
             <span className="text-[11px] font-bold text-[#6C757D] uppercase tracking-wider flex items-center gap-1">
@@ -307,7 +318,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Clickable Stat Card: Tất cả */}
             <div
               onClick={() => setActiveFilter("all")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#714B67] ${
@@ -323,7 +333,6 @@ export default function Home() {
               <ShieldCheck className="w-5 h-5 text-[#714B67]" />
             </div>
 
-            {/* Clickable Stat Card: Phạt tiền */}
             <div
               onClick={() => setActiveFilter("fine")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#28A745] ${
@@ -339,7 +348,6 @@ export default function Home() {
               <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
             </div>
 
-            {/* Clickable Stat Card: Hạn chế */}
             <div
               onClick={() => setActiveFilter("restriction")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-rose-500 ${
@@ -355,7 +363,6 @@ export default function Home() {
               <Ban className="w-5 h-5 text-rose-600" />
             </div>
 
-            {/* Stat Card: Mức phạt Max */}
             <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
               <div className="space-y-0.5">
                 <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">MỨC PHẠT MAX</p>
@@ -368,7 +375,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* UX Feature 3: GROUPED ODOO KANBAN SWIMLANES OR GRID VIEW */}
+        {/* GROUPED ODOO KANBAN SWIMLANES OR GRID VIEW */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#017E84]"></div>
@@ -376,11 +383,9 @@ export default function Home() {
           </div>
         ) : filteredRegulations.length > 0 ? (
           viewMode === "swimlanes" ? (
-            /* Swimlane Category Columns View */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {categorySwimlanes.map(([categoryName, categoryList]) => (
                 <div key={categoryName} className="bg-[#F1F3F5]/60 border border-[#DEE2E6] rounded-lg p-3.5 space-y-3 flex flex-col">
-                  {/* Column Swimlane Header */}
                   <div className="flex items-center justify-between pb-2 border-b border-[#DEE2E6]">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-[#212529]">{categoryName}</span>
@@ -398,7 +403,6 @@ export default function Home() {
                     </button>
                   </div>
 
-                  {/* Column Card Items */}
                   <div className="space-y-3 flex-1">
                     {categoryList.map((regulation) => (
                       <RegulationCard
@@ -414,7 +418,6 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            /* Standard Grid View */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredRegulations.map((regulation) => (
                 <RegulationCard
@@ -487,7 +490,7 @@ export default function Home() {
         </SheetContent>
       </Sheet>
 
-      {/* UX Feature 4: ⚡ QUICK PENALTY SHEET MODAL */}
+      {/* QUICK PENALTY SHEET MODAL */}
       <Sheet open={isQuickPenaltyOpen} onOpenChange={setIsQuickPenaltyOpen}>
         <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
           <div className="bg-[#28A745]/10 px-6 py-3.5 border-b border-[#28A745]/20 flex items-center justify-between">
@@ -510,11 +513,19 @@ export default function Home() {
               onSave={handleSaveQuickPenalty}
               onClose={() => setIsQuickPenaltyOpen(false)}
               regulations={quickPenaltyRegulation ? [quickPenaltyRegulation] : regulations}
-              people={people}
+              people={peopleNames}
             />
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* DYNAMIC EMPLOYEE MANAGER MODAL */}
+      <EmployeeManagerModal
+        isOpen={isEmpModalOpen}
+        onClose={() => setIsEmpModalOpen(false)}
+        employees={employees}
+        onRefresh={fetchInitialData}
+      />
     </div>
   );
 }
