@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Ban, CircleDollarSign, SearchX, Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { Ban, CircleDollarSign, SearchX, Trash2, ChevronDown, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   AlertDialog,
@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Checkbox } from "./ui/checkbox";
 import { useMemo } from "react";
+import React from 'react';
+import { motion } from 'motion/react';
 
 interface PenaltyListProps {
   penalties: ViolationRecord[];
@@ -42,12 +44,20 @@ function formatDate(dateString: string) {
   }
 }
 
+function getInitials(name: string) {
+  const parts = name.trim().split(' ');
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return name.substring(0, 2).toUpperCase();
+}
+
 export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyListProps) {
   const validPenalties = useMemo(() => {
     return penalties.filter(p => p.regulation && p.regulation.penalty);
   }, [penalties]);
 
-  // Group penalties by person (Matching Screenshots 1 & 2 "Trần Anh Tú (497)")
+  // Group penalties by person
   const groupedPenalties = useMemo(() => {
     const map = new Map<string, ViolationRecord[]>();
     for (const pen of validPenalties) {
@@ -71,21 +81,20 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
   }
 
   return (
-    <div className="border border-[#DEE2E6] rounded bg-white shadow-sm overflow-x-auto">
+    <div className="border border-[#DEE2E6] rounded-lg bg-white shadow-xs overflow-x-auto">
       <Table className="text-xs">
         <TableHeader className="bg-[#F1F3F5] border-b border-[#DEE2E6]">
           <TableRow className="hover:bg-transparent border-b border-[#DEE2E6]">
-            <TableHead className="w-[36px] py-2 px-3"></TableHead>
-            <TableHead className="w-[44px] text-[11px] font-bold text-[#212529] py-2 px-3">STT</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">EMPLOYEE (NGƯỜI VI PHẠM)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">DATE (NGÀY)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">CATEGORY (HẠNG MỤC)</TableHead>
-
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">VIOLATION (CHI TIẾT VI PHẠM)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">LOẠI PHẠT</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">PENALTY AMOUNT (MỨC PHẠT)</TableHead>
-            <TableHead className="text-[11px] font-bold text-[#212529] py-2 px-3">STATUS</TableHead>
-            <TableHead className="text-right text-[11px] font-bold text-[#212529] py-2 px-3">ACTION</TableHead>
+            <TableHead className="w-[36px] py-2.5 px-3"></TableHead>
+            <TableHead className="w-[44px] text-[11px] font-bold text-[#212529] py-2.5 px-3">STT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">EMPLOYEE (NGƯỜI VI PHẠM)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">DATE (NGÀY)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">CATEGORY (HẠNG MỤC)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">VIOLATION (CHI TIẾT VI PHẠM)</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">LOẠI PHẠT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">MỨC PHẠT</TableHead>
+            <TableHead className="text-[11px] font-bold text-[#212529] py-2.5 px-3">STATUS (TRẠNG THÁI)</TableHead>
+            <TableHead className="text-right text-[11px] font-bold text-[#212529] py-2.5 px-3">ACTION</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -94,24 +103,29 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
               return sum + (p.regulation.penalty.type === 'fine' ? (p.regulation.penalty.amount || 0) : 0);
             }, 0);
 
+            const initials = getInitials(personName);
+
             return (
-              <ReactFragment key={personName}>
-                {/* Odoo Grouping Accordion Row (Screenshot 1 & 2 style: ▶ Trần Anh Tú (Count)) */}
+              <React.Fragment key={personName}>
+                {/* Odoo Grouping Accordion Row */}
                 <TableRow className="bg-[#F8F9FA] hover:bg-[#F1F3F5] font-semibold text-[#212529] border-b border-[#DEE2E6]">
-                  <TableCell colSpan={3} className="py-1.5 px-3">
-                    <div className="flex items-center gap-1.5 font-bold text-xs text-[#212529]">
+                  <TableCell colSpan={3} className="py-2 px-3">
+                    <div className="flex items-center gap-2 font-bold text-xs text-[#212529]">
                       <ChevronDown className="w-3.5 h-3.5 text-[#017E84]" />
+                      <span className="w-6 h-6 rounded-full bg-[#714B67] text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                        {initials}
+                      </span>
                       <span>{personName}</span>
-                      <span className="text-[#6C757D] font-normal">({personList.length})</span>
+                      <span className="text-[#6C757D] font-normal">({personList.length} lượt)</span>
                     </div>
                   </TableCell>
-                  <TableCell colSpan={4} className="py-1.5 px-3 text-[11px] text-[#6C757D]">
+                  <TableCell colSpan={4} className="py-2 px-3 text-[11px] text-[#6C757D]">
                     Tổng lượt vi phạm của nhân sự
                   </TableCell>
-                  <TableCell className="py-1.5 px-3 font-bold text-[#28A745]">
+                  <TableCell className="py-2 px-3 font-bold text-[#28A745]">
                     {formatCurrency(groupTotalFine)}
                   </TableCell>
-                  <TableCell colSpan={2} className="py-1.5 px-3"></TableCell>
+                  <TableCell colSpan={2} className="py-2 px-3"></TableCell>
                 </TableRow>
 
                 {/* Individual Violation Rows */}
@@ -123,10 +137,10 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                     <TableRow
                       key={penalty.id}
                       className={`border-b border-[#E5E7EB] transition-colors ${
-                        isCompleted ? "bg-zinc-50 text-[#6C757D]" : "hover:bg-zinc-50 text-[#212529]"
+                        isCompleted ? "bg-zinc-50/60 text-[#6C757D]" : "hover:bg-zinc-50 text-[#212529]"
                       }`}
                     >
-                      <TableCell className="py-2 px-3">
+                      <TableCell className="py-2.5 px-3">
                         <Checkbox
                           checked={isCompleted}
                           onCheckedChange={(checked) => onToggleComplete(penalty.id, !!checked)}
@@ -134,23 +148,26 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                           aria-label="Đánh dấu hoàn thành"
                         />
                       </TableCell>
-                      <TableCell className={`py-2 px-3 text-xs text-[#6C757D] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-2.5 px-3 text-xs text-[#6C757D] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {idx + 1}
                       </TableCell>
-                      <TableCell className={`py-2 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60 text-[#6C757D]" : "text-[#212529]"}`}>
-                        {penalty.personName}
+                      <TableCell className={`py-2.5 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60 text-[#6C757D]" : "text-[#212529]"}`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#017E84]" />
+                          <span>{penalty.personName}</span>
+                        </div>
                       </TableCell>
-                      <TableCell className={`py-2 px-3 text-xs text-[#6C757D] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-2.5 px-3 text-xs text-[#6C757D] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {formatDate(penalty.date)}
                       </TableCell>
-                      <TableCell className={`py-2 px-3 text-xs font-semibold text-[#017E84] ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-2.5 px-3 text-xs font-semibold text-[#017E84] ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {penalty.regulation.category}
                       </TableCell>
-                      <TableCell className={`py-2 px-3 ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-2.5 px-3 ${isCompleted ? "line-through opacity-60" : ""}`}>
                         <p className="font-semibold text-xs text-[#212529]">{penalty.regulation.violation}</p>
                         {penalty.notes && <p className="text-[11px] text-[#6C757D] mt-0.5">{penalty.notes}</p>}
                       </TableCell>
-                      <TableCell className="py-2 px-3">
+                      <TableCell className="py-2.5 px-3">
                         <Badge
                           variant="outline"
                           className={`whitespace-nowrap text-[11px] font-semibold px-2 py-0.5 rounded border ${
@@ -167,7 +184,7 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                           {isFine ? "Phạt tiền" : "Hạn chế"}
                         </Badge>
                       </TableCell>
-                      <TableCell className={`py-2 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60" : ""}`}>
+                      <TableCell className={`py-2.5 px-3 font-semibold text-xs ${isCompleted ? "line-through opacity-60" : ""}`}>
                         {isFine ? (
                           <span className="text-[#28A745] font-bold">
                             {formatCurrency(penalty.regulation.penalty.amount ?? 0)}
@@ -178,16 +195,26 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                           </span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2 px-3">
-                        <span className={`inline-block px-2 py-0.5 text-[10px] font-bold rounded ${
+                      <TableCell className="py-2.5 px-3">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold rounded ${
                           isCompleted
                             ? "bg-[#28A745]/15 text-[#28A745] border border-[#28A745]/30"
                             : "bg-amber-500/15 text-amber-700 border border-amber-500/30"
                         }`}>
-                          {isCompleted ? "Đã nộp phạt" : "Chờ xử lý"}
+                          {isCompleted ? (
+                            <>
+                              <CheckCircle2 className="w-3 h-3 text-[#28A745]" />
+                              Đã nộp phạt
+                            </>
+                          ) : (
+                            <>
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                              Chờ xử lý
+                            </>
+                          )}
                         </span>
                       </TableCell>
-                      <TableCell className="py-2 px-3 text-right">
+                      <TableCell className="py-2.5 px-3 text-right">
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
@@ -220,7 +247,7 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
                     </TableRow>
                   );
                 })}
-              </ReactFragment>
+              </React.Fragment>
             );
           })}
         </TableBody>
@@ -228,7 +255,3 @@ export function PenaltyList({ penalties, onDelete, onToggleComplete }: PenaltyLi
     </div>
   );
 }
-
-// ReactFragment helper for JSX keys
-import React from 'react';
-const ReactFragment = React.Fragment;
