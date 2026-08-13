@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/Logo';
-import { FileText, ClipboardList, Server, Sparkles } from 'lucide-react';
+import { FileText, ClipboardList, Server } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface HeaderNavProps {
@@ -66,7 +66,7 @@ export function HeaderNav({ pendingPenaltiesCount = 0 }: HeaderNavProps) {
                       <motion.span
                         initial={{ scale: 0.7 }}
                         animate={{ scale: 1 }}
-                        className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full shadow-2xs ${
+                        className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full shadow-xs ${
                           item.active
                             ? 'bg-amber-400 text-zinc-900 font-extrabold'
                             : 'bg-amber-100 text-amber-800 border border-amber-300'

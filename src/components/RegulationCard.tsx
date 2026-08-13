@@ -65,7 +65,7 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
         <CardHeader className="p-0 pb-2.5 pt-1">
           <div className="flex justify-between items-start gap-2">
             <div className="space-y-1">
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2.5 py-0.5 rounded-full shadow-xs">
                 <Tag className="w-3 h-3 text-[#017E84]" />
                 {regulation.category}
               </span>
