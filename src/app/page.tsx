@@ -200,13 +200,13 @@ export default function Home() {
 
       {/* PAGE ONBOARDING HERO BANNER: Clear context for new users */}
       <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] py-4">
-        <div className="container mx-auto px-4 lg:px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div className="ds-container flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
-            <h1 className="text-lg font-bold text-[#1F1F1F] tracking-tight flex items-center gap-2">
+            <h1 className="text-xl font-bold text-[#1F1F1F] tracking-tight flex items-center gap-2.5">
               <span>Hệ Thống Quy Định &amp; Mức Xử Phạt Nội Bộ</span>
               <span className="badge-ds-info text-xs font-bold">VUX Law ERP</span>
             </h1>
-            <p className="text-xs text-[#6B6B6B] mt-0.5">
+            <p className="text-xs text-[#6B6B6B] mt-1">
               Tra cứu danh mục quy định, cấu hình mức xử phạt và ghi nhận vi phạm cho nhân sự công ty.
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function Home() {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => handleQuickPenalty()}
-              className="btn-ds-outline text-xs py-2 px-3 font-bold flex items-center gap-1.5"
+              className="btn-ds-outline text-xs font-bold flex items-center gap-2"
             >
               <ClipboardPen className="w-4 h-4 text-[#1E74E8]" />
               Ghi Nhận Vi Phạm
@@ -226,10 +226,10 @@ export default function Home() {
 
       {/* Control Panel Bar — Responsive 12-Column Grid Architecture */}
       <div className="bg-white border-b border-[#E0E0E0] sticky top-14 z-[90]">
-        <div className="container mx-auto px-4 lg:px-6 py-3">
+        <div className="ds-container py-3.5">
           <div className="grid grid-cols-12 gap-4 items-center">
             {/* Left Cluster: Breadcrumb, Primary CTA & Employee Manager */}
-            <div className="col-span-12 lg:col-span-5 flex flex-wrap items-center gap-2">
+            <div className="col-span-12 lg:col-span-5 flex flex-wrap items-center gap-2.5">
               <div className="flex items-center text-xs font-medium text-[#1F1F1F] gap-1 mr-2">
                 <span className="text-[#1E74E8] font-semibold">Quy định</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#6B6B6B]" />
@@ -240,7 +240,7 @@ export default function Home() {
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleAddNew()}
-                className="btn-ds-primary text-xs py-2 px-3.5"
+                className="btn-ds-primary text-xs"
               >
                 <Plus className="h-4 w-4" />
                 Tạo Quy Định Mới
@@ -249,7 +249,7 @@ export default function Home() {
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setIsEmpModalOpen(true)}
-                className="btn-ds-secondary text-xs py-2 px-3.5"
+                className="btn-ds-secondary text-xs"
               >
                 <Users className="w-4 h-4 text-[#1E74E8]" />
                 <span>Nhân Sự ({employees.length})</span>
@@ -258,11 +258,11 @@ export default function Home() {
 
             {/* Central Search Cluster */}
             <div className="col-span-12 md:col-span-7 lg:col-span-4">
-              <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
+              <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3.5 py-2 transition-colors">
                 <Search className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
                 
                 {activeFilter !== "all" && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1E74E8] bg-[#EAF2FD] border border-[#1E74E8]/30 px-1.5 py-0.5 rounded-full mr-1.5 shrink-0">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1E74E8] bg-[#EAF2FD] border border-[#1E74E8]/30 px-2 py-0.5 rounded-full mr-2 shrink-0">
                     {activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}
                     <button onClick={() => setActiveFilter("all")} className="hover:text-[#185EC0]">
                       <X className="w-3 h-3" />
@@ -291,26 +291,26 @@ export default function Home() {
                 <span>Hiển thị: <strong>{filteredRegulations.length}</strong> quy định</span>
               </div>
 
-              <div className="flex items-center border border-[#E0E0E0] rounded-sm bg-white overflow-hidden">
+              <div className="flex items-center border border-[#E0E0E0] rounded-md bg-white overflow-hidden">
                 <button
                   onClick={() => setViewMode("swimlanes")}
-                  className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
+                  className={`px-2.5 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${
                     viewMode === "swimlanes" ? "bg-[#EAF2FD] text-[#1E74E8] font-bold" : "text-[#6B6B6B] hover:text-[#1F1F1F]"
                   }`}
                   title="Swimlanes Column View"
                 >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline text-[11px]">Swimlanes</span>
+                  <LayoutGrid className="w-4 h-4" />
+                  <span className="hidden sm:inline text-xs">Swimlanes</span>
                 </button>
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
+                  className={`px-2.5 py-1.5 text-xs flex items-center gap-1.5 transition-colors ${
                     viewMode === "grid" ? "bg-[#EAF2FD] text-[#1E74E8] font-bold" : "text-[#6B6B6B] hover:text-[#1F1F1F]"
                   }`}
                   title="Grid View"
                 >
-                  <List className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline text-[11px]">Grid</span>
+                  <List className="w-4 h-4" />
+                  <span className="hidden sm:inline text-xs">Grid</span>
                 </button>
               </div>
             </div>
@@ -319,7 +319,7 @@ export default function Home() {
       </div>
 
       {/* Main Content Body */}
-      <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
+      <main className="ds-container py-8 space-y-7">
         {/* INTERACTIVE KPI STAT CARDS — 12-COLUMN RESPONSIVE GRID */}
         <div className="space-y-2">
           <div className="flex justify-between items-center px-1">

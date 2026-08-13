@@ -37,7 +37,7 @@ export function HeaderNav({ pendingPenaltiesCount = 0 }: HeaderNavProps) {
 
   return (
     <header className="bg-white border-b border-[#E0E0E0] sticky top-0 z-[100]">
-      <div className="container mx-auto px-4 lg:px-6">
+      <div className="ds-container">
         <div className="flex h-14 items-center justify-between gap-4 py-2">
           <Logo />
 

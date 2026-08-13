@@ -8,16 +8,35 @@
 html {
   color-scheme: light only;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.5;
   background-color: var(--color-bg-page, #FFFFFF);
   color: var(--color-text-primary, #1F1F1F);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* UNIFIED CONTAINER MAX-WIDTH: Ensures 100% perfect vertical alignment of left/right edges */
+.ds-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .ds-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 @layer base {
@@ -46,14 +65,17 @@ body {
 }
 
 @layer components {
-  /* Design System Buttons — §8.1 & §9.1 */
+  /* Design System Buttons — Scaled up & Perfectly Proportionate */
   .btn-ds-primary, .btn-token-primary, .btn-token-green {
     display: inline-flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
     white-space: nowrap !important;
+    min-height: 42px;
+    padding: 10px 18px;
+    font-size: 13.5px;
     background-color: var(--color-primary-main);
     color: var(--color-primary-textOn);
     border: none;
@@ -79,14 +101,17 @@ body {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
     white-space: nowrap !important;
+    min-height: 42px;
+    padding: 10px 18px;
+    font-size: 13.5px;
     background-color: var(--color-bg-page);
     color: var(--color-text-primary);
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-sm);
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     box-shadow: none !important;
     transition: background-color var(--motion-fast), border-color var(--motion-fast);
   }
@@ -100,14 +125,17 @@ body {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
     white-space: nowrap !important;
+    min-height: 42px;
+    padding: 10px 18px;
+    font-size: 13.5px;
     background-color: var(--color-bg-page);
     color: var(--color-brand-main);
     border: 1px solid var(--color-brand-main);
     border-radius: var(--radius-sm);
     font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    font-weight: 700;
     box-shadow: none !important;
     transition: background-color var(--motion-fast), border-color var(--motion-fast);
   }
@@ -122,14 +150,17 @@ body {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
     white-space: nowrap !important;
+    min-height: 42px;
+    padding: 10px 16px;
+    font-size: 13.5px;
     background-color: transparent;
     color: var(--color-brand-main);
     border: none;
     border-radius: var(--radius-sm);
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     box-shadow: none !important;
   }
   .btn-ds-ghost:hover:not(:disabled) {
@@ -137,18 +168,18 @@ body {
     color: var(--color-brand-hover);
   }
 
-  /* Design System Badges & Tags — §8.4 & §9.3 */
+  /* Design System Badges & Tags — Scaled up & Proportionate */
   .badge-ds-primary {
     background-color: var(--color-primary-subtle);
     color: var(--color-primary-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -156,13 +187,13 @@ body {
     background-color: var(--color-semantic-success-subtle);
     color: var(--color-semantic-success-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -170,13 +201,13 @@ body {
     background-color: var(--color-semantic-info-subtle);
     color: var(--color-semantic-info-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -184,13 +215,13 @@ body {
     background-color: var(--color-semantic-warning-subtle);
     color: var(--color-semantic-warning-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -198,13 +229,13 @@ body {
     background-color: var(--color-semantic-error-subtle);
     color: var(--color-semantic-error-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -212,13 +243,13 @@ body {
     background-color: var(--color-semantic-neutral-subtle);
     color: var(--color-semantic-neutral-main);
     border-radius: var(--radius-full);
-    height: 24px;
-    padding: 0 12px;
-    font-size: 12px;
-    font-weight: 500;
+    height: 26px;
+    padding: 0 14px;
+    font-size: 12.5px;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Inter', sans-serif;
   }
 
@@ -242,18 +273,18 @@ body {
     background-color: var(--color-bg-subtle);
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-lg);
-    padding: 16px;
+    padding: 20px;
   }
 
-  /* Input — §8.2 & §9.2 */
+  /* Input — Scaled up to 44px Height */
   .input-ds {
     background-color: var(--color-bg-page);
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-md);
     color: var(--color-text-primary);
-    height: 40px;
-    padding: 12px;
-    font-size: 14px;
+    height: 44px;
+    padding: 12px 16px;
+    font-size: 14.5px;
     font-family: 'Inter', sans-serif;
     transition: border-color var(--motion-base);
   }
