@@ -10,6 +10,7 @@ import type { ViolationRecord, Regulation, Employee } from "@/lib/types";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { DateRange } from "react-day-picker";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ViolationForm } from "@/components/ViolationForm";
 import { getPenalties, addMultiplePenalties, deletePenalty, updatePenalty } from "@/lib/penaltyService";
@@ -245,20 +246,28 @@ export default function PenaltiesPage() {
 
             {/* Central Controls: Filter by Person Select */}
             <div className="col-span-12 md:col-span-7 lg:col-span-4 flex items-center gap-2">
-              <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3.5 py-2 transition-colors">
-                <UserCheck className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
-                <select
+              <div className="w-full">
+                <Select
                   value={selectedPerson || "ALL"}
-                  onChange={(e) => setSelectedPerson(e.target.value === "ALL" ? null : e.target.value)}
-                  className="w-full bg-transparent text-xs text-[#1F1F1F] font-semibold focus:outline-none cursor-pointer pr-4"
+                  onValueChange={(val) => setSelectedPerson(val === "ALL" ? null : val)}
                 >
-                  <option value="ALL">Tất cả nhân sự ({peopleNames.length})</option>
-                  {peopleNames.map((name) => (
-                    <option key={name} value={name}>
-                      👤 {name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full h-11 bg-white border border-[#E0E0E0] focus:ring-2 focus:ring-[#1E74E8] rounded-md px-3.5 text-sm font-semibold text-[#1F1F1F]">
+                    <div className="flex items-center gap-2 truncate">
+                      <UserCheck className="w-4 h-4 text-[#6B6B6B] shrink-0" />
+                      <SelectValue placeholder="Lọc theo nhân sự..." />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL" className="font-medium text-sm">
+                      👥 Tất cả nhân sự ({peopleNames.length})
+                    </SelectItem>
+                    {peopleNames.map((name) => (
+                      <SelectItem key={name} value={name} className="font-semibold text-sm">
+                        👤 {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {selectedPerson && (

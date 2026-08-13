@@ -161,19 +161,19 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
                   name={`violations.${index}.personName`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold text-[#1F1F1F]">Người Vi Phạm</FormLabel>
+                      <FormLabel className="text-sm font-bold text-[#1F1F1F]">Người Vi Phạm</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="bg-white border-[#E0E0E0] text-[#1F1F1F] text-xs h-10 rounded-md">
+                          <SelectTrigger className="bg-white border-[#E0E0E0] text-[#1F1F1F] text-sm h-11 rounded-md font-medium">
                             <SelectValue placeholder="Chọn một thành viên nhân sự" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-white border-[#E0E0E0] text-xs">
+                        <SelectContent className="bg-white border-[#E0E0E0] text-sm">
                           {people.length === 0 ? (
-                            <SelectItem value="empty" disabled>Chưa có nhân sự trong CSDL</SelectItem>
+                            <SelectItem value="empty" disabled className="text-sm">Chưa có nhân sự trong CSDL</SelectItem>
                           ) : (
                             people.map(person => (
-                              <SelectItem key={person} value={person}>{person}</SelectItem>
+                              <SelectItem key={person} value={person} className="text-sm font-medium">{person}</SelectItem>
                             ))
                           )}
                         </SelectContent>
@@ -188,27 +188,27 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
                   name={`violations.${index}.date`}
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="text-xs font-bold text-[#1F1F1F]">Ngày Vi Phạm</FormLabel>
+                      <FormLabel className="text-sm font-bold text-[#1F1F1F]">Ngày Vi Phạm</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left font-medium h-10 text-xs border-[#E0E0E0] bg-white text-[#1F1F1F] rounded-md",
+                                "w-full pl-3.5 text-left font-medium h-11 text-sm border-[#E0E0E0] bg-white text-[#1F1F1F] rounded-md flex justify-between items-center",
                                 !field.value && "text-[#D1D1D1]"
                               )}
                             >
                               {field.value ? (
                                 format(field.value, "dd/MM/yyyy")
                               ) : (
-                                <span>Chọn ngày</span>
+                                <span>Chọn ngày vi phạm</span>
                               )}
-                              <CalendarIcon className="ml-auto h-4 w-4 text-[#6B6B6B]" />
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-60 text-[#6B6B6B]" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 bg-white border-[#E0E0E0]" align="start">
+                        <PopoverContent className="w-auto p-0 z-[2500]" align="start">
                           <Calendar
                             mode="single"
                             selected={field.value}
@@ -230,22 +230,21 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
                   name={`violations.${index}.regulationId`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold text-[#1F1F1F]">Quy Định Áp Dụng</FormLabel>
+                      <FormLabel className="text-sm font-bold text-[#1F1F1F]">Quy Định Áp Dụng</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value} disabled={noRegulations}>
                         <FormControl>
-                          <SelectTrigger className="bg-white border-[#E0E0E0] text-[#1F1F1F] text-xs h-10 rounded-md">
-                            <SelectValue placeholder={noRegulations ? "Không có quy định nào" : "Chọn một quy định"} />
+                          <SelectTrigger className="bg-white border-[#E0E0E0] text-[#1F1F1F] text-sm h-11 rounded-md font-medium">
+                            <SelectValue placeholder={noRegulations ? "Chưa có quy định nào" : "Chọn một quy định"} />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-white border-[#E0E0E0] text-xs">
+                        <SelectContent className="bg-white border-[#E0E0E0] text-sm">
                           {regulations.map(reg => (
-                            <SelectItem key={reg.id} value={reg.id}>
+                            <SelectItem key={reg.id} value={reg.id} className="text-sm font-medium">
                               [{reg.category}] {reg.violation}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      {noRegulations && <FormDescription className="text-xs text-[#6B6B6B]">Vui lòng tạo quy định trước khi ghi lỗi.</FormDescription>}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -256,9 +255,13 @@ export function ViolationForm({ people, regulations, onSave, onClose, toast: cus
                   name={`violations.${index}.notes`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold text-[#1F1F1F]">Ghi Chú Thêm (Tùy chọn)</FormLabel>
+                      <FormLabel className="text-sm font-bold text-[#1F1F1F]">Ghi Chú Thêm (Tùy chọn)</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Thêm ghi chú ngữ cảnh vi phạm..." {...field} rows={2} value={field.value || ''} className="bg-white border-[#E0E0E0] text-[#1F1F1F] rounded-md text-xs p-3" />
+                        <Textarea
+                          placeholder="Thêm ghi chú ngữ cảnh vi phạm..."
+                          className="resize-none bg-white border-[#E0E0E0] text-[#1F1F1F] text-sm rounded-md placeholder-[#D1D1D1] min-h-[90px] focus:border-[#1E74E8]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
