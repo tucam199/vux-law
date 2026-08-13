@@ -4,8 +4,8 @@ import { Grid3X3, Scale } from 'lucide-react';
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group hover:opacity-90">
-      {/* Odoo App Switcher Matrix Icon (Screenshot 1-4 style) */}
-      <div className="w-8 h-8 rounded bg-[#017E84] text-white flex items-center justify-center shadow-sm border border-[#01686d]">
+      {/* Odoo App Switcher Matrix Icon in Characteristic Odoo Purple #714B67 */}
+      <div className="w-8 h-8 rounded bg-[#714B67] text-white flex items-center justify-center shadow-xs border border-[#5f3e56]">
         <Grid3X3 className="w-4 h-4 text-white group-hover:rotate-90 transition-transform duration-300" />
       </div>
 

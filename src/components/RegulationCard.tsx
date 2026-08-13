@@ -34,7 +34,14 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
   const isFine = regulation.penalty.type === 'fine';
   
   return (
-    <Card className={`odoo-kanban-card ${isFine ? 'border-l-[#017E84]' : 'border-l-[#714B67]'}`}>
+    <Card className="odoo-kanban-card pl-5">
+      {/* Clean Left Vertical Accent Stripe (Fixes dark border line glitch) */}
+      <div
+        className={`absolute left-0 top-0 bottom-0 w-1.5 ${
+          isFine ? 'bg-[#017E84]' : 'bg-[#714B67]'
+        }`}
+      />
+
       <CardHeader className="p-0 pb-3">
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-1">
@@ -72,7 +79,6 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
             MỨC XỬ PHẠT
           </span>
           {isFine ? (
-            /* Circled Area in Image 2: Amount is BLACK #212529 text */
             <div className="text-lg font-bold text-[#212529] leading-tight">
               {formatCurrency(regulation.penalty.amount ?? 0)}
             </div>
@@ -87,7 +93,7 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
       <CardFooter className="p-0 pt-3 border-t border-[#E5E7EB] flex justify-between items-center">
         <button
           onClick={onEdit}
-          className="btn-odoo-purple text-[11px] py-1 px-2.5"
+          className="btn-odoo-purple text-[11px] py-1 px-2.5 font-bold"
         >
           Sửa quy định
         </button>
