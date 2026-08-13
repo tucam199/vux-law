@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Ban, CircleDollarSign, FilePenLine, Trash2, Tag } from "lucide-react";
+import { Ban, CircleDollarSign, Zap, Trash2, Tag, FilePenLine } from "lucide-react";
 import type { Regulation } from "@/lib/types";
 import {
   AlertDialog,
@@ -20,13 +20,14 @@ interface RegulationCardProps {
   regulation: Regulation;
   onEdit: () => void;
   onDelete: () => void;
+  onQuickPenalty?: (regulation: Regulation) => void;
 }
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
 }
 
-export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardProps) {
+export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }: RegulationCardProps) {
   if (!regulation || !regulation.penalty) {
     return null;
   }
@@ -35,14 +36,14 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
   
   return (
     <Card className="odoo-kanban-card pl-5">
-      {/* Clean Left Vertical Accent Stripe (Fixes dark border line glitch) */}
+      {/* Clean Left Vertical Accent Stripe */}
       <div
         className={`absolute left-0 top-0 bottom-0 w-1.5 ${
           isFine ? 'bg-[#017E84]' : 'bg-[#714B67]'
         }`}
       />
 
-      <CardHeader className="p-0 pb-3">
+      <CardHeader className="p-0 pb-2.5">
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-1">
             <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2 py-0.5 rounded">
@@ -72,8 +73,8 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
         </div>
       </CardHeader>
 
-      <CardContent className="p-0 py-3 flex-grow">
-        <Separator className="bg-[#E5E7EB] mb-3" />
+      <CardContent className="p-0 py-2.5 flex-grow">
+        <Separator className="bg-[#E5E7EB] mb-2.5" />
         <div className="space-y-1">
           <span className="block text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">
             MỨC XỬ PHẠT
@@ -90,23 +91,36 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
         </div>
       </CardContent>
 
-      <CardFooter className="p-0 pt-3 border-t border-[#E5E7EB] flex justify-between items-center">
-        <button
-          onClick={onEdit}
-          className="btn-odoo-purple text-[11px] py-1 px-2.5 font-bold"
-        >
-          Sửa quy định
-        </button>
+      <CardFooter className="p-0 pt-3 border-t border-[#E5E7EB] flex justify-between items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {/* Quick Action: ⚡ Phạt Nhanh Button */}
+          {onQuickPenalty && (
+            <button
+              onClick={() => onQuickPenalty(regulation)}
+              className="btn-odoo-green text-[11px] py-1 px-2 font-bold flex items-center gap-1"
+              title="Ghi nhận vi phạm nhanh cho nhân sự với quy định này"
+            >
+              <Zap className="w-3 h-3 fill-current text-amber-300" />
+              Phạt Nhanh
+            </button>
+          )}
+
+          <button
+            onClick={onEdit}
+            className="btn-odoo-purple text-[11px] py-1 px-2 font-semibold"
+          >
+            Sửa
+          </button>
+        </div>
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-2 rounded"
+              className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-1.5 rounded"
             >
-              <Trash2 className="h-3.5 w-3.5 mr-1" />
-              Xóa
+              <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent className="bg-white border-[#DEE2E6] rounded-lg">

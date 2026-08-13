@@ -2,21 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X } from "lucide-react";
-import { Logo } from "@/components/Logo";
+import { ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X } from "lucide-react";
 import { PenaltyList } from "@/components/PenaltyList";
+import { HeaderNav } from "@/components/HeaderNav";
 import type { ViolationRecord, Regulation } from "@/lib/types";
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DateRange } from "react-day-picker";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, isWithinInterval, parseISO } from "date-fns";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ViolationForm } from "@/components/ViolationForm";
 import { getPenalties, addMultiplePenalties, deletePenalty, updatePenalty } from "@/lib/penaltyService";
 import { getRegulations } from "@/lib/regulationService";
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
 
 const people = [
   "Trình Mỹ Phượng Oanh",
@@ -213,23 +211,11 @@ export default function PenaltiesPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#212529]">
-      {/* Header Bar */}
-      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-sm">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex h-12 items-center justify-between gap-4">
-            <Logo />
-            <Link href="/">
-              <Button variant="outline" size="sm" className="h-8 text-xs border-[#DEE2E6] text-[#212529] hover:bg-zinc-100 font-medium">
-                <Home className="h-3.5 w-3.5 mr-1 text-[#017E84]" />
-                Trang Chủ Quy Định
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Unified Odoo Header Bar */}
+      <HeaderNav pendingPenaltiesCount={stats.pendingCount} />
 
       {/* Control Panel Bar */}
-      <div className="bg-white border-b border-[#DEE2E6] shadow-sm sticky top-12 z-20">
+      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Left Controls: Breadcrumbs & Primary Action Button */}
@@ -310,7 +296,7 @@ export default function PenaltiesPage() {
 
       {/* Main Body */}
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
-        {/* KPI Stat Cards (Numbers are BLACK #212529 text) */}
+        {/* KPI Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
             <div className="space-y-0.5">
