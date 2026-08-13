@@ -1,57 +1,58 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Search, CircleDollarSign, Ban, ShieldCheck, X, LayoutGrid, List, ChevronRight, ChevronLeft, SlidersHorizontal, Zap, Filter, FolderPlus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Search, Plus, Users, CircleDollarSign, Ban, ShieldCheck, SlidersHorizontal, ChevronRight, ChevronLeft, LayoutGrid, List, X, Filter, FolderPlus, Zap, CheckCircle2 } from "lucide-react";
 import { RegulationCard } from "@/components/RegulationCard";
-import { RegulationForm } from "@/components/RegulationForm";
-import { ViolationForm } from "@/components/ViolationForm";
-import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
 import { HeaderNav } from "@/components/HeaderNav";
+import { RegulationForm } from "@/components/RegulationForm";
+import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
 import type { Regulation, ViolationRecord, Employee } from "@/lib/types";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { ViolationForm } from "@/components/ViolationForm";
 import { getRegulations, addRegulation, updateRegulation, deleteRegulation } from "@/lib/regulationService";
-import { addMultiplePenalties, getPenalties } from "@/lib/penaltyService";
+import { getPenalties, addMultiplePenalties } from "@/lib/penaltyService";
 import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "motion/react";
 
 function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
+  return new Intl.NumberFormat("vi-VN").format(amount) + " đ";
 }
 
 export default function Home() {
   const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [penalties, setPenalties] = useState<ViolationRecord[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isEmpModalOpen, setIsEmpModalOpen] = useState(false);
-  const [isQuickPenaltyOpen, setIsQuickPenaltyOpen] = useState(false);
-  const [quickPenaltyRegulation, setQuickPenaltyRegulation] = useState<Regulation | null>(null);
-  const [editingRegulation, setEditingRegulation] = useState<Regulation | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "fine" | "restriction">("all");
   const [viewMode, setViewMode] = useState<"swimlanes" | "grid">("swimlanes");
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [editingRegulation, setEditingRegulation] = useState<Regulation | null>(null);
+  const [isQuickPenaltyOpen, setIsQuickPenaltyOpen] = useState(false);
+  const [quickPenaltyRegulation, setQuickPenaltyRegulation] = useState<Regulation | null>(null);
+  const [isEmpModalOpen, setIsEmpModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchInitialData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [fetchedRegs, fetchedPens, fetchedEmps] = await Promise.all([
+      const [fetchedRegs, fetchedPenalties, fetchedEmployees] = await Promise.all([
         getRegulations(),
         getPenalties(),
         getEmployees(),
       ]);
       setRegulations(fetchedRegs);
-      setPenalties(fetchedPens);
-      setEmployees(fetchedEmps);
+      setPenalties(fetchedPenalties);
+      setEmployees(fetchedEmployees);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
-        title: "Lỗi",
-        description: "Không thể tải dữ liệu. Vui lòng thử lại.",
+        title: "Lỗi hệ thống",
+        description: "Không thể tải dữ liệu quy định từ CSDL.",
         variant: "destructive",
       });
     } finally {
@@ -64,11 +65,57 @@ export default function Home() {
   }, [fetchInitialData]);
 
   const peopleNames = useMemo(() => {
-    return employees.map(e => e.name);
+    return employees.map((e) => e.name);
   }, [employees]);
 
-  const handleAddNew = (defaultCategory?: string) => {
-    setEditingRegulation(defaultCategory ? ({ category: defaultCategory, violation: '', penalty: { type: 'fine', amount: 50000 } } as any) : null);
+  const stats = useMemo(() => {
+    const total = regulations.length;
+    const fineCount = regulations.filter(r => r.penalty?.type === 'fine').length;
+    const restrictionCount = regulations.filter(r => r.penalty?.type === 'restriction').length;
+    
+    const totalFineAmount = regulations.reduce((max, r) => {
+      if (r.penalty?.type === 'fine' && r.penalty.amount) {
+        return Math.max(max, r.penalty.amount);
+      }
+      return max;
+    }, 0);
+
+    const pendingPenaltiesCount = penalties.filter(p => p.status === 'pending').length;
+
+    return { total, fineCount, restrictionCount, totalFineAmount, pendingPenaltiesCount };
+  }, [regulations, penalties]);
+
+  const filteredRegulations = useMemo(() => {
+    return regulations.filter((reg) => {
+      if (!reg || !reg.penalty) return false;
+      const matchesSearch =
+        reg.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        reg.violation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (reg.penalty.type === "fine" && reg.penalty.amount?.toString().includes(searchQuery)) ||
+        (reg.penalty.type === "restriction" && reg.penalty.details?.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      const matchesFilter =
+        activeFilter === "all" ||
+        (activeFilter === "fine" && reg.penalty.type === "fine") ||
+        (activeFilter === "restriction" && reg.penalty.type === "restriction");
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [regulations, searchQuery, activeFilter]);
+
+  const categorySwimlanes = useMemo(() => {
+    const groups: { [key: string]: Regulation[] } = {};
+    filteredRegulations.forEach((reg) => {
+      if (!groups[reg.category]) {
+        groups[reg.category] = [];
+      }
+      groups[reg.category].push(reg);
+    });
+    return Object.entries(groups);
+  }, [filteredRegulations]);
+
+  const handleAddNew = (categoryPreset?: string) => {
+    setEditingRegulation(categoryPreset ? ({ category: categoryPreset, violation: '', penalty: { type: 'fine' } } as Regulation) : null);
     setIsSheetOpen(true);
   };
 
@@ -77,10 +124,37 @@ export default function Home() {
     setIsSheetOpen(true);
   };
 
+  const handleSave = async (data: Omit<Regulation, 'id'> & { id?: string }) => {
+    try {
+      if (data.id) {
+        await updateRegulation(data.id, data);
+        toast({
+          title: "Thành công",
+          description: "Đã cập nhật quy định.",
+        });
+      } else {
+        await addRegulation(data);
+        toast({
+          title: "Thành công",
+          description: "Đã tạo quy định mới vào CSDL.",
+        });
+      }
+      setIsSheetOpen(false);
+      await fetchInitialData();
+    } catch (error) {
+      console.error("Error saving regulation: ", error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể lưu quy định. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleDelete = async (id: string) => {
     try {
       await deleteRegulation(id);
-      await fetchInitialData();
+      setRegulations(prev => prev.filter(r => r.id !== id));
       toast({
         title: "Thành công",
         description: "Đã xóa quy định.",
@@ -95,39 +169,6 @@ export default function Home() {
     }
   };
 
-  const handleSave = async (
-    regulationData: Omit<Regulation, "id"> & { id?: string }
-  ) => {
-    try {
-      if (regulationData.id) {
-        const { id, ...dataToUpdate } = regulationData;
-        await updateRegulation(id, dataToUpdate);
-        toast({
-          title: "Thành công",
-          description: "Đã cập nhật quy định.",
-        });
-      } else {
-        const { id, ...dataToAdd } = regulationData;
-        await addRegulation(dataToAdd);
-        toast({
-          title: "Thành công",
-          description: "Đã tạo quy định mới.",
-        });
-      }
-      setIsSheetOpen(false);
-      await fetchInitialData();
-    } catch (error) {
-      console.error("Error saving regulation: ", error);
-      toast({
-        title: "Lỗi",
-        description: `Không thể lưu quy định: ${error instanceof Error ? error.message : "Vui lòng thử lại."}`,
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-
-  // Quick 1-Click Penalty Action from Card
   const handleQuickPenalty = (regulation: Regulation) => {
     setQuickPenaltyRegulation(regulation);
     setIsQuickPenaltyOpen(true);
@@ -137,83 +178,40 @@ export default function Home() {
     try {
       await addMultiplePenalties(violations);
       toast({
-        title: "Thành công ⚡",
-        description: `Đã phạt nhanh ${violations.length} nhân sự thành công.`,
+        title: "Thành công",
+        description: `Đã ghi nhận ${violations.length} vi phạm mới cho quy định "${quickPenaltyRegulation?.violation}".`,
       });
       setIsQuickPenaltyOpen(false);
+      setQuickPenaltyRegulation(null);
       await fetchInitialData();
     } catch (error) {
-      console.error("Error saving quick penalty:", error);
+      console.error("Error adding quick penalty: ", error);
       toast({
         title: "Lỗi",
-        description: "Không thể lưu phạt nhanh. Vui lòng thử lại.",
+        description: "Không thể ghi nhận vi phạm. Vui lòng thử lại.",
         variant: "destructive",
       });
-      throw error;
     }
   };
-
-  // KPI Metrics Calculation
-  const stats = useMemo(() => {
-    const total = regulations.length;
-    const fineCount = regulations.filter((r) => r.penalty?.type === "fine").length;
-    const restrictionCount = regulations.filter((r) => r.penalty?.type === "restriction").length;
-    const totalFineAmount = regulations
-      .filter((r) => r.penalty?.type === "fine")
-      .reduce((sum, r) => sum + (r.penalty?.amount || 0), 0);
-
-    const pendingPenaltiesCount = penalties.filter(p => !p.isCompleted).length;
-
-    return { total, fineCount, restrictionCount, totalFineAmount, pendingPenaltiesCount };
-  }, [regulations, penalties]);
-
-  // Filtered regulations
-  const filteredRegulations = useMemo(() => {
-    return regulations.filter((reg) => {
-      const matchesSearch =
-        searchQuery.trim() === "" ||
-        reg.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        reg.violation.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesFilter =
-        activeFilter === "all" ||
-        (activeFilter === "fine" && reg.penalty?.type === "fine") ||
-        (activeFilter === "restriction" && reg.penalty?.type === "restriction");
-
-      return matchesSearch && matchesFilter;
-    });
-  }, [regulations, searchQuery, activeFilter]);
-
-  // Grouped by Category for Swimlane Odoo View
-  const categorySwimlanes = useMemo(() => {
-    const map = new Map<string, Regulation[]>();
-    for (const reg of filteredRegulations) {
-      const cat = reg.category || "Quy định chung";
-      const list = map.get(cat) || [];
-      list.push(reg);
-      map.set(cat, list);
-    }
-    return Array.from(map.entries());
-  }, [filteredRegulations]);
 
   return (
     <div className="min-h-screen bg-white text-[#1F1F1F]">
       {/* Unified Module Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingPenaltiesCount} />
 
-      {/* Control Panel Bar (§8.5 & §9) */}
+      {/* Control Panel Bar — Responsive 12-Column Grid Architecture */}
       <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] sticky top-14 z-[90]">
         <div className="container mx-auto px-4 lg:px-6 py-3">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Left Controls: Breadcrumbs, Primary CTA & Dynamic Employee Manager */}
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-12 gap-4 items-center">
+            {/* Left Cluster: Breadcrumb, Primary CTA & Employee Manager (5 Columns) */}
+            <div className="col-span-12 lg:col-span-5 flex flex-wrap items-center gap-2">
               <div className="flex items-center text-xs font-medium text-[#1F1F1F] gap-1 mr-2">
                 <span className="text-[#1E74E8] font-semibold">Quy định</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#6B6B6B]" />
                 <span className="text-[#1F1F1F] font-bold">Khung Xử Phạt</span>
               </div>
 
-              {/* SINGLE PRIMARY CTA PER SCREEN: #7FCA27 Green */}
+              {/* Single Primary CTA (#7FCA27 Green) */}
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleAddNew()}
@@ -233,35 +231,37 @@ export default function Home() {
               </motion.button>
             </div>
 
-            {/* Central Search Bar */}
-            <div className="relative flex items-center w-full md:w-80 bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
-              <Search className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
-              
-              {activeFilter !== "all" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1E74E8] bg-[#EAF2FD] border border-[#1E74E8]/30 px-1.5 py-0.5 rounded-full mr-1.5 shrink-0">
-                  {activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}
-                  <button onClick={() => setActiveFilter("all")} className="hover:text-[#185EC0]">
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              )}
+            {/* Central Search Cluster (4 Columns) */}
+            <div className="col-span-12 md:col-span-7 lg:col-span-4">
+              <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
+                <Search className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
+                
+                {activeFilter !== "all" && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1E74E8] bg-[#EAF2FD] border border-[#1E74E8]/30 px-1.5 py-0.5 rounded-full mr-1.5 shrink-0">
+                    {activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}
+                    <button onClick={() => setActiveFilter("all")} className="hover:text-[#185EC0]">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
 
-              <input
-                type="text"
-                placeholder="Tìm kiếm quy định..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent text-xs text-[#1F1F1F] focus:outline-none placeholder-[#D1D1D1]"
-              />
-              {searchQuery && (
-                <button onClick={() => setSearchQuery("")} className="text-[#6B6B6B] hover:text-[#1F1F1F]">
-                  <X className="w-4 h-4" />
-                </button>
-              )}
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm quy định..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-xs text-[#1F1F1F] focus:outline-none placeholder-[#D1D1D1]"
+                />
+                {searchQuery && (
+                  <button onClick={() => setSearchQuery("")} className="text-[#6B6B6B] hover:text-[#1F1F1F]">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Right Controls: View Switcher & Pagination */}
-            <div className="flex items-center gap-3">
+            {/* Right Cluster: View Switcher & Counter (3 Columns) */}
+            <div className="col-span-12 md:col-span-5 lg:col-span-3 flex items-center justify-end gap-3">
               <div className="flex items-center gap-1.5 text-xs text-[#1F1F1F] font-medium">
                 <span>1-{filteredRegulations.length} / {filteredRegulations.length}</span>
                 <div className="flex items-center border border-[#E0E0E0] rounded-sm bg-white">
@@ -303,7 +303,7 @@ export default function Home() {
 
       {/* Main Content Body */}
       <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
-        {/* INTERACTIVE KPI STAT CARDS (§8.5 & §9.4) */}
+        {/* INTERACTIVE KPI STAT CARDS — 12-COLUMN RESPONSIVE GRID */}
         <div className="space-y-2">
           <div className="flex justify-between items-center px-1">
             <span className="text-xs font-bold text-[#6B6B6B] uppercase tracking-wider flex items-center gap-1.5">
@@ -320,12 +320,12 @@ export default function Home() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-12 gap-4">
             <motion.div
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("all")}
-              className={`p-4 cursor-pointer transition-all ${
+              className={`col-span-6 md:col-span-3 p-4 cursor-pointer transition-all ${
                 activeFilter === "all" ? "card-ds card-ds-selected" : "card-ds"
               }`}
             >
@@ -342,7 +342,7 @@ export default function Home() {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("fine")}
-              className={`p-4 cursor-pointer transition-all ${
+              className={`col-span-6 md:col-span-3 p-4 cursor-pointer transition-all ${
                 activeFilter === "fine" ? "card-ds card-ds-selected" : "card-ds"
               }`}
             >
@@ -359,7 +359,7 @@ export default function Home() {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("restriction")}
-              className={`p-4 cursor-pointer transition-all ${
+              className={`col-span-6 md:col-span-3 p-4 cursor-pointer transition-all ${
                 activeFilter === "restriction" ? "card-ds card-ds-selected" : "card-ds"
               }`}
             >
@@ -372,7 +372,7 @@ export default function Home() {
               </div>
             </motion.div>
 
-            <div className="card-ds p-4 flex items-center justify-between">
+            <div className="col-span-6 md:col-span-3 card-ds p-4 flex items-center justify-between">
               <div className="space-y-1">
                 <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">MỨC PHẠT MAX</p>
                 <p className="text-xl font-bold text-[#1F1F1F] truncate">
@@ -384,7 +384,30 @@ export default function Home() {
           </div>
         </div>
 
-        {/* GROUPED SWIMLANES OR GRID VIEW */}
+        {/* ACTIVE FILTER CONTEXT BANNER */}
+        {activeFilter !== "all" && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-[#EAF2FD] border border-[#1E74E8] rounded-lg p-3 flex items-center justify-between text-xs text-[#1E74E8]"
+          >
+            <div className="flex items-center gap-2 font-medium">
+              <Filter className="w-4 h-4 text-[#1E74E8]" />
+              <span>
+                Đang lọc hiển thị: <strong>{activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}</strong> ({filteredRegulations.length} quy định)
+              </span>
+            </div>
+            <button
+              onClick={() => setActiveFilter("all")}
+              className="btn-ds-secondary text-xs py-1 px-2.5 font-bold flex items-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              Xóa bộ lọc
+            </button>
+          </motion.div>
+        )}
+
+        {/* GROUPED SWIMLANES OR GRID VIEW — 12-COLUMN RESPONSIVE GRID */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-[#E0E0E0] bg-white py-20 text-center space-y-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E74E8]"></div>
@@ -392,19 +415,19 @@ export default function Home() {
           </div>
         ) : filteredRegulations.length > 0 ? (
           viewMode === "swimlanes" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-12 gap-6">
               {categorySwimlanes.map(([categoryName, categoryList]) => (
                 <motion.div
                   key={categoryName}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25 }}
-                  className="bg-[#F8F8F8] border border-[#E0E0E0] rounded-xl p-4 space-y-4 flex flex-col"
+                  className="col-span-12 md:col-span-6 lg:col-span-4 bg-[#F8F8F8] border border-[#E0E0E0] rounded-xl p-4 space-y-4 flex flex-col"
                 >
                   <div className="flex items-center justify-between pb-3 border-b border-[#E0E0E0]">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-[#1F1F1F]">{categoryName}</span>
-                      <span className="badge-ds-info text-xs font-bold px-2 py-0.5">
+                      <span className="badge-ds-neutral text-xs font-bold px-2 py-0.5">
                         {categoryList.length}
                       </span>
                     </div>
@@ -435,16 +458,17 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-12 gap-6">
               <AnimatePresence>
                 {filteredRegulations.map((regulation) => (
-                  <RegulationCard
-                    key={regulation.id}
-                    regulation={regulation}
-                    onEdit={() => handleEdit(regulation)}
-                    onDelete={() => handleDelete(regulation.id)}
-                    onQuickPenalty={handleQuickPenalty}
-                  />
+                  <div key={regulation.id} className="col-span-12 md:col-span-6 lg:col-span-4">
+                    <RegulationCard
+                      regulation={regulation}
+                      onEdit={() => handleEdit(regulation)}
+                      onDelete={() => handleDelete(regulation.id)}
+                      onQuickPenalty={handleQuickPenalty}
+                    />
+                  </div>
                 ))}
               </AnimatePresence>
             </div>

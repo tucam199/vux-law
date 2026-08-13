@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X, UserCheck, AlertOctagon } from "lucide-react";
+import { Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X, UserCheck, AlertOctagon, Filter } from "lucide-react";
 import { PenaltyList } from "@/components/PenaltyList";
 import { HeaderNav } from "@/components/HeaderNav";
 import { EmployeeManagerModal } from "@/components/EmployeeManagerModal";
@@ -210,12 +210,12 @@ export default function PenaltiesPage() {
       {/* Unified Module Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingCount} />
 
-      {/* Control Panel Bar (§8.5 & §9) */}
+      {/* Control Panel Bar — 12-Column Grid Architecture */}
       <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] sticky top-14 z-[90]">
         <div className="container mx-auto px-4 lg:px-6 py-3">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Left Controls: Breadcrumbs & Primary Action */}
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-12 gap-4 items-center">
+            {/* Left Controls: Breadcrumbs & Primary Action (5 Columns) */}
+            <div className="col-span-12 lg:col-span-5 flex flex-wrap items-center gap-2">
               <div className="flex items-center text-xs font-medium text-[#1F1F1F] gap-1 mr-2">
                 <span className="text-[#1E74E8] font-semibold">Xử Phạt</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#6B6B6B]" />
@@ -243,14 +243,14 @@ export default function PenaltiesPage() {
               </motion.button>
             </div>
 
-            {/* Central Controls: Filter by Person Select */}
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <div className="relative flex items-center bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
+            {/* Central Controls: Filter by Person Select (4 Columns) */}
+            <div className="col-span-12 md:col-span-7 lg:col-span-4 flex items-center gap-2">
+              <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
                 <UserCheck className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
                 <select
                   value={selectedPerson || "ALL"}
                   onChange={(e) => setSelectedPerson(e.target.value === "ALL" ? null : e.target.value)}
-                  className="bg-transparent text-xs text-[#1F1F1F] font-medium focus:outline-none cursor-pointer pr-4"
+                  className="w-full bg-transparent text-xs text-[#1F1F1F] font-medium focus:outline-none cursor-pointer pr-4"
                 >
                   <option value="ALL">Tất cả nhân sự ({peopleNames.length})</option>
                   {peopleNames.map((name) => (
@@ -264,7 +264,7 @@ export default function PenaltiesPage() {
               {selectedPerson && (
                 <button
                   onClick={() => setSelectedPerson(null)}
-                  className="btn-ds-secondary text-xs py-1.5 px-2.5"
+                  className="btn-ds-secondary text-xs py-1.5 px-2.5 shrink-0"
                   title="Xóa lọc nhân sự"
                 >
                   Xóa lọc
@@ -272,8 +272,8 @@ export default function PenaltiesPage() {
               )}
             </div>
 
-            {/* Right Controls: Stats & Quick Count */}
-            <div className="flex items-center gap-3">
+            {/* Right Controls: Stats & Quick Count (3 Columns) */}
+            <div className="col-span-12 md:col-span-5 lg:col-span-3 flex items-center justify-end">
               <div className="text-xs text-[#6B6B6B] font-medium">
                 Hiển thị: <strong className="text-[#1F1F1F]">{filteredPenalties.length}</strong> bản ghi
               </div>
@@ -284,9 +284,9 @@ export default function PenaltiesPage() {
 
       {/* Main Content Body */}
       <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
-        {/* KPI STAT CARDS (§8.5 & §9.4) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="card-ds p-4 flex items-center justify-between">
+        {/* KPI STAT CARDS — 12-COLUMN RESPONSIVE GRID */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-12 md:col-span-4 card-ds p-4 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">TỔNG LẦN VI PHẠM</p>
               <p className="text-2xl font-bold text-[#1F1F1F]">{stats.totalCount}</p>
@@ -294,7 +294,7 @@ export default function PenaltiesPage() {
             <AlertOctagon className="w-6 h-6 text-[#1E74E8]" />
           </div>
 
-          <div className="card-ds p-4 flex items-center justify-between">
+          <div className="col-span-12 md:col-span-4 card-ds p-4 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">TỔNG TIỀN PHẠT DUYỆT</p>
               <p className="text-2xl font-bold text-[#1F1F1F]">{formatCurrency(stats.totalFineApproved)}</p>
@@ -302,7 +302,7 @@ export default function PenaltiesPage() {
             <CircleDollarSign className="w-6 h-6 text-[#7FCA27]" />
           </div>
 
-          <div className="card-ds p-4 flex items-center justify-between">
+          <div className="col-span-12 md:col-span-4 card-ds p-4 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">VI PHẠM CHỜ XỬ LÝ</p>
               <p className="text-2xl font-bold text-[#1F1F1F]">{stats.pendingCount}</p>
@@ -310,6 +310,23 @@ export default function PenaltiesPage() {
             <Clock className="w-6 h-6 text-[#FF8832]" />
           </div>
         </div>
+
+        {/* ACTIVE FILTER BANNER */}
+        {selectedPerson && (
+          <div className="bg-[#EAF2FD] border border-[#1E74E8] rounded-lg p-3 flex items-center justify-between text-xs text-[#1E74E8]">
+            <div className="flex items-center gap-2 font-medium">
+              <Filter className="w-4 h-4 text-[#1E74E8]" />
+              <span>Đang lọc vi phạm của nhân sự: <strong>{selectedPerson}</strong> ({filteredPenalties.length} bản ghi)</span>
+            </div>
+            <button
+              onClick={() => setSelectedPerson(null)}
+              className="btn-ds-secondary text-xs py-1 px-2.5 font-bold flex items-center gap-1"
+            >
+              <X className="w-3.5 h-3.5" />
+              Xóa lọc nhân sự
+            </button>
+          </div>
+        )}
 
         {/* PENALTY LIST TABLE (§8.6 & §9.5) */}
         {isLoading ? (

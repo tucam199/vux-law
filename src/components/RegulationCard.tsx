@@ -1,11 +1,11 @@
 "use client";
 
+import type { Regulation } from "@/lib/types";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Ban, CircleDollarSign, Zap, Trash2, Tag, FilePenLine } from "lucide-react";
-import type { Regulation } from "@/lib/types";
+import { Ban, CircleDollarSign, Tag, Trash2, Zap, Edit3 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ interface RegulationCardProps {
 }
 
 function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
+  return new Intl.NumberFormat("vi-VN").format(amount) + " đ";
 }
 
 export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }: RegulationCardProps) {
@@ -56,8 +56,9 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
         <CardHeader className="p-0 pb-3 pt-1">
           <div className="flex justify-between items-start gap-2">
             <div className="space-y-1.5">
-              <span className="badge-ds-info">
-                <Tag className="w-3 h-3 text-[#1E74E8]" />
+              {/* NEUTRAL CATEGORY BADGE: Eliminates visual color collision */}
+              <span className="badge-ds-neutral">
+                <Tag className="w-3 h-3 text-[#6B6B6B]" />
                 {regulation.category}
               </span>
               <CardTitle className="text-sm font-bold text-[#1F1F1F] leading-snug pt-1">
@@ -97,6 +98,7 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
           </div>
         </CardContent>
 
+        {/* CARD FOOTER ACTION BAR */}
         <CardFooter className="p-0 pt-3 border-t border-[#E0E0E0] flex justify-between items-center gap-2">
           <div className="flex items-center gap-2">
             {onQuickPenalty && (
@@ -113,40 +115,45 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
 
             <button
               onClick={onEdit}
-              className="btn-ds-secondary text-xs py-1.5 px-3 font-medium"
+              className="btn-ds-secondary text-xs py-1.5 px-3 font-medium flex items-center gap-1"
             >
+              <Edit3 className="w-3.5 h-3.5 text-[#1E74E8]" />
               Sửa
             </button>
           </div>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs text-[#6B6B6B] hover:text-[#D32F2F] hover:bg-[#FDECEC] px-2 rounded-sm"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white border-[#E0E0E0] rounded-xl">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-[#1F1F1F] font-bold text-base">Xác nhận xóa quy định?</AlertDialogTitle>
-                <AlertDialogDescription className="text-[#6B6B6B] text-xs">
-                  Hành động này sẽ xóa quy định khỏi CSDL hệ thống.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="btn-ds-secondary text-xs h-9">Hủy</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={onDelete}
-                  className="bg-[#D32F2F] hover:bg-[#b71c1c] text-white text-xs h-9 font-bold rounded-sm"
+          {/* SAFELY SEPARATED DELETE BUTTON TO PREVENT ACCIDENTAL CLICKS */}
+          <div className="ml-auto">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 text-[#6B6B6B] hover:text-[#D32F2F] hover:bg-[#FDECEC] rounded-sm transition-colors"
+                  title="Xóa quy định này"
                 >
-                  Xóa Quy Định
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-white border-[#E0E0E0] rounded-xl">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-[#1F1F1F] font-bold text-base">Xác nhận xóa quy định?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-[#6B6B6B] text-xs">
+                    Hành động này sẽ xóa quy định khỏi CSDL hệ thống.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="btn-ds-secondary text-xs h-9">Hủy</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={onDelete}
+                    className="bg-[#D32F2F] hover:bg-[#b71c1c] text-white text-xs h-9 font-bold rounded-sm"
+                  >
+                    Xóa Quy Định
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </CardFooter>
       </Card>
     </motion.div>
