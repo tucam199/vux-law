@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, LayoutGrid, List } from "lucide-react";
+import { Home, ListFilter, Search, Plus, Users, CircleDollarSign, CheckCircle2, Clock, ChevronRight, ChevronLeft, LayoutGrid, List, X } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { PenaltyList } from "@/components/PenaltyList";
 import type { ViolationRecord, Regulation } from "@/lib/types";
@@ -212,15 +212,15 @@ export default function PenaltiesPage() {
   const noRegulations = regulations.length === 0;
 
   return (
-    <div className="min-h-screen bg-[#1e1e24] text-zinc-100 font-sans">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#212529] font-sans">
       {/* Odoo Top Navbar */}
-      <header className="bg-[#18181c] border-b border-[#32323d] sticky top-0 z-30">
+      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex h-14 items-center justify-between gap-4">
+          <div className="flex h-12 items-center justify-between gap-4">
             <Logo />
             <Link href="/">
-              <Button variant="ghost" size="sm" className="h-8 text-xs text-zinc-300 hover:text-white hover:bg-[#25252d]">
-                <Home className="h-3.5 w-3.5 mr-1 text-[#017e84]" />
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+                <Home className="h-3.5 w-3.5 mr-1 text-[#017E84]" />
                 Trang Chủ Quy Định
               </Button>
             </Link>
@@ -229,53 +229,61 @@ export default function PenaltiesPage() {
       </header>
 
       {/* Odoo Control Panel Bar */}
-      <div className="bg-[#25252d] border-b border-[#32323d] shadow-sm sticky top-14 z-20">
-        <div className="container mx-auto px-4 lg:px-6 py-3">
+      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+        <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Odoo Breadcrumbs & Primary Action Button */}
+            {/* Left Controls: Breadcrumbs & Primary Purple Button */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center text-sm font-medium text-zinc-300 gap-1.5">
-                <span className="text-[#017e84] font-bold">Xử phạt</span>
-                <ChevronRight className="w-4 h-4 text-zinc-500" />
-                <span className="text-zinc-100 font-semibold">Nhật Ký Vi Phạm</span>
+              <div className="flex items-center text-xs font-semibold text-[#212529] gap-1">
+                <span className="text-[#017E84] font-bold">Xử phạt</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
+                <span className="text-[#212529]">Nhật Ký Vi Phạm</span>
               </div>
 
               <button
                 onClick={handleAddViolation}
                 disabled={noRegulations}
-                className="btn-odoo-green"
+                className="btn-odoo-green text-xs"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-3.5 w-3.5" />
                 Ghi Nhận Vi Phạm
               </button>
             </div>
 
-            {/* Odoo Search & Filter Control View */}
+            {/* Central Search & Filter View */}
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                <Input
+              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2 py-1 shadow-xs">
+                <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
+                {selectedPerson && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/30 px-1.5 py-0.5 rounded mr-1 shrink-0">
+                    {selectedPerson}
+                    <button onClick={() => setSelectedPerson(null)} className="hover:text-rose-600">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )}
+                <input
                   type="text"
-                  placeholder="Tìm theo tên cá nhân..."
+                  placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 bg-[#1e1e24] border-[#32323d] text-xs text-zinc-100 h-8 rounded focus-visible:ring-[#714B67]"
+                  className="w-full bg-transparent text-xs text-[#212529] focus:outline-none placeholder-[#6C757D]"
                 />
               </div>
 
-              {/* Person Dropdown */}
+              {/* Person Select */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="btn-odoo-secondary">
-                    <Users className="w-3.5 h-3.5 text-[#017e84]" />
+                  <button className="btn-odoo-outline text-xs">
+                    <Users className="w-3.5 h-3.5 text-[#017E84]" />
                     {selectedPerson ? selectedPerson : "Nhân sự"}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-[#25252d] border-[#32323d] text-zinc-200 text-xs rounded-md">
+                <DropdownMenuContent align="end" className="bg-white border-[#DEE2E6] text-[#212529] text-xs rounded shadow-md">
                   <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
                     Tất cả nhân sự
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-[#32323d]" />
+                  <DropdownMenuSeparator className="bg-[#DEE2E6]" />
                   {people.map((person) => (
                     <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
                       {person}
@@ -284,31 +292,14 @@ export default function PenaltiesPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Time Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="btn-odoo-secondary">
-                    <ListFilter className="w-3.5 h-3.5 text-[#28a745]" />
-                    Thời gian
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-[#25252d] border-[#32323d] text-zinc-200 text-xs rounded-md">
-                  <DropdownMenuItem onSelect={() => handleFilterChange(null)}>Tất cả</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => handleFilterChange('today')}>Hôm nay</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => handleFilterChange('this_week')}>Tuần này</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => handleFilterChange('this_month')}>Tháng này</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => handleFilterChange('this_year')}>Năm nay</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* View Switcher Buttons */}
-              <div className="flex items-center gap-1 bg-[#1e1e24] p-0.5 rounded border border-[#32323d] shrink-0">
+              {/* View Switcher */}
+              <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden shrink-0">
                 <Link href="/">
-                  <button className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded" title="Kanban View">
+                  <button className="p-1.5 text-[#6C757D] hover:text-[#017E84]" title="Kanban View">
                     <LayoutGrid className="w-3.5 h-3.5" />
                   </button>
                 </Link>
-                <button className="p-1.5 text-zinc-200 bg-[#32323d] rounded" title="List View">
+                <button className="p-1.5 bg-[#017E84]/15 text-[#017E84]" title="List View">
                   <List className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -318,49 +309,49 @@ export default function PenaltiesPage() {
       </div>
 
       {/* Main Odoo Content Body */}
-      <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
-        {/* Odoo Stat Buttons */}
+      <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
+        {/* Odoo Stat Counter Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
             <div>
-              <p className="text-[10px] font-bold text-zinc-400 uppercase">TỔNG LƯỢT PHẠT</p>
-              <p className="text-xl font-bold text-white">{stats.totalCount}</p>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG LƯỢT PHẠT</p>
+              <p className="text-xl font-bold text-[#212529]">{stats.totalCount}</p>
             </div>
-            <Users className="w-5 h-5 text-[#017e84]" />
+            <Users className="w-5 h-5 text-[#017E84]" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
             <div>
-              <p className="text-[10px] font-bold text-zinc-400 uppercase">ĐÃ HOÀN THÀNH</p>
-              <p className="text-xl font-bold text-[#28a745]">{stats.completedCount}</p>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">ĐÃ HOÀN THÀNH</p>
+              <p className="text-xl font-bold text-[#28A745]">{stats.completedCount}</p>
             </div>
-            <CheckCircle2 className="w-5 h-5 text-[#28a745]" />
+            <CheckCircle2 className="w-5 h-5 text-[#28A745]" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
             <div>
-              <p className="text-[10px] font-bold text-zinc-400 uppercase">CHƯA HOÀN THÀNH</p>
-              <p className="text-xl font-bold text-amber-400">{stats.pendingCount}</p>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">CHƯA NỘP/THỰC HIỆN</p>
+              <p className="text-xl font-bold text-amber-600">{stats.pendingCount}</p>
             </div>
-            <Clock className="w-5 h-5 text-amber-400" />
+            <Clock className="w-5 h-5 text-amber-600" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
             <div>
-              <p className="text-[10px] font-bold text-zinc-400 uppercase">TỔNG TIỀN PHẠT</p>
-              <p className="text-base font-bold text-[#28a745]">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG TIỀN PHẠT</p>
+              <p className="text-base font-bold text-[#28A745]">
                 {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
               </p>
             </div>
-            <CircleDollarSign className="w-5 h-5 text-[#28a745]" />
+            <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
           </div>
         </div>
 
-        {/* Odoo List View Display */}
+        {/* Odoo Data Table Display */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-[#32323d] bg-[#25252d] py-20 text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28a745]"></div>
-            <p className="text-zinc-400 text-xs font-medium">Đang tải Odoo List View...</p>
+          <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28A745]"></div>
+            <p className="text-[#6C757D] text-xs font-medium">Đang tải Odoo List View...</p>
           </div>
         ) : (
           <PenaltyList
@@ -373,15 +364,15 @@ export default function PenaltiesPage() {
 
       {/* Violation Form Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-[#25252d] border-[#32323d] text-zinc-100 p-0">
-          <div className="bg-[#1e1e24] px-6 py-4 border-b border-[#32323d] flex items-center justify-between">
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
+          <div className="bg-[#F8F9FA] px-6 py-3.5 border-b border-[#DEE2E6] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-zinc-100 text-lg font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
-              <SheetDescription className="text-zinc-400 text-xs">
+              <SheetTitle className="text-[#212529] text-base font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
+              <SheetDescription className="text-[#6C757D] text-xs">
                 Odoo Form View
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#28a745]/20 text-[#28a745] border border-[#28a745]/30 px-2 py-0.5 rounded">
+            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#28A745]/10 text-[#28A745] border border-[#28A745]/20 px-2 py-0.5 rounded">
               Bản nháp
             </div>
           </div>

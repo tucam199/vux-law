@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Trung tâm xử lý vi phạm VUX LAW',
-  description: 'Quản lý và theo dõi các khoản phạt và quy định vi phạm.',
+  title: 'Trung tâm xử lý vi phạm VUX LAW ERP',
+  description: 'Hệ thống quản lý quy định và xử phạt chuẩn Odoo ERP.',
 };
 
 export default function RootLayout({
@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`dark ${inter.variable}`}>
-      <body className={`${inter.className} font-sans bg-[#09090b] text-zinc-100 antialiased selection:bg-emerald-500 selection:text-zinc-950`}>
+    <html lang="vi" className={`light ${inter.variable}`}>
+      <body className={`${inter.className} font-sans bg-[#F8F9FA] text-[#212529] antialiased selection:bg-[#017E84] selection:text-white`}>
         {children}
         <Toaster />
       </body>

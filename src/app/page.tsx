@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Plus, ListChecks, Server, Search, CircleDollarSign, Ban, ShieldCheck, Filter, X, LayoutGrid, List, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Plus, ListChecks, Server, Search, CircleDollarSign, Ban, ShieldCheck, Filter, X, LayoutGrid, List, ChevronRight, ChevronLeft, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -144,23 +144,23 @@ export default function Home() {
   }, [regulations, searchQuery, activeFilter]);
 
   return (
-    <div className="min-h-screen bg-[#1e1e24] text-zinc-100 font-sans">
-      {/* Odoo 17 Top Navbar */}
-      <header className="bg-[#18181c] border-b border-[#32323d] sticky top-0 z-30">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#212529] font-sans">
+      {/* Odoo 17 Light Mode Top Navbar */}
+      <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="flex h-14 items-center justify-between gap-4">
+          <div className="flex h-12 items-center justify-between gap-4">
             <Logo />
             <div className="flex items-center gap-2">
               <Link href="/vibehost">
-                <Button variant="ghost" size="sm" className="h-8 text-xs text-zinc-300 hover:text-white hover:bg-[#25252d]">
-                  <Server className="h-3.5 w-3.5 mr-1 text-[#017e84]" />
+                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+                  <Server className="h-3.5 w-3.5 mr-1 text-[#017E84]" />
                   VibeHost MCP
                 </Button>
               </Link>
 
               <Link href="/penalties">
-                <Button variant="ghost" size="sm" className="h-8 text-xs text-zinc-300 hover:text-white hover:bg-[#25252d]">
-                  <ListChecks className="h-3.5 w-3.5 mr-1 text-[#28a745]" />
+                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+                  <ListChecks className="h-3.5 w-3.5 mr-1 text-[#28A745]" />
                   Danh Sách Bị Phạt
                 </Button>
               </Link>
@@ -169,93 +169,78 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Odoo 17 Control Panel Bar */}
-      <div className="bg-[#25252d] border-b border-[#32323d] shadow-sm sticky top-14 z-20">
-        <div className="container mx-auto px-4 lg:px-6 py-3">
+      {/* Odoo 17 Light Mode Control Panel Bar (Exact match to Screenshots 1-4) */}
+      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+        <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Odoo Breadcrumbs & Primary Action Button */}
+            {/* Left Controls: Breadcrumbs & Primary Purple Button */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center text-sm font-medium text-zinc-300 gap-1.5">
-                <span className="text-[#017e84] font-bold">Quy định</span>
-                <ChevronRight className="w-4 h-4 text-zinc-500" />
-                <span className="text-zinc-100 font-semibold">Khung Xử Phạt</span>
+              <div className="flex items-center text-xs font-semibold text-[#212529] gap-1">
+                <span className="text-[#017E84] font-bold">Quy định</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
+                <span className="text-[#212529]">Khung Xử Phạt</span>
               </div>
 
-              {/* Odoo Primary Action Button */}
+              {/* Odoo Purple Primary Action Button */}
               <button
                 onClick={handleAddNew}
-                className="btn-odoo-primary"
+                className="btn-odoo-purple text-xs"
               >
-                <Plus className="h-4 w-4" />
-                Thêm Mới
+                <Plus className="h-3.5 w-3.5" />
+                Thêm Quy Định
               </button>
             </div>
 
-            {/* Odoo Search & Filter Control View */}
-            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              {/* Search View */}
-              <div className="relative w-full md:w-72">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
-                <Input
-                  type="text"
-                  placeholder="Tìm kiếm quy định..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 pr-7 h-8 bg-[#1e1e24] border-[#32323d] text-xs text-zinc-100 rounded focus-visible:ring-[#714B67]"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-200"
-                  >
-                    <X className="w-3.5 h-3.5" />
+            {/* Central Odoo Search Bar with Teal Border (Exact match to Screenshots 1-4) */}
+            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2 py-1 shadow-xs">
+              <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
+              
+              {/* Embedded Filter Tag Pills */}
+              {activeFilter !== "all" && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/30 px-1.5 py-0.5 rounded mr-1 shrink-0">
+                  {activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}
+                  <button onClick={() => setActiveFilter("all")} className="hover:text-rose-600">
+                    <X className="w-3 h-3" />
                   </button>
-                )}
+                </span>
+              )}
+
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent text-xs text-[#212529] focus:outline-none placeholder-[#6C757D]"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-[#6C757D] hover:text-[#212529]">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Right Controls: Pagination & View Switcher Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Odoo Pagination Counter (1-9 / 9 < >) */}
+              <div className="flex items-center gap-1.5 text-xs text-[#212529] font-medium">
+                <span>1-{filteredRegulations.length} / {filteredRegulations.length}</span>
+                <div className="flex items-center border border-[#DEE2E6] rounded bg-white">
+                  <button className="p-1 hover:bg-zinc-100 border-r border-[#DEE2E6]">
+                    <ChevronLeft className="w-3 h-3 text-[#6C757D]" />
+                  </button>
+                  <button className="p-1 hover:bg-zinc-100">
+                    <ChevronRight className="w-3 h-3 text-[#6C757D]" />
+                  </button>
+                </div>
               </div>
 
-              {/* Filter Pills */}
-              <div className="flex items-center gap-1 bg-[#1e1e24] p-0.5 rounded border border-[#32323d]">
-                <button
-                  onClick={() => setActiveFilter("all")}
-                  className={`h-7 px-2.5 text-xs font-medium rounded transition-colors ${
-                    activeFilter === "all"
-                      ? "bg-[#714B67] text-white"
-                      : "text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  Tất cả ({regulations.length})
-                </button>
-
-                <button
-                  onClick={() => setActiveFilter("fine")}
-                  className={`h-7 px-2.5 text-xs font-medium rounded transition-colors ${
-                    activeFilter === "fine"
-                      ? "bg-[#28a745] text-white"
-                      : "text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  Phạt tiền ({stats.fineCount})
-                </button>
-
-                <button
-                  onClick={() => setActiveFilter("restriction")}
-                  className={`h-7 px-2.5 text-xs font-medium rounded transition-colors ${
-                    activeFilter === "restriction"
-                      ? "bg-rose-600 text-white"
-                      : "text-zinc-400 hover:text-zinc-200"
-                  }`}
-                >
-                  Hạn chế ({stats.restrictionCount})
-                </button>
-              </div>
-
-              {/* View Switcher Buttons */}
-              <div className="flex items-center gap-1 bg-[#1e1e24] p-0.5 rounded border border-[#32323d] shrink-0">
-                <button className="p-1.5 text-zinc-200 bg-[#32323d] rounded" title="Kanban View">
+              {/* Odoo View Switcher (Kanban / List) */}
+              <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden">
+                <button className="p-1.5 bg-[#017E84]/15 text-[#017E84]" title="Kanban View">
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
                 <Link href="/penalties">
-                  <button className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded" title="List View">
+                  <button className="p-1.5 text-[#6C757D] hover:text-[#017E84]" title="List View">
                     <List className="w-3.5 h-3.5" />
                   </button>
                 </Link>
@@ -265,50 +250,50 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Odoo Content Body */}
-      <main className="container mx-auto px-4 lg:px-6 py-6 max-w-7xl space-y-6">
-        {/* Odoo Stat Buttons / KPI Counters */}
+      {/* Main Odoo Body Content */}
+      <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
+        {/* Odoo KPI Stat Cards (Screenshot 4 Helpdesk style) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase">TỔNG QUY ĐỊNH</span>
-              <div className="text-xl font-bold text-white">{stats.total}</div>
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
+            <div>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG QUY ĐỊNH</p>
+              <p className="text-xl font-bold text-[#212529]">{stats.total}</p>
             </div>
-            <ShieldCheck className="w-6 h-6 text-[#714B67]" />
+            <ShieldCheck className="w-5 h-5 text-[#714B67]" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase">PHẠT TIỀN</span>
-              <div className="text-xl font-bold text-[#28a745]">{stats.fineCount}</div>
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
+            <div>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">PHẠT TIỀN</p>
+              <p className="text-xl font-bold text-[#28A745]">{stats.fineCount}</p>
             </div>
-            <CircleDollarSign className="w-6 h-6 text-[#28a745]" />
+            <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase">HẠN CHẾ</span>
-              <div className="text-xl font-bold text-rose-400">{stats.restrictionCount}</div>
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
+            <div>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">HẠN CHẾ</p>
+              <p className="text-xl font-bold text-rose-600">{stats.restrictionCount}</p>
             </div>
-            <Ban className="w-6 h-6 text-rose-400" />
+            <Ban className="w-5 h-5 text-rose-600" />
           </div>
 
-          <div className="bg-[#25252d] border border-[#32323d] rounded-lg p-3 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase">MỨC PHẠT TỔNG</span>
-              <div className="text-base font-bold text-[#017e84] truncate">
+          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
+            <div>
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase">MỨC PHẠT MAX</p>
+              <p className="text-base font-bold text-[#017E84] truncate">
                 {formatCurrency(stats.totalFineAmount)}
-              </div>
+              </p>
             </div>
-            <SlidersHorizontal className="w-6 h-6 text-[#017e84]" />
+            <SlidersHorizontal className="w-5 h-5 text-[#017E84]" />
           </div>
         </div>
 
         {/* Odoo Kanban View Grid */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-[#32323d] bg-[#25252d] py-20 text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#714B67]"></div>
-            <p className="text-zinc-400 text-xs font-medium">Đang tải Odoo Kanban View...</p>
+          <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#017E84]"></div>
+            <p className="text-[#6C757D] text-xs font-medium">Đang tải Odoo Kanban View...</p>
           </div>
         ) : filteredRegulations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -322,16 +307,16 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#32323d] bg-[#25252d] py-20 text-center space-y-3">
-            <ShieldCheck className="h-10 w-10 text-zinc-500" />
+          <div className="flex flex-col items-center justify-center rounded border border-dashed border-[#DEE2E6] bg-white py-20 text-center space-y-3">
+            <ShieldCheck className="h-10 w-10 text-[#6C757D]" />
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-zinc-200">
+              <h3 className="text-sm font-bold text-[#212529]">
                 {searchQuery || activeFilter !== "all"
                   ? "Không tìm thấy quy định phù hợp trong Odoo"
                   : "Chưa Có Quy Định Nào"}
               </h3>
-              <p className="text-xs text-zinc-400 max-w-xs mx-auto">
-                Bắt đầu bằng cách bấm nút "Thêm Mới" ở thanh điều hướng Odoo.
+              <p className="text-xs text-[#6C757D] max-w-xs mx-auto">
+                Bắt đầu bằng cách bấm nút "Thêm Quy Định" ở thanh điều khiển Odoo.
               </p>
             </div>
             {searchQuery || activeFilter !== "all" ? (
@@ -340,14 +325,14 @@ export default function Home() {
                   setSearchQuery("");
                   setActiveFilter("all");
                 }}
-                className="btn-odoo-secondary"
+                className="btn-odoo-outline"
               >
                 Xóa bộ lọc
               </button>
             ) : (
-              <button onClick={handleAddNew} className="btn-odoo-primary">
+              <button onClick={handleAddNew} className="btn-odoo-purple">
                 <Plus className="h-4 w-4" />
-                Thêm Mới Quy Định
+                Thêm Quy Định
               </button>
             )}
           </div>
@@ -356,19 +341,19 @@ export default function Home() {
 
       {/* Slide-over Odoo Form Sheet View */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-lg w-full flex flex-col bg-[#25252d] border-[#32323d] text-zinc-100 p-0">
+        <SheetContent className="sm:max-w-lg w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
           {/* Odoo Form Header Status Bar */}
-          <div className="bg-[#1e1e24] px-6 py-4 border-b border-[#32323d] flex items-center justify-between">
+          <div className="bg-[#F8F9FA] px-6 py-3.5 border-b border-[#DEE2E6] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-zinc-100 text-lg font-bold">
+              <SheetTitle className="text-[#212529] text-base font-bold">
                 {editingRegulation ? "Sửa Quy Định Odoo" : "Tạo Quy Định Mới"}
               </SheetTitle>
-              <SheetDescription className="text-zinc-400 text-xs">
-                Odoo Form View
+              <SheetDescription className="text-[#6C757D] text-xs">
+                Odoo Form Sheet View
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#714B67]/20 text-[#714B67] border border-[#714B67]/30 px-2 py-0.5 rounded">
-              {editingRegulation ? "Chỉnh sửa" : "Bản nháp"}
+            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#714B67]/10 text-[#714B67] border border-[#714B67]/20 px-2 py-0.5 rounded">
+              {editingRegulation ? "Đã lưu" : "Bản nháp"}
             </div>
           </div>
 

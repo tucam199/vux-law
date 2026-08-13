@@ -3,24 +3,24 @@ import { Grid3X3, Scale } from 'lucide-react';
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-3 group transition-transform hover:opacity-90">
-      {/* Odoo App Switcher Matrix Menu Icon */}
-      <div className="w-9 h-9 rounded-lg bg-[#714B67] hover:bg-[#5f3e56] text-white flex items-center justify-center shadow-sm transition-colors border border-[#85587a]">
-        <Grid3X3 className="w-5 h-5 text-white/90 group-hover:rotate-90 transition-transform duration-300" />
+    <Link href="/" className="flex items-center gap-2.5 group hover:opacity-90">
+      {/* Odoo App Switcher Matrix Icon (Screenshot 1-4 style) */}
+      <div className="w-8 h-8 rounded bg-[#017E84] text-white flex items-center justify-center shadow-sm border border-[#01686d]">
+        <Grid3X3 className="w-4 h-4 text-white group-hover:rotate-90 transition-transform duration-300" />
       </div>
 
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
-            <Scale className="w-4 h-4 text-[#017e84]" />
+          <span className="text-base font-bold tracking-tight text-[#212529] flex items-center gap-1">
+            <Scale className="w-4 h-4 text-[#714B67]" />
             VUX Law
           </span>
-          <span className="text-[10px] font-semibold bg-[#714B67]/20 text-[#017e84] border border-[#017e84]/30 px-1.5 py-0.5 rounded uppercase">
-            Enterprise
+          <span className="text-[10px] font-semibold bg-[#714B67]/10 text-[#714B67] border border-[#714B67]/20 px-1.5 py-0.2 rounded uppercase">
+            ERP
           </span>
         </div>
-        <span className="text-[10px] font-medium tracking-wide text-zinc-400 -mt-0.5">
-          Quy Định & Xử Phạt ERP
+        <span className="text-[10px] font-medium text-[#6C757D] -mt-0.5">
+          Quy Định & Xử Phạt
         </span>
       </div>
     </Link>
