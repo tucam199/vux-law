@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Ban, CircleDollarSign, Zap, Trash2, Tag } from "lucide-react";
+import { Ban, CircleDollarSign, Zap, Trash2, Tag, FilePenLine } from "lucide-react";
 import type { Regulation } from "@/lib/types";
 import {
   AlertDialog,
@@ -39,13 +39,22 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
   
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ y: -3, transition: { duration: 0.2 } }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Card className="odoo-kanban-card pl-5 transition-shadow hover:shadow-md">
+      <Card className="odoo-kanban-card pl-5 border-[#DEE2E6] hover:border-[#714B67]/60 hover:shadow-md transition-all duration-300 rounded-lg">
+        {/* Top UI Layouts Mini Accent Bar */}
+        <div
+          className={`absolute top-0 left-0 right-0 h-1 ${
+            isFine
+              ? "bg-gradient-to-r from-[#017E84] to-emerald-400"
+              : "bg-gradient-to-r from-[#714B67] to-rose-400"
+          }`}
+        />
+
         {/* Clean Left Vertical Accent Stripe */}
         <div
           className={`absolute left-0 top-0 bottom-0 w-1.5 transition-colors ${
@@ -53,21 +62,21 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
           }`}
         />
 
-        <CardHeader className="p-0 pb-2.5">
+        <CardHeader className="p-0 pb-2.5 pt-1">
           <div className="flex justify-between items-start gap-2">
             <div className="space-y-1">
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2 py-0.5 rounded">
-                <Tag className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/20 px-2.5 py-0.5 rounded-full shadow-2xs">
+                <Tag className="w-3 h-3 text-[#017E84]" />
                 {regulation.category}
               </span>
-              <CardTitle className="text-sm font-bold text-[#212529] leading-snug pt-1">
+              <CardTitle className="text-sm font-bold text-[#212529] leading-snug pt-1.5">
                 {regulation.violation}
               </CardTitle>
             </div>
 
             <Badge
               variant="outline"
-              className={`flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded shrink-0 border ${
+              className={`flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold rounded-full shrink-0 border ${
                 isFine
                   ? 'bg-[#28A745]/10 text-[#28A745] border-[#28A745]/30'
                   : 'bg-rose-500/10 text-rose-600 border-rose-500/30'
@@ -85,16 +94,16 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
 
         <CardContent className="p-0 py-2.5 flex-grow">
           <Separator className="bg-[#E5E7EB] mb-2.5" />
-          <div className="space-y-1">
+          <div className="space-y-1 bg-[#F8F9FA] p-2.5 rounded-md border border-[#DEE2E6]">
             <span className="block text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">
-              MỨC XỬ PHẠT
+              MỨC XỬ PHẠT QUY ĐỊNH
             </span>
             {isFine ? (
-              <div className="text-lg font-bold text-[#212529] leading-tight">
+              <div className="text-lg font-extrabold text-[#212529] leading-tight">
                 {formatCurrency(regulation.penalty.amount ?? 0)}
               </div>
             ) : (
-              <p className="text-xs text-[#212529] bg-[#F8F9FA] p-2.5 rounded border border-[#DEE2E6] italic leading-relaxed">
+              <p className="text-xs text-[#212529] font-medium italic leading-relaxed">
                 "{regulation.penalty.details || 'Không có chi tiết'}"
               </p>
             )}
@@ -105,19 +114,19 @@ export function RegulationCard({ regulation, onEdit, onDelete, onQuickPenalty }:
           <div className="flex items-center gap-1.5">
             {onQuickPenalty && (
               <motion.button
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.94 }}
                 onClick={() => onQuickPenalty(regulation)}
-                className="btn-odoo-green text-[11px] py-1 px-2 font-bold flex items-center gap-1 shadow-xs"
+                className="btn-odoo-green text-[11px] py-1 px-2.5 font-extrabold flex items-center gap-1 shadow-xs ring-1 ring-[#28A745]/30 hover:shadow-sm"
                 title="Ghi nhận vi phạm nhanh cho nhân sự với quy định này"
               >
-                <Zap className="w-3 h-3 fill-current text-amber-300" />
+                <Zap className="w-3.5 h-3.5 fill-amber-300 text-amber-300 animate-pulse" />
                 Phạt Nhanh
               </motion.button>
             )}
 
             <button
               onClick={onEdit}
-              className="btn-odoo-purple text-[11px] py-1 px-2 font-semibold"
+              className="btn-odoo-purple text-[11px] py-1 px-2.5 font-semibold"
             >
               Sửa
             </button>

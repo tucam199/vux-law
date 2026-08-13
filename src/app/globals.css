@@ -43,23 +43,33 @@ body {
 }
 
 @layer components {
-  /* Odoo Light Mode Buttons */
+  /* Premium Odoo Light Mode Buttons */
   .btn-odoo-purple {
-    @apply bg-[#714B67] hover:bg-[#5f3e56] text-white font-medium transition-all rounded px-3 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+    @apply bg-[#714B67] hover:bg-[#5f3e56] text-white font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow-sm;
   }
   .btn-odoo-teal {
-    @apply bg-[#017E84] hover:bg-[#01686d] text-white font-medium transition-all rounded px-3 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+    @apply bg-[#017E84] hover:bg-[#01686d] text-white font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow-sm;
   }
   .btn-odoo-green {
-    @apply bg-[#28A745] hover:bg-[#218838] text-white font-medium transition-all rounded px-3 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+    @apply bg-[#28A745] hover:bg-[#218838] text-white font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow;
   }
   .btn-odoo-outline {
-    @apply bg-white hover:bg-zinc-100 border border-[#DEE2E6] text-[#212529] font-medium transition-all rounded px-3 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98];
+    @apply bg-white hover:bg-zinc-50 border border-[#DEE2E6] hover:border-[#017E84]/50 text-[#212529] font-medium transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs;
   }
 
-  /* Odoo Kanban Tile */
+  /* Odoo Kanban Tile with UI Layouts Glow & Shadow */
   .odoo-kanban-card {
-    @apply bg-white border border-[#DEE2E6] hover:border-[#714B67] transition-all rounded-md p-4 flex flex-col justify-between relative overflow-hidden shadow-sm;
+    @apply bg-white border border-[#DEE2E6] hover:border-[#714B67]/60 hover:shadow-md transition-all duration-300 rounded-lg p-4 flex flex-col justify-between relative overflow-hidden shadow-xs;
+  }
+
+  /* Glassmorphism Header Bar */
+  .odoo-glass-header {
+    @apply bg-white/90 backdrop-blur-md border-b border-[#DEE2E6] shadow-2xs;
+  }
+
+  /* UI Layouts Gradient Accent Box */
+  .odoo-gradient-badge {
+    @apply bg-gradient-to-r from-[#714B67] to-[#017E84] text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-2xs;
   }
 }
 
