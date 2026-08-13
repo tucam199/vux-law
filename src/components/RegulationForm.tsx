@@ -122,23 +122,22 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
         await onSave(submissionData);
     } catch (error) {
         // The parent component will show a toast error.
-        // The form remains as is for the user to try again.
     }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-0 py-2 flex-1 flex flex-col">
-        <ScrollArea className="flex-grow pr-6 -mr-6">
-            <div className="space-y-6 pb-6">
+        <ScrollArea className="flex-grow pr-4 -mr-4">
+            <div className="space-y-5 pb-4">
                 <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Hạng Mục Vi Phạm</FormLabel>
+                    <FormLabel className="text-xs font-bold text-[#212529]">Hạng Mục Vi Phạm</FormLabel>
                     <FormControl>
-                        <Input placeholder="ví dụ: Vi phạm giao thông" {...field} />
+                        <Input placeholder="ví dụ: Vi phạm giao thông" {...field} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs h-9" />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -149,9 +148,9 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 name="violation"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Chi Tiết Vi Phạm</FormLabel>
+                    <FormLabel className="text-xs font-bold text-[#212529]">Chi Tiết Vi Phạm</FormLabel>
                     <FormControl>
-                        <Textarea placeholder="Mô tả chi tiết vi phạm..." {...field} value={field.value || ''} rows={4} />
+                        <Textarea placeholder="Mô tả chi tiết vi phạm..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs" />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -161,8 +160,8 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 control={form.control}
                 name="penaltyType"
                 render={({ field }) => (
-                    <FormItem className="space-y-3">
-                    <FormLabel>Loại Hình Phạt</FormLabel>
+                    <FormItem className="space-y-2">
+                    <FormLabel className="text-xs font-bold text-[#212529]">Loại Hình Phạt</FormLabel>
                     <FormControl>
                         <RadioGroup
                         onValueChange={field.onChange}
@@ -173,13 +172,13 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                             <FormControl>
                             <RadioGroupItem value="fine" />
                             </FormControl>
-                            <FormLabel className="font-normal">Phạt tiền</FormLabel>
+                            <FormLabel className="font-normal text-xs text-[#212529]">Phạt tiền</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                             <FormControl>
                             <RadioGroupItem value="restriction" />
                             </FormControl>
-                            <FormLabel className="font-normal">Hạn chế</FormLabel>
+                            <FormLabel className="font-normal text-xs text-[#212529]">Hạn chế</FormLabel>
                         </FormItem>
                         </RadioGroup>
                     </FormControl>
@@ -193,15 +192,15 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                     name="penaltyAmount"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Số Tiền Phạt</FormLabel>
+                        <FormLabel className="text-xs font-bold text-[#212529]">Số Tiền Phạt</FormLabel>
                         <FormControl>
                             <div className="relative">
-                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} className="bg-slate-950 border-slate-800" />
-                                <span className="absolute inset-y-0 right-3 flex items-center text-slate-400 font-medium">đ</span>
+                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs h-9 pr-8" />
+                                <span className="absolute inset-y-0 right-3 flex items-center text-[#6C757D] text-xs font-medium">đ</span>
                             </div>
                         </FormControl>
                         {field.value && Number(field.value) > 0 && (
-                          <p className="text-xs text-emerald-400 font-medium mt-1">
+                          <p className="text-xs text-[#28A745] font-semibold mt-1">
                             Xem trước: {new Intl.NumberFormat('vi-VN').format(Number(field.value))} đ
                           </p>
                         )}
@@ -216,9 +215,9 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                     name="penaltyDetails"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Chi Tiết Hạn Chế</FormLabel>
+                        <FormLabel className="text-xs font-bold text-[#212529]">Chi Tiết Hạn Chế</FormLabel>
                         <FormControl>
-                        <Textarea placeholder="Mô tả chi tiết hạn chế..." {...field} value={field.value || ''} rows={4} />
+                        <Textarea placeholder="Mô tả chi tiết hạn chế..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -227,13 +226,13 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 )}
             </div>
         </ScrollArea>
-        <div className="flex-shrink-0 pt-4 border-t border-[#32323d] flex justify-end gap-2">
-            <button type="button" className="btn-odoo-secondary" onClick={onClose}>
+        <div className="flex-shrink-0 pt-4 border-t border-[#DEE2E6] flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs border-[#DEE2E6] text-[#212529]">
                 Hủy
-            </button>
-            <button type="submit" disabled={form.formState.isSubmitting} className="btn-odoo-primary">
-                {form.formState.isSubmitting ? "Đang lưu Odoo..." : "Lưu Quy Định"}
-            </button>
+            </Button>
+            <Button type="submit" disabled={form.formState.isSubmitting} className="h-8 text-xs bg-[#714B67] hover:bg-[#5f3e56] text-white font-bold">
+                {form.formState.isSubmitting ? "Đang lưu..." : "Lưu Quy Định"}
+            </Button>
         </div>
       </form>
     </Form>

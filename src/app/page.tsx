@@ -145,21 +145,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#212529] font-sans">
-      {/* Odoo 17 Light Mode Top Navbar */}
+      {/* Header Bar */}
       <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex h-12 items-center justify-between gap-4">
             <Logo />
+            {/* Standard Header Buttons (as requested: no forced odoo colors here) */}
             <div className="flex items-center gap-2">
               <Link href="/vibehost">
-                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+                <Button variant="outline" size="sm" className="h-8 text-xs border-[#DEE2E6] text-[#212529] hover:bg-zinc-100 font-medium">
                   <Server className="h-3.5 w-3.5 mr-1 text-[#017E84]" />
                   VibeHost MCP
                 </Button>
               </Link>
 
               <Link href="/penalties">
-                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+                <Button variant="outline" size="sm" className="h-8 text-xs border-[#DEE2E6] text-[#212529] hover:bg-zinc-100 font-medium">
                   <ListChecks className="h-3.5 w-3.5 mr-1 text-[#28A745]" />
                   Danh Sách Bị Phạt
                 </Button>
@@ -169,7 +170,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Odoo 17 Light Mode Control Panel Bar (Exact match to Screenshots 1-4) */}
+      {/* Odoo 17 Light Mode Control Panel Bar */}
       <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
@@ -184,15 +185,15 @@ export default function Home() {
               {/* Odoo Purple Primary Action Button */}
               <button
                 onClick={handleAddNew}
-                className="btn-odoo-purple text-xs"
+                className="btn-odoo-purple text-xs font-bold"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Thêm Quy Định
               </button>
             </div>
 
-            {/* Central Odoo Search Bar with Teal Border (Exact match to Screenshots 1-4) */}
-            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2 py-1 shadow-xs">
+            {/* Central Odoo Search Bar */}
+            <div className="relative flex items-center w-full md:w-96 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
               <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
               
               {/* Embedded Filter Tag Pills */}
@@ -221,7 +222,6 @@ export default function Home() {
 
             {/* Right Controls: Pagination & View Switcher Buttons */}
             <div className="flex items-center gap-3">
-              {/* Odoo Pagination Counter (1-9 / 9 < >) */}
               <div className="flex items-center gap-1.5 text-xs text-[#212529] font-medium">
                 <span>1-{filteredRegulations.length} / {filteredRegulations.length}</span>
                 <div className="flex items-center border border-[#DEE2E6] rounded bg-white">
@@ -234,7 +234,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Odoo View Switcher (Kanban / List) */}
               <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden">
                 <button className="p-1.5 bg-[#017E84]/15 text-[#017E84]" title="Kanban View">
                   <LayoutGrid className="w-3.5 h-3.5" />
@@ -250,42 +249,42 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Odoo Body Content */}
+      {/* Main Content Body */}
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
-        {/* Odoo KPI Stat Cards (Screenshot 4 Helpdesk style) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG QUY ĐỊNH</p>
-              <p className="text-xl font-bold text-[#212529]">{stats.total}</p>
+        {/* KPI Stat Cards (Clean white Cards with crisp padding) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG QUY ĐỊNH</p>
+              <p className="text-2xl font-black text-[#212529]">{stats.total}</p>
             </div>
-            <ShieldCheck className="w-5 h-5 text-[#714B67]" />
+            <ShieldCheck className="w-6 h-6 text-[#714B67]" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">PHẠT TIỀN</p>
-              <p className="text-xl font-bold text-[#28A745]">{stats.fineCount}</p>
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">PHẠT TIỀN</p>
+              <p className="text-2xl font-black text-[#28A745]">{stats.fineCount}</p>
             </div>
-            <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
+            <CircleDollarSign className="w-6 h-6 text-[#28A745]" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">HẠN CHẾ</p>
-              <p className="text-xl font-bold text-rose-600">{stats.restrictionCount}</p>
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">HẠN CHẾ</p>
+              <p className="text-2xl font-black text-rose-600">{stats.restrictionCount}</p>
             </div>
-            <Ban className="w-5 h-5 text-rose-600" />
+            <Ban className="w-6 h-6 text-rose-600" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">MỨC PHẠT MAX</p>
-              <p className="text-base font-bold text-[#017E84] truncate">
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">MỨC PHẠT MAX</p>
+              <p className="text-lg font-black text-[#017E84] truncate">
                 {formatCurrency(stats.totalFineAmount)}
               </p>
             </div>
-            <SlidersHorizontal className="w-5 h-5 text-[#017E84]" />
+            <SlidersHorizontal className="w-6 h-6 text-[#017E84]" />
           </div>
         </div>
 
@@ -293,7 +292,7 @@ export default function Home() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#017E84]"></div>
-            <p className="text-[#6C757D] text-xs font-medium">Đang tải Odoo Kanban View...</p>
+            <p className="text-[#6C757D] text-xs font-medium">Đang tải danh sách quy định...</p>
           </div>
         ) : filteredRegulations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -312,11 +311,11 @@ export default function Home() {
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-[#212529]">
                 {searchQuery || activeFilter !== "all"
-                  ? "Không tìm thấy quy định phù hợp trong Odoo"
+                  ? "Không tìm thấy quy định phù hợp"
                   : "Chưa Có Quy Định Nào"}
               </h3>
               <p className="text-xs text-[#6C757D] max-w-xs mx-auto">
-                Bắt đầu bằng cách bấm nút "Thêm Quy Định" ở thanh điều khiển Odoo.
+                Bắt đầu bằng cách bấm nút "Thêm Quy Định" ở thanh điều khiển.
               </p>
             </div>
             {searchQuery || activeFilter !== "all" ? (
@@ -339,17 +338,16 @@ export default function Home() {
         )}
       </main>
 
-      {/* Slide-over Odoo Form Sheet View */}
+      {/* Form Sheet View */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetContent className="sm:max-w-lg w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
-          {/* Odoo Form Header Status Bar */}
           <div className="bg-[#F8F9FA] px-6 py-3.5 border-b border-[#DEE2E6] flex items-center justify-between">
             <div className="space-y-0.5">
               <SheetTitle className="text-[#212529] text-base font-bold">
-                {editingRegulation ? "Sửa Quy Định Odoo" : "Tạo Quy Định Mới"}
+                {editingRegulation ? "Sửa Quy Định" : "Tạo Quy Định Mới"}
               </SheetTitle>
               <SheetDescription className="text-[#6C757D] text-xs">
-                Odoo Form Sheet View
+                Biểu mẫu nhập liệu quy định
               </SheetDescription>
             </div>
             <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#714B67]/10 text-[#714B67] border border-[#714B67]/20 px-2 py-0.5 rounded">

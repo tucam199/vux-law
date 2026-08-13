@@ -65,16 +65,16 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
         </div>
       </CardHeader>
 
-      <CardContent className="p-0 py-2 flex-grow">
+      <CardContent className="p-0 py-3 flex-grow">
         <Separator className="bg-[#E5E7EB] mb-3" />
-        <div>
-          <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wide mb-1">
+        <div className="space-y-1">
+          <span className="block text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">
             MỨC XỬ PHẠT
-          </p>
+          </span>
           {isFine ? (
-            <span className="text-xl font-bold text-[#28A745]">
+            <div className="text-xl font-bold text-[#28A745] leading-tight">
               {formatCurrency(regulation.penalty.amount ?? 0)}
-            </span>
+            </div>
           ) : (
             <p className="text-xs text-[#212529] bg-[#F8F9FA] p-2.5 rounded border border-[#DEE2E6] italic leading-relaxed">
               "{regulation.penalty.details || 'Không có chi tiết'}"
@@ -84,7 +84,6 @@ export function RegulationCard({ regulation, onEdit, onDelete }: RegulationCardP
       </CardContent>
 
       <CardFooter className="p-0 pt-3 border-t border-[#E5E7EB] flex justify-between items-center">
-        {/* Odoo Style "New Request" / "Action" Button */}
         <button
           onClick={onEdit}
           className="btn-odoo-purple text-[11px] py-1 px-2.5"

@@ -213,13 +213,13 @@ export default function PenaltiesPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#212529] font-sans">
-      {/* Odoo Top Navbar */}
+      {/* Header Bar */}
       <header className="bg-white border-b border-[#DEE2E6] sticky top-0 z-30 shadow-xs">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="flex h-12 items-center justify-between gap-4">
             <Logo />
             <Link href="/">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-[#212529] hover:bg-zinc-100">
+              <Button variant="outline" size="sm" className="h-8 text-xs border-[#DEE2E6] text-[#212529] hover:bg-zinc-100 font-medium">
                 <Home className="h-3.5 w-3.5 mr-1 text-[#017E84]" />
                 Trang Chủ Quy Định
               </Button>
@@ -228,11 +228,11 @@ export default function PenaltiesPage() {
         </div>
       </header>
 
-      {/* Odoo Control Panel Bar */}
+      {/* Control Panel Bar */}
       <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* Left Controls: Breadcrumbs & Primary Purple Button */}
+            {/* Left Controls: Breadcrumbs & Primary Action Button */}
             <div className="flex items-center gap-3">
               <div className="flex items-center text-xs font-semibold text-[#212529] gap-1">
                 <span className="text-[#017E84] font-bold">Xử phạt</span>
@@ -243,7 +243,7 @@ export default function PenaltiesPage() {
               <button
                 onClick={handleAddViolation}
                 disabled={noRegulations}
-                className="btn-odoo-green text-xs"
+                className="btn-odoo-green text-xs font-bold"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Ghi Nhận Vi Phạm
@@ -252,7 +252,7 @@ export default function PenaltiesPage() {
 
             {/* Central Search & Filter View */}
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2 py-1 shadow-xs">
+              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
                 <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
                 {selectedPerson && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/30 px-1.5 py-0.5 rounded mr-1 shrink-0">
@@ -274,7 +274,7 @@ export default function PenaltiesPage() {
               {/* Person Select */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="btn-odoo-outline text-xs">
+                  <button className="btn-odoo-outline text-xs font-medium">
                     <Users className="w-3.5 h-3.5 text-[#017E84]" />
                     {selectedPerson ? selectedPerson : "Nhân sự"}
                   </button>
@@ -308,50 +308,50 @@ export default function PenaltiesPage() {
         </div>
       </div>
 
-      {/* Main Odoo Content Body */}
+      {/* Main Body */}
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
-        {/* Odoo Stat Counter Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG LƯỢT PHẠT</p>
-              <p className="text-xl font-bold text-[#212529]">{stats.totalCount}</p>
+        {/* KPI Stat Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG LƯỢT PHẠT</p>
+              <p className="text-2xl font-black text-[#212529]">{stats.totalCount}</p>
             </div>
-            <Users className="w-5 h-5 text-[#017E84]" />
+            <Users className="w-6 h-6 text-[#017E84]" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">ĐÃ HOÀN THÀNH</p>
-              <p className="text-xl font-bold text-[#28A745]">{stats.completedCount}</p>
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">ĐÃ HOÀN THÀNH</p>
+              <p className="text-2xl font-black text-[#28A745]">{stats.completedCount}</p>
             </div>
-            <CheckCircle2 className="w-5 h-5 text-[#28A745]" />
+            <CheckCircle2 className="w-6 h-6 text-[#28A745]" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">CHƯA NỘP/THỰC HIỆN</p>
-              <p className="text-xl font-bold text-amber-600">{stats.pendingCount}</p>
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">CHƯA NỘP/THỰC HIỆN</p>
+              <p className="text-2xl font-black text-amber-600">{stats.pendingCount}</p>
             </div>
-            <Clock className="w-5 h-5 text-amber-600" />
+            <Clock className="w-6 h-6 text-amber-600" />
           </div>
 
-          <div className="bg-white border border-[#E5E7EB] rounded p-3 flex items-center justify-between shadow-xs">
-            <div>
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase">TỔNG TIỀN PHẠT</p>
-              <p className="text-base font-bold text-[#28A745]">
+          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG TIỀN PHẠT</p>
+              <p className="text-lg font-black text-[#28A745]">
                 {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
               </p>
             </div>
-            <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
+            <CircleDollarSign className="w-6 h-6 text-[#28A745]" />
           </div>
         </div>
 
-        {/* Odoo Data Table Display */}
+        {/* Data Table Display */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28A745]"></div>
-            <p className="text-[#6C757D] text-xs font-medium">Đang tải Odoo List View...</p>
+            <p className="text-[#6C757D] text-xs font-medium">Đang tải danh sách xử phạt...</p>
           </div>
         ) : (
           <PenaltyList
@@ -369,7 +369,7 @@ export default function PenaltiesPage() {
             <div className="space-y-0.5">
               <SheetTitle className="text-[#212529] text-base font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
               <SheetDescription className="text-[#6C757D] text-xs">
-                Odoo Form View
+                Biểu mẫu ghi nhận vi phạm
               </SheetDescription>
             </div>
             <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#28A745]/10 text-[#28A745] border border-[#28A745]/20 px-2 py-0.5 rounded">
