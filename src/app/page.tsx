@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Search, Plus, Users, CircleDollarSign, Ban, ShieldCheck, SlidersHorizontal, ChevronRight, ChevronLeft, LayoutGrid, List, X, Filter, FolderPlus, Zap, CheckCircle2 } from "lucide-react";
+import { Search, Plus, Users, CircleDollarSign, Ban, ShieldCheck, SlidersHorizontal, ChevronRight, ChevronLeft, LayoutGrid, List, X, Filter, FolderPlus, Zap, CheckCircle2, ClipboardPen } from "lucide-react";
 import { RegulationCard } from "@/components/RegulationCard";
 import { HeaderNav } from "@/components/HeaderNav";
 import { RegulationForm } from "@/components/RegulationForm";
@@ -15,7 +15,6 @@ import { getRegulations, addRegulation, updateRegulation, deleteRegulation } fro
 import { getPenalties, addMultiplePenalties } from "@/lib/penaltyService";
 import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
-import { Separator } from "@/components/ui/separator";
 import { motion, AnimatePresence } from "motion/react";
 
 function formatCurrency(amount: number) {
@@ -169,8 +168,8 @@ export default function Home() {
     }
   };
 
-  const handleQuickPenalty = (regulation: Regulation) => {
-    setQuickPenaltyRegulation(regulation);
+  const handleQuickPenalty = (regulation?: Regulation) => {
+    setQuickPenaltyRegulation(regulation || null);
     setIsQuickPenaltyOpen(true);
   };
 
@@ -179,7 +178,7 @@ export default function Home() {
       await addMultiplePenalties(violations);
       toast({
         title: "Thành công",
-        description: `Đã ghi nhận ${violations.length} vi phạm mới cho quy định "${quickPenaltyRegulation?.violation}".`,
+        description: `Đã ghi nhận ${violations.length} vi phạm mới vào Nhật ký xử phạt.`,
       });
       setIsQuickPenaltyOpen(false);
       setQuickPenaltyRegulation(null);
@@ -199,11 +198,37 @@ export default function Home() {
       {/* Unified Module Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingPenaltiesCount} />
 
+      {/* PAGE ONBOARDING HERO BANNER: Clear context for new users */}
+      <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] py-4">
+        <div className="container mx-auto px-4 lg:px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-lg font-bold text-[#1F1F1F] tracking-tight flex items-center gap-2">
+              <span>Hệ Thống Quy Định &amp; Mức Xử Phạt Nội Bộ</span>
+              <span className="badge-ds-info text-xs font-bold">VUX Law ERP</span>
+            </h1>
+            <p className="text-xs text-[#6B6B6B] mt-0.5">
+              Tra cứu danh mục quy định, cấu hình mức xử phạt và ghi nhận vi phạm cho nhân sự công ty.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              onClick={() => handleQuickPenalty()}
+              className="btn-ds-outline text-xs py-2 px-3 font-bold flex items-center gap-1.5"
+            >
+              <ClipboardPen className="w-4 h-4 text-[#1E74E8]" />
+              Ghi Nhận Vi Phạm
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
       {/* Control Panel Bar — Responsive 12-Column Grid Architecture */}
-      <div className="bg-[#F8F8F8] border-b border-[#E0E0E0] sticky top-14 z-[90]">
+      <div className="bg-white border-b border-[#E0E0E0] sticky top-14 z-[90]">
         <div className="container mx-auto px-4 lg:px-6 py-3">
           <div className="grid grid-cols-12 gap-4 items-center">
-            {/* Left Cluster: Breadcrumb, Primary CTA & Employee Manager (5 Columns) */}
+            {/* Left Cluster: Breadcrumb, Primary CTA & Employee Manager */}
             <div className="col-span-12 lg:col-span-5 flex flex-wrap items-center gap-2">
               <div className="flex items-center text-xs font-medium text-[#1F1F1F] gap-1 mr-2">
                 <span className="text-[#1E74E8] font-semibold">Quy định</span>
@@ -211,14 +236,14 @@ export default function Home() {
                 <span className="text-[#1F1F1F] font-bold">Khung Xử Phạt</span>
               </div>
 
-              {/* Single Primary CTA (#7FCA27 Green) */}
+              {/* Primary CTA (#7FCA27 Green) */}
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleAddNew()}
                 className="btn-ds-primary text-xs py-2 px-3.5"
               >
                 <Plus className="h-4 w-4" />
-                Thêm Quy Định
+                Tạo Quy Định Mới
               </motion.button>
 
               <motion.button
@@ -227,11 +252,11 @@ export default function Home() {
                 className="btn-ds-secondary text-xs py-2 px-3.5"
               >
                 <Users className="w-4 h-4 text-[#1E74E8]" />
-                <span>Quản Lý Nhân Sự ({employees.length})</span>
+                <span>Nhân Sự ({employees.length})</span>
               </motion.button>
             </div>
 
-            {/* Central Search Cluster (4 Columns) */}
+            {/* Central Search Cluster */}
             <div className="col-span-12 md:col-span-7 lg:col-span-4">
               <div className="relative flex items-center w-full bg-white border border-[#E0E0E0] focus-within:border-[#1E74E8] rounded-md px-3 py-1.5 transition-colors">
                 <Search className="w-4 h-4 text-[#6B6B6B] mr-2 shrink-0" />
@@ -260,18 +285,10 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Cluster: View Switcher & Counter (3 Columns) */}
+            {/* Right Cluster: View Switcher & Counter */}
             <div className="col-span-12 md:col-span-5 lg:col-span-3 flex items-center justify-end gap-3">
               <div className="flex items-center gap-1.5 text-xs text-[#1F1F1F] font-medium">
-                <span>1-{filteredRegulations.length} / {filteredRegulations.length}</span>
-                <div className="flex items-center border border-[#E0E0E0] rounded-sm bg-white">
-                  <button className="p-1 hover:bg-[#F8F8F8] border-r border-[#E0E0E0]">
-                    <ChevronLeft className="w-3.5 h-3.5 text-[#6B6B6B]" />
-                  </button>
-                  <button className="p-1 hover:bg-[#F8F8F8]">
-                    <ChevronRight className="w-3.5 h-3.5 text-[#6B6B6B]" />
-                  </button>
-                </div>
+                <span>Hiển thị: <strong>{filteredRegulations.length}</strong> quy định</span>
               </div>
 
               <div className="flex items-center border border-[#E0E0E0] rounded-sm bg-white overflow-hidden">
@@ -308,7 +325,7 @@ export default function Home() {
           <div className="flex justify-between items-center px-1">
             <span className="text-xs font-bold text-[#6B6B6B] uppercase tracking-wider flex items-center gap-1.5">
               <Filter className="w-3.5 h-3.5 text-[#1E74E8]" />
-              Bộ lọc nhanh 1-Click
+              Thống kê &amp; Lọc nhanh
             </span>
             {activeFilter !== "all" && (
               <button
@@ -348,7 +365,7 @@ export default function Home() {
             >
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">PHẠT TIỀN (FILTER)</p>
+                  <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">QUY ĐỊNH PHẠT TIỀN</p>
                   <p className="text-2xl font-bold text-[#1F1F1F]">{stats.fineCount}</p>
                 </div>
                 <CircleDollarSign className="w-6 h-6 text-[#7FCA27]" />
@@ -365,7 +382,7 @@ export default function Home() {
             >
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">HẠN CHẾ (FILTER)</p>
+                  <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">QUY ĐỊNH HẠN CHẾ</p>
                   <p className="text-2xl font-bold text-[#1F1F1F]">{stats.restrictionCount}</p>
                 </div>
                 <Ban className="w-6 h-6 text-[#FF8832]" />
@@ -374,7 +391,7 @@ export default function Home() {
 
             <div className="col-span-6 md:col-span-3 card-ds p-4 flex items-center justify-between">
               <div className="space-y-1">
-                <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">MỨC PHẠT MAX</p>
+                <p className="text-[11px] font-bold text-[#6B6B6B] uppercase tracking-wider">MỨC PHẠT CAO NHẤT</p>
                 <p className="text-xl font-bold text-[#1F1F1F] truncate">
                   {formatCurrency(stats.totalFineAmount)}
                 </p>
@@ -394,7 +411,7 @@ export default function Home() {
             <div className="flex items-center gap-2 font-medium">
               <Filter className="w-4 h-4 text-[#1E74E8]" />
               <span>
-                Đang lọc hiển thị: <strong>{activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}</strong> ({filteredRegulations.length} quy định)
+                Đang lọc hiển thị: <strong>{activeFilter === "fine" ? "Quy định phạt tiền" : "Quy định hạn chế"}</strong> ({filteredRegulations.length} quy định)
               </span>
             </div>
             <button
@@ -483,7 +500,7 @@ export default function Home() {
                   : "Chưa Có Quy Định Nào"}
               </h3>
               <p className="text-xs text-[#6B6B6B] max-w-xs mx-auto">
-                Bắt đầu bằng cách bấm nút "Thêm Quy Định" ở thanh điều khiển.
+                Bắt đầu bằng cách bấm nút "Tạo Quy Định Mới" ở thanh điều khiển.
               </p>
             </div>
             {searchQuery || activeFilter !== "all" ? (
@@ -499,7 +516,7 @@ export default function Home() {
             ) : (
               <button onClick={() => handleAddNew()} className="btn-ds-primary text-xs font-bold px-4 py-2">
                 <Plus className="h-4 w-4" />
-                Thêm Quy Định
+                Tạo Quy Định Mới
               </button>
             )}
           </div>
@@ -540,14 +557,18 @@ export default function Home() {
             <div className="space-y-0.5">
               <SheetTitle className="text-[#1F1F1F] text-lg font-bold flex items-center gap-2">
                 <Zap className="w-5 h-5 text-[#7FCA27]" />
-                Phạt Nhanh Nhân Sự
+                Ghi Nhận Vi Phạm Nhân Sự
               </SheetTitle>
               <SheetDescription className="text-[#6B6B6B] text-xs">
-                Quy định chọn sẵn: <strong className="text-[#1F1F1F]">{quickPenaltyRegulation?.violation}</strong>
+                {quickPenaltyRegulation ? (
+                  <span>Quy định chọn sẵn: <strong className="text-[#1F1F1F]">{quickPenaltyRegulation.violation}</strong></span>
+                ) : (
+                  <span>Chọn nhân sự và quy định vi phạm tương ứng</span>
+                )}
               </SheetDescription>
             </div>
             <div className="badge-ds-success text-xs font-bold px-2.5 py-0.5">
-              ⚡ 1-Click Fast Action
+              ⚡ Ghi nhận nhanh
             </div>
           </div>
 

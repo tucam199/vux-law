@@ -42,7 +42,7 @@ export function HeaderNav({ pendingPenaltiesCount = 0 }: HeaderNavProps) {
           <Logo />
 
           {/* Design System Module Nav Tabs */}
-          <nav className="flex items-center gap-2 overflow-x-auto py-1">
+          <nav className="flex items-center gap-2 overflow-x-auto py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
