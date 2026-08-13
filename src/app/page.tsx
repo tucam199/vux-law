@@ -15,6 +15,7 @@ import { getRegulations, addRegulation, updateRegulation, deleteRegulation } fro
 import { addMultiplePenalties, getPenalties } from "@/lib/penaltyService";
 import { getEmployees } from "@/lib/employeeService";
 import { useToast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "motion/react";
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
@@ -212,22 +213,23 @@ export default function Home() {
                 <span className="text-[#212529] font-bold">Khung Xử Phạt</span>
               </div>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.96 }}
                 onClick={() => handleAddNew()}
                 className="btn-odoo-purple text-xs font-bold shadow-xs"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Thêm Quy Định
-              </button>
+              </motion.button>
 
-              {/* Dynamic Employee Manager Modal Trigger */}
-              <button
+              <motion.button
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setIsEmpModalOpen(true)}
                 className="btn-odoo-outline text-xs font-medium"
               >
                 <Users className="w-3.5 h-3.5 text-[#017E84]" />
                 <span>Quản Lý Nhân Sự ({employees.length})</span>
-              </button>
+              </motion.button>
             </div>
 
             {/* Central Odoo Search Bar */}
@@ -274,7 +276,7 @@ export default function Home() {
               <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden">
                 <button
                   onClick={() => setViewMode("swimlanes")}
-                  className={`p-1.5 text-xs flex items-center gap-1 ${
+                  className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
                     viewMode === "swimlanes" ? "bg-[#017E84]/15 text-[#017E84] font-bold" : "text-[#6C757D] hover:text-[#017E84]"
                   }`}
                   title="Odoo Swimlanes Column View"
@@ -284,7 +286,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-1.5 text-xs flex items-center gap-1 ${
+                  className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
                     viewMode === "grid" ? "bg-[#017E84]/15 text-[#017E84] font-bold" : "text-[#6C757D] hover:text-[#017E84]"
                   }`}
                   title="Grid View"
@@ -300,7 +302,7 @@ export default function Home() {
 
       {/* Main Content Body */}
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-6">
-        {/* INTERACTIVE KPI STAT CARDS */}
+        {/* INTERACTIVE MOTION KPI STAT CARDS */}
         <div className="space-y-1">
           <div className="flex justify-between items-center px-1">
             <span className="text-[11px] font-bold text-[#6C757D] uppercase tracking-wider flex items-center gap-1">
@@ -318,7 +320,9 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("all")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#714B67] ${
                 activeFilter === "all"
@@ -331,9 +335,11 @@ export default function Home() {
                 <p className="text-xl font-bold text-[#212529]">{stats.total}</p>
               </div>
               <ShieldCheck className="w-5 h-5 text-[#714B67]" />
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("fine")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#28A745] ${
                 activeFilter === "fine"
@@ -346,9 +352,11 @@ export default function Home() {
                 <p className="text-xl font-bold text-[#212529]">{stats.fineCount}</p>
               </div>
               <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("restriction")}
               className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-rose-500 ${
                 activeFilter === "restriction"
@@ -361,7 +369,7 @@ export default function Home() {
                 <p className="text-xl font-bold text-[#212529]">{stats.restrictionCount}</p>
               </div>
               <Ban className="w-5 h-5 text-rose-600" />
-            </div>
+            </motion.div>
 
             <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
               <div className="space-y-0.5">
@@ -385,7 +393,13 @@ export default function Home() {
           viewMode === "swimlanes" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {categorySwimlanes.map(([categoryName, categoryList]) => (
-                <div key={categoryName} className="bg-[#F1F3F5]/60 border border-[#DEE2E6] rounded-lg p-3.5 space-y-3 flex flex-col">
+                <motion.div
+                  key={categoryName}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-[#F1F3F5]/60 border border-[#DEE2E6] rounded-lg p-3.5 space-y-3 flex flex-col"
+                >
                   <div className="flex items-center justify-between pb-2 border-b border-[#DEE2E6]">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-[#212529]">{categoryName}</span>
@@ -404,30 +418,34 @@ export default function Home() {
                   </div>
 
                   <div className="space-y-3 flex-1">
-                    {categoryList.map((regulation) => (
-                      <RegulationCard
-                        key={regulation.id}
-                        regulation={regulation}
-                        onEdit={() => handleEdit(regulation)}
-                        onDelete={() => handleDelete(regulation.id)}
-                        onQuickPenalty={handleQuickPenalty}
-                      />
-                    ))}
+                    <AnimatePresence>
+                      {categoryList.map((regulation) => (
+                        <RegulationCard
+                          key={regulation.id}
+                          regulation={regulation}
+                          onEdit={() => handleEdit(regulation)}
+                          onDelete={() => handleDelete(regulation.id)}
+                          onQuickPenalty={handleQuickPenalty}
+                        />
+                      ))}
+                    </AnimatePresence>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredRegulations.map((regulation) => (
-                <RegulationCard
-                  key={regulation.id}
-                  regulation={regulation}
-                  onEdit={() => handleEdit(regulation)}
-                  onDelete={() => handleDelete(regulation.id)}
-                  onQuickPenalty={handleQuickPenalty}
-                />
-              ))}
+              <AnimatePresence>
+                {filteredRegulations.map((regulation) => (
+                  <RegulationCard
+                    key={regulation.id}
+                    regulation={regulation}
+                    onEdit={() => handleEdit(regulation)}
+                    onDelete={() => handleDelete(regulation.id)}
+                    onQuickPenalty={handleQuickPenalty}
+                  />
+                ))}
+              </AnimatePresence>
             </div>
           )
         ) : (
