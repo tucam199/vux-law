@@ -197,26 +197,26 @@ export default function Home() {
   }, [filteredRegulations]);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#212529]">
-      {/* Unified Odoo Module Header Bar */}
+    <div className="min-h-screen bg-[var(--bg-main,#FAFAFA)] text-[var(--text-primary,#2F3438)]">
+      {/* Unified Notion Module Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingPenaltiesCount} />
 
-      {/* Odoo 17 Light Mode Control Panel Bar */}
-      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+      {/* Notion Control Panel Bar */}
+      <div className="bg-white border-b border-[#E9E9E7] shadow-2xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Left Controls: Breadcrumbs, Primary Action & Dynamic Employee Manager */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center text-xs font-medium text-[#212529] gap-1 mr-1">
-                <span className="text-[#017E84] font-semibold">Quy định</span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
-                <span className="text-[#212529] font-bold">Khung Xử Phạt</span>
+              <div className="flex items-center text-xs font-medium text-[#2F3438] gap-1 mr-1">
+                <span className="text-[#2F3438] font-semibold">Quy định</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#787774]" />
+                <span className="text-[#2F3438] font-bold">Khung Xử Phạt</span>
               </div>
 
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleAddNew()}
-                className="btn-odoo-purple text-xs font-bold shadow-xs"
+                className="btn-token-primary text-xs font-bold"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Thêm Quy Định
@@ -225,21 +225,21 @@ export default function Home() {
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setIsEmpModalOpen(true)}
-                className="btn-odoo-outline text-xs font-medium"
+                className="btn-token-outline text-xs font-medium"
               >
-                <Users className="w-3.5 h-3.5 text-[#017E84]" />
+                <Users className="w-3.5 h-3.5 text-[#2F3438]" />
                 <span>Quản Lý Nhân Sự ({employees.length})</span>
               </motion.button>
             </div>
 
-            {/* Central Odoo Search Bar */}
-            <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
-              <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
+            {/* Central Notion Search Bar */}
+            <div className="relative flex items-center w-full md:w-80 bg-white border border-[#D3D3D0] focus-within:border-[#2F3438] rounded px-2.5 py-1 shadow-2xs transition-colors">
+              <Search className="w-3.5 h-3.5 text-[#787774] mr-1.5 shrink-0" />
               
               {activeFilter !== "all" && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/30 px-1.5 py-0.5 rounded mr-1 shrink-0">
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2F3438] bg-[#F0F0EF] border border-[#E0E0DE] px-1.5 py-0.5 rounded mr-1 shrink-0">
                   {activeFilter === "fine" ? "Phạt tiền" : "Hạn chế"}
-                  <button onClick={() => setActiveFilter("all")} className="hover:text-rose-600">
+                  <button onClick={() => setActiveFilter("all")} className="hover:text-black">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -250,10 +250,10 @@ export default function Home() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent text-xs text-[#212529] focus:outline-none placeholder-[#6C757D]"
+                className="w-full bg-transparent text-xs text-[#2F3438] focus:outline-none placeholder-[#787774]"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery("")} className="text-[#6C757D] hover:text-[#212529]">
+                <button onClick={() => setSearchQuery("")} className="text-[#787774] hover:text-[#2F3438]">
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -261,25 +261,25 @@ export default function Home() {
 
             {/* Right Controls: View Switcher & Pagination */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-xs text-[#212529] font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-[#2F3438] font-medium">
                 <span>1-{filteredRegulations.length} / {filteredRegulations.length}</span>
-                <div className="flex items-center border border-[#DEE2E6] rounded bg-white">
-                  <button className="p-1 hover:bg-zinc-100 border-r border-[#DEE2E6]">
-                    <ChevronLeft className="w-3 h-3 text-[#6C757D]" />
+                <div className="flex items-center border border-[#E9E9E7] rounded bg-white">
+                  <button className="p-1 hover:bg-[#F7F7F5] border-r border-[#E9E9E7]">
+                    <ChevronLeft className="w-3 h-3 text-[#787774]" />
                   </button>
-                  <button className="p-1 hover:bg-zinc-100">
-                    <ChevronRight className="w-3 h-3 text-[#6C757D]" />
+                  <button className="p-1 hover:bg-[#F7F7F5]">
+                    <ChevronRight className="w-3 h-3 text-[#787774]" />
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden">
+              <div className="flex items-center border border-[#D3D3D0] rounded bg-white overflow-hidden">
                 <button
                   onClick={() => setViewMode("swimlanes")}
                   className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
-                    viewMode === "swimlanes" ? "bg-[#017E84]/15 text-[#017E84] font-bold" : "text-[#6C757D] hover:text-[#017E84]"
+                    viewMode === "swimlanes" ? "bg-[#F0F0EF] text-[#2F3438] font-bold" : "text-[#787774] hover:text-[#2F3438]"
                   }`}
-                  title="Odoo Swimlanes Column View"
+                  title="Swimlanes Column View"
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline text-[11px]">Swimlanes</span>
@@ -287,7 +287,7 @@ export default function Home() {
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-1.5 text-xs flex items-center gap-1 transition-colors ${
-                    viewMode === "grid" ? "bg-[#017E84]/15 text-[#017E84] font-bold" : "text-[#6C757D] hover:text-[#017E84]"
+                    viewMode === "grid" ? "bg-[#F0F0EF] text-[#2F3438] font-bold" : "text-[#787774] hover:text-[#2F3438]"
                   }`}
                   title="Grid View"
                 >
@@ -305,14 +305,14 @@ export default function Home() {
         {/* INTERACTIVE MOTION KPI STAT CARDS */}
         <div className="space-y-1">
           <div className="flex justify-between items-center px-1">
-            <span className="text-[11px] font-bold text-[#6C757D] uppercase tracking-wider flex items-center gap-1">
-              <Filter className="w-3 h-3 text-[#714B67]" />
+            <span className="text-[11px] font-bold text-[#787774] uppercase tracking-wider flex items-center gap-1">
+              <Filter className="w-3 h-3 text-[#2F3438]" />
               Bộ lọc nhanh 1-Click
             </span>
             {activeFilter !== "all" && (
               <button
                 onClick={() => setActiveFilter("all")}
-                className="text-[11px] text-[#017E84] hover:underline font-semibold"
+                className="text-[11px] text-[#2F3438] hover:underline font-semibold"
               >
                 Hiển thị tất cả ({stats.total})
               </button>
@@ -324,70 +324,70 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("all")}
-              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#714B67] ${
+              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#2F3438] ${
                 activeFilter === "all"
-                  ? "border-2 border-[#714B67] bg-[#714B67]/5 shadow-sm ring-1 ring-[#714B67]/20"
-                  : "border-[#DEE2E6] shadow-xs"
+                  ? "border-2 border-[#2F3438] bg-[#F7F7F5] shadow-xs"
+                  : "border-[#E9E9E7] shadow-2xs"
               }`}
             >
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG QUY ĐỊNH</p>
-                <p className="text-xl font-bold text-[#212529]">{stats.total}</p>
+                <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">TỔNG QUY ĐỊNH</p>
+                <p className="text-xl font-bold text-[#2F3438]">{stats.total}</p>
               </div>
-              <ShieldCheck className="w-5 h-5 text-[#714B67]" />
+              <ShieldCheck className="w-5 h-5 text-[#2F3438]" />
             </motion.div>
 
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("fine")}
-              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#28A745] ${
+              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#2F3438] ${
                 activeFilter === "fine"
-                  ? "border-2 border-[#28A745] bg-[#28A745]/5 shadow-sm ring-1 ring-[#28A745]/20"
-                  : "border-[#DEE2E6] shadow-xs"
+                  ? "border-2 border-[#2F3438] bg-[#F7F7F5] shadow-xs"
+                  : "border-[#E9E9E7] shadow-2xs"
               }`}
             >
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">PHẠT TIỀN (FILTER)</p>
-                <p className="text-xl font-bold text-[#212529]">{stats.fineCount}</p>
+                <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">PHẠT TIỀN (FILTER)</p>
+                <p className="text-xl font-bold text-[#2F3438]">{stats.fineCount}</p>
               </div>
-              <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
+              <CircleDollarSign className="w-5 h-5 text-[#2F3438]" />
             </motion.div>
 
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveFilter("restriction")}
-              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-rose-500 ${
+              className={`bg-white border rounded-lg p-4 flex items-center justify-between transition-all cursor-pointer hover:border-[#2F3438] ${
                 activeFilter === "restriction"
-                  ? "border-2 border-rose-500 bg-rose-500/5 shadow-sm ring-1 ring-rose-500/20"
-                  : "border-[#DEE2E6] shadow-xs"
+                  ? "border-2 border-[#2F3438] bg-[#F7F7F5] shadow-xs"
+                  : "border-[#E9E9E7] shadow-2xs"
               }`}
             >
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">HẠN CHẾ (FILTER)</p>
-                <p className="text-xl font-bold text-[#212529]">{stats.restrictionCount}</p>
+                <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">HẠN CHẾ (FILTER)</p>
+                <p className="text-xl font-bold text-[#2F3438]">{stats.restrictionCount}</p>
               </div>
-              <Ban className="w-5 h-5 text-rose-600" />
+              <Ban className="w-5 h-5 text-[#2F3438]" />
             </motion.div>
 
-            <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+            <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">MỨC PHẠT MAX</p>
-                <p className="text-lg font-bold text-[#212529] truncate">
+                <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">MỨC PHẠT MAX</p>
+                <p className="text-lg font-bold text-[#2F3438] truncate">
                   {formatCurrency(stats.totalFineAmount)}
                 </p>
               </div>
-              <SlidersHorizontal className="w-5 h-5 text-[#017E84]" />
+              <SlidersHorizontal className="w-5 h-5 text-[#2F3438]" />
             </div>
           </div>
         </div>
 
-        {/* GROUPED ODOO KANBAN SWIMLANES OR GRID VIEW */}
+        {/* GROUPED NOTION KANBAN SWIMLANES OR GRID VIEW */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#017E84]"></div>
-            <p className="text-[#6C757D] text-xs font-medium">Đang tải Odoo Kanban View...</p>
+          <div className="flex flex-col items-center justify-center rounded border border-[#E9E9E7] bg-white py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2F3438]"></div>
+            <p className="text-[#787774] text-xs font-medium">Đang tải Notion Swimlane View...</p>
           </div>
         ) : filteredRegulations.length > 0 ? (
           viewMode === "swimlanes" ? (
@@ -398,19 +398,19 @@ export default function Home() {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-[#F1F3F5]/60 border border-[#DEE2E6] rounded-lg p-3.5 space-y-3 flex flex-col"
+                  className="notion-swimlane"
                 >
-                  <div className="flex items-center justify-between pb-2 border-b border-[#DEE2E6]">
+                  <div className="flex items-center justify-between pb-2 border-b border-[#E9E9E7]">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-[#212529]">{categoryName}</span>
-                      <span className="text-[10px] font-bold bg-white text-[#714B67] border border-[#DEE2E6] px-1.5 py-0.2 rounded-full">
+                      <span className="text-xs font-bold text-[#2F3438]">{categoryName}</span>
+                      <span className="text-[10px] font-bold bg-[#EFEFED] text-[#2F3438] border border-[#E0E0DE] px-1.5 py-0.2 rounded-full">
                         {categoryList.length}
                       </span>
                     </div>
 
                     <button
                       onClick={() => handleAddNew(categoryName)}
-                      className="p-1 text-[#017E84] hover:bg-white rounded transition-colors"
+                      className="p-1 text-[#2F3438] hover:bg-white rounded transition-colors"
                       title={`Thêm quy định cho ${categoryName}`}
                     >
                       <FolderPlus className="w-4 h-4" />
@@ -449,15 +449,15 @@ export default function Home() {
             </div>
           )
         ) : (
-          <div className="flex flex-col items-center justify-center rounded border border-dashed border-[#DEE2E6] bg-white py-20 text-center space-y-3">
-            <ShieldCheck className="h-10 w-10 text-[#6C757D]" />
+          <div className="flex flex-col items-center justify-center rounded border border-dashed border-[#E9E9E7] bg-white py-20 text-center space-y-3">
+            <ShieldCheck className="h-10 w-10 text-[#787774]" />
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-[#212529]">
+              <h3 className="text-sm font-bold text-[#2F3438]">
                 {searchQuery || activeFilter !== "all"
                   ? "Không tìm thấy quy định phù hợp"
                   : "Chưa Có Quy Định Nào"}
               </h3>
-              <p className="text-xs text-[#6C757D] max-w-xs mx-auto">
+              <p className="text-xs text-[#787774] max-w-xs mx-auto">
                 Bắt đầu bằng cách bấm nút "Thêm Quy Định" ở thanh điều khiển.
               </p>
             </div>
@@ -467,12 +467,12 @@ export default function Home() {
                   setSearchQuery("");
                   setActiveFilter("all");
                 }}
-                className="btn-odoo-outline"
+                className="btn-token-outline"
               >
                 Xóa bộ lọc
               </button>
             ) : (
-              <button onClick={() => handleAddNew()} className="btn-odoo-purple font-bold">
+              <button onClick={() => handleAddNew()} className="btn-token-primary font-bold">
                 <Plus className="h-4 w-4" />
                 Thêm Quy Định
               </button>
@@ -483,17 +483,17 @@ export default function Home() {
 
       {/* Form Sheet View for Edit/Add Regulation */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-lg w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
-          <div className="bg-[#F8F9FA] px-6 py-3.5 border-b border-[#DEE2E6] flex items-center justify-between">
+        <SheetContent className="sm:max-w-lg w-full flex flex-col bg-white border-[#E9E9E7] text-[#2F3438] p-0 shadow-xl">
+          <div className="bg-[#F7F7F5] px-6 py-3.5 border-b border-[#E9E9E7] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-[#212529] text-base font-bold">
+              <SheetTitle className="text-[#2F3438] text-base font-bold">
                 {editingRegulation?.id ? "Sửa Quy Định" : "Tạo Quy Định Mới"}
               </SheetTitle>
-              <SheetDescription className="text-[#6C757D] text-xs">
+              <SheetDescription className="text-[#787774] text-xs">
                 Biểu mẫu nhập liệu quy định
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#714B67]/10 text-[#714B67] border border-[#714B67]/20 px-2 py-0.5 rounded">
+            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#F0F0EF] text-[#2F3438] border border-[#E0E0DE] px-2 py-0.5 rounded">
               {editingRegulation?.id ? "Đã lưu" : "Bản nháp"}
             </div>
           </div>
@@ -510,18 +510,18 @@ export default function Home() {
 
       {/* QUICK PENALTY SHEET MODAL */}
       <Sheet open={isQuickPenaltyOpen} onOpenChange={setIsQuickPenaltyOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
-          <div className="bg-[#28A745]/10 px-6 py-3.5 border-b border-[#28A745]/20 flex items-center justify-between">
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#E9E9E7] text-[#2F3438] p-0 shadow-xl">
+          <div className="bg-[#F7F7F5] px-6 py-3.5 border-b border-[#E9E9E7] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-[#212529] text-base font-bold flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-[#28A745]" />
+              <SheetTitle className="text-[#2F3438] text-base font-bold flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-[#2F3438]" />
                 Phạt Nhanh Nhân Sự
               </SheetTitle>
-              <SheetDescription className="text-[#6C757D] text-xs">
-                Quy định chọn sẵn: <strong className="text-[#212529]">{quickPenaltyRegulation?.violation}</strong>
+              <SheetDescription className="text-[#787774] text-xs">
+                Quy định chọn sẵn: <strong className="text-[#2F3438]">{quickPenaltyRegulation?.violation}</strong>
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-bold bg-[#28A745] text-white px-2 py-0.5 rounded shadow-xs">
+            <div className="flex items-center gap-1 text-[11px] font-bold bg-[#2F3438] text-white px-2 py-0.5 rounded shadow-2xs">
               ⚡ 1-Click Fast Action
             </div>
           </div>

@@ -5,72 +5,197 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 13px;
-  background-color: #F8F9FA;
-  color: #212529;
+  background-color: var(--bg-main, #FAFAFA);
+  color: var(--text-primary, #2F3438);
   -webkit-font-smoothing: antialiased;
 }
 
 @layer base {
   :root, .light {
-    /* Odoo Light Mode Base Colors */
-    --background: 0 0% 97.6%;       /* #F8F9FA Odoo Page Background */
-    --foreground: 210 11% 15%;      /* #212529 Odoo Text Dark */
-    --card: 0 0% 100%;              /* #FFFFFF Pure White */
-    --card-foreground: 210 11% 15%;
+    /* Notion Monochrome Base Palette */
+    --background: 0 0% 98%;          /* #FAFAFA Notion Page Background */
+    --foreground: 0 0% 20%;          /* #2F3438 Notion Text Main */
+    --card: 0 0% 100%;               /* #FFFFFF Pure White */
+    --card-foreground: 0 0% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
-    
-    /* Odoo Brand Colors */
-    --odoo-purple: #714B67;
-    --odoo-teal: #017E84;
-    --odoo-green: #28A745;
+    --popover-foreground: 0 0% 20%;
 
-    --primary: 316 20% 37%;         /* #714B67 Odoo Purple */
+    --primary: 0 0% 18%;             /* #2F3438 Notion Primary Black/Dark Gray */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 17% 95%;       /* #F1F3F5 Odoo Gray Header */
-    --secondary-foreground: 210 11% 15%;
-    --muted: 210 17% 95%;
-    --muted-foreground: 210 7% 46%;  /* #6C757D Muted Gray Text */
-    --accent: 184 98% 26%;          /* #017E84 Odoo Teal */
+    --secondary: 0 0% 96.5%;         /* #F7F7F5 Notion Muted Gray */
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 96.5%;
+    --muted-foreground: 0 0% 47%;    /* #787774 Notion Muted Text */
+    --accent: 0 0% 22%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 0% 20%;
     --destructive-foreground: 0 0% 98%;
-    --border: 210 14% 89%;          /* #DEE2E6 Crisp Light Border */
-    --input: 210 14% 89%;
-    --ring: 184 98% 26%;
+    --border: 0 0% 91%;              /* #E9E9E7 Notion Subtle Border */
+    --input: 0 0% 91%;
+    --ring: 0 0% 20%;
     --radius: 0.375rem;
+
+    /* ==========================================================================
+       CENTRALIZED DESIGN TOKENS (SỬ DỤNG CHUNG TOÀN BỘ ỨNG DỤNG)
+       Khi đổi màu ở các biến dưới đây, tất cả các thành phần tương ứng sẽ đồng bộ!
+       ========================================================================== */
+
+    /* 1. Base Notion Colors */
+    --bg-main: #FAFAFA;
+    --bg-subtle: #F7F7F5;
+    --bg-hover: #EFEFED;
+    --text-primary: #2F3438;
+    --text-secondary: #787774;
+    --text-tertiary: #9B9A97;
+    --border-default: #E9E9E7;
+    --border-strong: #D3D3D0;
+
+    /* 2. Label / Badge / Tag Design Tokens */
+    --token-label-fine-bg: #F0F0EF;
+    --token-label-fine-text: #2F3438;
+    --token-label-fine-border: #E0E0DE;
+
+    --token-label-restriction-bg: #F0F0EF;
+    --token-label-restriction-text: #37352F;
+    --token-label-restriction-border: #E0E0DE;
+
+    --token-label-category-bg: #F7F7F5;
+    --token-label-category-text: #2F3438;
+    --token-label-category-border: #E0E0DE;
+
+    /* 3. Button Design Tokens */
+    --token-btn-primary-bg: #2F3438;
+    --token-btn-primary-text: #FFFFFF;
+    --token-btn-primary-hover: #191919;
+
+    --token-btn-accent-bg: #37352F;
+    --token-btn-accent-text: #FFFFFF;
+    --token-btn-accent-hover: #191919;
+
+    --token-btn-green-bg: #2F3438;
+    --token-btn-green-text: #FFFFFF;
+    --token-btn-green-hover: #000000;
+
+    --token-btn-outline-bg: #FFFFFF;
+    --token-btn-outline-text: #2F3438;
+    --token-btn-outline-border: #E0E0DE;
+    --token-btn-outline-hover: #F7F7F5;
+
+    /* 4. Status Indicator Tokens */
+    --token-status-completed-bg: #F0F0EF;
+    --token-status-completed-text: #2F3438;
+    --token-status-completed-border: #D3D3D0;
+
+    --token-status-pending-bg: #F7F7F5;
+    --token-status-pending-text: #5A5A58;
+    --token-status-pending-border: #E0E0DE;
+
+    /* 5. Header & Navigation Tokens */
+    --token-nav-active-bg: #2F3438;
+    --token-nav-active-text: #FFFFFF;
+    --token-nav-inactive-text: #2F3438;
+    --token-nav-badge-bg: #37352F;
+    --token-nav-badge-text: #FFFFFF;
+
+    /* 6. Card & Swimlane Tokens */
+    --token-card-bg: #FFFFFF;
+    --token-card-border: #E9E9E7;
+    --token-card-stripe-fine: #2F3438;
+    --token-card-stripe-restriction: #787774;
+
+    --token-swimlane-bg: #F7F7F5;
+    --token-swimlane-border: #E9E9E7;
+    --token-swimlane-badge-bg: #EFEFED;
+    --token-swimlane-badge-text: #2F3438;
   }
 }
 
 @layer components {
-  /* Premium Odoo Light Mode Buttons */
-  .btn-odoo-purple {
-    @apply bg-[#714B67] hover:bg-[#5f3e56] text-white font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow-sm;
+  /* Reusable Token Buttons */
+  .btn-token-primary {
+    background-color: var(--token-btn-primary-bg);
+    color: var(--token-btn-primary-text);
+    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
   }
-  .btn-odoo-teal {
-    @apply bg-[#017E84] hover:bg-[#01686d] text-white font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow-sm;
+  .btn-token-accent {
+    background-color: var(--token-btn-accent-bg);
+    color: var(--token-btn-accent-text);
+    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
   }
-  .btn-odoo-green {
-    @apply bg-[#28A745] hover:bg-[#218838] text-white font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs hover:shadow;
+  .btn-token-green {
+    background-color: var(--token-btn-green-bg);
+    color: var(--token-btn-green-text);
+    @apply font-bold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:opacity-90;
   }
-  .btn-odoo-outline {
-    @apply bg-white hover:bg-zinc-50 border border-[#DEE2E6] hover:border-[#017E84]/50 text-[#212529] font-medium transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-xs;
+  .btn-token-outline {
+    background-color: var(--token-btn-outline-bg);
+    color: var(--token-btn-outline-text);
+    border: 1px solid var(--token-btn-outline-border);
+    @apply font-semibold transition-all rounded-md px-3.5 py-1.5 text-xs flex items-center gap-1.5 active:scale-[0.98] shadow-2xs hover:bg-[#F7F7F5];
   }
 
-  /* Odoo Kanban Tile with UI Layouts Glow & Shadow */
-  .odoo-kanban-card {
-    @apply bg-white border border-[#DEE2E6] hover:border-[#714B67]/60 hover:shadow-md transition-all duration-300 rounded-lg p-4 flex flex-col justify-between relative overflow-hidden shadow-xs;
+  /* Backward Compatibility Aliases */
+  .btn-odoo-purple { @apply btn-token-primary; }
+  .btn-odoo-teal { @apply btn-token-accent; }
+  .btn-odoo-green { @apply btn-token-green; }
+  .btn-odoo-outline { @apply btn-token-outline; }
+
+  /* Token Badges & Labels */
+  .token-badge-fine {
+    background-color: var(--token-label-fine-bg);
+    color: var(--token-label-fine-text);
+    border: 1px solid var(--token-label-fine-border);
+    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
+  }
+  .token-badge-restriction {
+    background-color: var(--token-label-restriction-bg);
+    color: var(--token-label-restriction-text);
+    border: 1px solid var(--token-label-restriction-border);
+    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
+  }
+  .token-badge-category {
+    background-color: var(--token-label-category-bg);
+    color: var(--token-label-category-text);
+    border: 1px solid var(--token-label-category-border);
+    @apply px-2.5 py-0.5 text-[11px] font-bold rounded-full inline-flex items-center gap-1;
   }
 
-  /* Glassmorphism Header Bar */
-  .odoo-glass-header {
-    @apply bg-white/90 backdrop-blur-md border-b border-[#DEE2E6] shadow-xs;
+  /* Token Status Badges */
+  .token-status-completed {
+    background-color: var(--token-status-completed-bg);
+    color: var(--token-status-completed-text);
+    border: 1px solid var(--token-status-completed-border);
+    @apply px-2 py-0.5 text-[10px] font-bold rounded inline-flex items-center gap-1;
+  }
+  .token-status-pending {
+    background-color: var(--token-status-pending-bg);
+    color: var(--token-status-pending-text);
+    border: 1px solid var(--token-status-pending-border);
+    @apply px-2 py-0.5 text-[10px] font-bold rounded inline-flex items-center gap-1;
   }
 
-  /* UI Layouts Gradient Accent Box */
-  .odoo-gradient-badge {
-    @apply bg-gradient-to-r from-[#714B67] to-[#017E84] text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-xs;
+  /* Token Card Containers */
+  .notion-card {
+    background-color: var(--token-card-bg);
+    border: 1px solid var(--token-card-border);
+    @apply hover:border-[#D3D3D0] hover:shadow-xs transition-all duration-200 rounded-lg p-4 flex flex-col justify-between relative overflow-hidden;
   }
+  .odoo-kanban-card { @apply notion-card; }
+
+  /* Notion Swimlane */
+  .notion-swimlane {
+    background-color: var(--token-swimlane-bg);
+    border: 1px solid var(--token-swimlane-border);
+    @apply rounded-lg p-3.5 space-y-3 flex flex-col;
+  }
+
+  /* Header & Control Panel */
+  .notion-glass-header {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--border-default);
+    @apply backdrop-blur-md sticky top-0 z-30 shadow-2xs;
+  }
+  .odoo-glass-header { @apply notion-glass-header; }
 }
 
 @layer base {
@@ -81,3 +206,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+

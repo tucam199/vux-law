@@ -213,26 +213,26 @@ export default function PenaltiesPage() {
   const noRegulations = regulations.length === 0;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#212529]">
-      {/* Unified Odoo Header Bar */}
+    <div className="min-h-screen bg-[var(--bg-main,#FAFAFA)] text-[var(--text-primary,#2F3438)]">
+      {/* Unified Notion Header Bar */}
       <HeaderNav pendingPenaltiesCount={stats.pendingCount} />
 
       {/* Control Panel Bar */}
-      <div className="bg-white border-b border-[#DEE2E6] shadow-xs sticky top-12 z-20">
+      <div className="bg-white border-b border-[#E9E9E7] shadow-2xs sticky top-12 z-20">
         <div className="container mx-auto px-4 lg:px-6 py-2.5">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             {/* Left Controls: Breadcrumbs & Primary Action Button */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center text-xs font-medium text-[#212529] gap-1 mr-1">
-                <span className="text-[#017E84] font-semibold">Xử phạt</span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#6C757D]" />
-                <span className="text-[#212529] font-bold">Nhật Ký Vi Phạm</span>
+              <div className="flex items-center text-xs font-medium text-[#2F3438] gap-1 mr-1">
+                <span className="text-[#2F3438] font-semibold">Xử phạt</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#787774]" />
+                <span className="text-[#2F3438] font-bold">Nhật Ký Vi Phạm</span>
               </div>
 
               <button
                 onClick={handleAddViolation}
                 disabled={noRegulations}
-                className="btn-odoo-green text-xs font-bold"
+                className="btn-token-green text-xs font-bold"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Ghi Nhận Vi Phạm
@@ -240,21 +240,21 @@ export default function PenaltiesPage() {
 
               <button
                 onClick={() => setIsEmpModalOpen(true)}
-                className="btn-odoo-outline text-xs font-medium"
+                className="btn-token-outline text-xs font-medium"
               >
-                <Users className="w-3.5 h-3.5 text-[#017E84]" />
+                <Users className="w-3.5 h-3.5 text-[#2F3438]" />
                 <span>Quản Lý Nhân Sự ({employees.length})</span>
               </button>
             </div>
 
             {/* Central Search & Filter View */}
             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#017E84] rounded px-2.5 py-1 shadow-xs">
-                <Search className="w-3.5 h-3.5 text-[#017E84] mr-1.5 shrink-0" />
+              <div className="relative flex items-center w-full md:w-80 bg-white border border-[#D3D3D0] focus-within:border-[#2F3438] rounded px-2.5 py-1 shadow-2xs transition-colors">
+                <Search className="w-3.5 h-3.5 text-[#787774] mr-1.5 shrink-0" />
                 {selectedPerson && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#017E84] bg-[#017E84]/10 border border-[#017E84]/30 px-1.5 py-0.5 rounded mr-1 shrink-0">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2F3438] bg-[#F0F0EF] border border-[#E0E0DE] px-1.5 py-0.5 rounded mr-1 shrink-0">
                     {selectedPerson}
-                    <button onClick={() => setSelectedPerson(null)} className="hover:text-rose-600">
+                    <button onClick={() => setSelectedPerson(null)} className="hover:text-black">
                       <X className="w-3 h-3" />
                     </button>
                   </span>
@@ -264,23 +264,23 @@ export default function PenaltiesPage() {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-xs text-[#212529] focus:outline-none placeholder-[#6C757D]"
+                  className="w-full bg-transparent text-xs text-[#2F3438] focus:outline-none placeholder-[#787774]"
                 />
               </div>
 
               {/* Dynamic Person Select Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="btn-odoo-outline text-xs font-medium">
-                    <Users className="w-3.5 h-3.5 text-[#017E84]" />
+                  <button className="btn-token-outline text-xs font-medium">
+                    <Users className="w-3.5 h-3.5 text-[#2F3438]" />
                     {selectedPerson ? selectedPerson : "Nhân sự"}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white border-[#DEE2E6] text-[#212529] text-xs rounded shadow-md">
+                <DropdownMenuContent align="end" className="bg-white border-[#E9E9E7] text-[#2F3438] text-xs rounded shadow-md">
                   <DropdownMenuItem onSelect={() => handlePersonSelect(null)}>
                     Tất cả nhân sự
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-[#DEE2E6]" />
+                  <DropdownMenuSeparator className="bg-[#E9E9E7]" />
                   {peopleNames.map((person) => (
                     <DropdownMenuItem key={person} onSelect={() => handlePersonSelect(person)}>
                       {person}
@@ -290,13 +290,13 @@ export default function PenaltiesPage() {
               </DropdownMenu>
 
               {/* View Switcher */}
-              <div className="flex items-center border border-[#017E84] rounded bg-white overflow-hidden shrink-0">
+              <div className="flex items-center border border-[#D3D3D0] rounded bg-white overflow-hidden shrink-0">
                 <Link href="/">
-                  <button className="p-1.5 text-[#6C757D] hover:text-[#017E84]" title="Kanban View">
+                  <button className="p-1.5 text-[#787774] hover:text-[#2F3438]" title="Kanban View">
                     <LayoutGrid className="w-3.5 h-3.5" />
                   </button>
                 </Link>
-                <button className="p-1.5 bg-[#017E84]/15 text-[#017E84]" title="List View">
+                <button className="p-1.5 bg-[#F0F0EF] text-[#2F3438]" title="List View">
                   <List className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -309,46 +309,46 @@ export default function PenaltiesPage() {
       <main className="container mx-auto px-4 lg:px-6 py-5 max-w-7xl space-y-5">
         {/* KPI Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
             <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG LƯỢT PHẠT</p>
-              <p className="text-xl font-bold text-[#212529]">{stats.totalCount}</p>
+              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">TỔNG LƯỢT PHẠT</p>
+              <p className="text-xl font-bold text-[#2F3438]">{stats.totalCount}</p>
             </div>
-            <Users className="w-5 h-5 text-[#017E84]" />
+            <Users className="w-5 h-5 text-[#2F3438]" />
           </div>
 
-          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
             <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">ĐÃ HOÀN THÀNH</p>
-              <p className="text-xl font-bold text-[#212529]">{stats.completedCount}</p>
+              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">ĐÃ HOÀN THÀNH</p>
+              <p className="text-xl font-bold text-[#2F3438]">{stats.completedCount}</p>
             </div>
-            <CheckCircle2 className="w-5 h-5 text-[#28A745]" />
+            <CheckCircle2 className="w-5 h-5 text-[#2F3438]" />
           </div>
 
-          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
             <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">CHƯA NỘP/THỰC HIỆN</p>
-              <p className="text-xl font-bold text-[#212529]">{stats.pendingCount}</p>
+              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">CHƯA NỘP/THỰC HIỆN</p>
+              <p className="text-xl font-bold text-[#2F3438]">{stats.pendingCount}</p>
             </div>
-            <Clock className="w-5 h-5 text-amber-600" />
+            <Clock className="w-5 h-5 text-[#787774]" />
           </div>
 
-          <div className="bg-white border border-[#DEE2E6] rounded-lg p-4 flex items-center justify-between shadow-xs">
+          <div className="bg-white border border-[#E9E9E7] rounded-lg p-4 flex items-center justify-between shadow-2xs">
             <div className="space-y-0.5">
-              <p className="text-[10px] font-bold text-[#6C757D] uppercase tracking-wider">TỔNG TIỀN PHẠT</p>
-              <p className="text-lg font-bold text-[#212529]">
+              <p className="text-[10px] font-bold text-[#787774] uppercase tracking-wider">TỔNG TIỀN PHẠT</p>
+              <p className="text-lg font-bold text-[#2F3438]">
                 {new Intl.NumberFormat('vi-VN').format(stats.totalFinesSum)} đ
               </p>
             </div>
-            <CircleDollarSign className="w-5 h-5 text-[#28A745]" />
+            <CircleDollarSign className="w-5 h-5 text-[#2F3438]" />
           </div>
         </div>
 
         {/* Data Table Display */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center rounded border border-[#E5E7EB] bg-white py-20 text-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28A745]"></div>
-            <p className="text-[#6C757D] text-xs font-medium">Đang tải danh sách xử phạt...</p>
+          <div className="flex flex-col items-center justify-center rounded border border-[#E9E9E7] bg-white py-20 text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2F3438]"></div>
+            <p className="text-[#787774] text-xs font-medium">Đang tải danh sách xử phạt...</p>
           </div>
         ) : (
           <PenaltyList
@@ -361,15 +361,15 @@ export default function PenaltiesPage() {
 
       {/* Violation Form Sheet */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#DEE2E6] text-[#212529] p-0 shadow-xl">
-          <div className="bg-[#F8F9FA] px-6 py-3.5 border-b border-[#DEE2E6] flex items-center justify-between">
+        <SheetContent className="sm:max-w-xl w-full flex flex-col bg-white border-[#E9E9E7] text-[#2F3438] p-0 shadow-xl">
+          <div className="bg-[#F7F7F5] px-6 py-3.5 border-b border-[#E9E9E7] flex items-center justify-between">
             <div className="space-y-0.5">
-              <SheetTitle className="text-[#212529] text-base font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
-              <SheetDescription className="text-[#6C757D] text-xs">
+              <SheetTitle className="text-[#2F3438] text-base font-bold">Ghi Nhận Vi Phạm Mới</SheetTitle>
+              <SheetDescription className="text-[#787774] text-xs">
                 Biểu mẫu ghi nhận vi phạm
               </SheetDescription>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#28A745]/10 text-[#28A745] border border-[#28A745]/20 px-2 py-0.5 rounded">
+            <div className="flex items-center gap-1 text-[11px] font-semibold bg-[#F0F0EF] text-[#2F3438] border border-[#E0E0DE] px-2 py-0.5 rounded">
               Bản nháp
             </div>
           </div>

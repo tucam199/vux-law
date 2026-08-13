@@ -135,9 +135,9 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 name="category"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel className="text-xs font-bold text-[#212529]">Hạng Mục Vi Phạm</FormLabel>
+                    <FormLabel className="text-xs font-bold text-[#2F3438]">Hạng Mục Vi Phạm</FormLabel>
                     <FormControl>
-                        <Input placeholder="ví dụ: Vi phạm giao thông" {...field} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs h-9" />
+                        <Input placeholder="ví dụ: Vi phạm giao thông" {...field} className="bg-white border-[#D3D3D0] text-[#2F3438] focus-visible:ring-[#2F3438] text-xs h-9" />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -148,9 +148,9 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 name="violation"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel className="text-xs font-bold text-[#212529]">Chi Tiết Vi Phạm</FormLabel>
+                    <FormLabel className="text-xs font-bold text-[#2F3438]">Chi Tiết Vi Phạm</FormLabel>
                     <FormControl>
-                        <Textarea placeholder="Mô tả chi tiết vi phạm..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs" />
+                        <Textarea placeholder="Mô tả chi tiết vi phạm..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#D3D3D0] text-[#2F3438] focus-visible:ring-[#2F3438] text-xs" />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
@@ -161,7 +161,7 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 name="penaltyType"
                 render={({ field }) => (
                     <FormItem className="space-y-2">
-                    <FormLabel className="text-xs font-bold text-[#212529]">Loại Hình Phạt</FormLabel>
+                    <FormLabel className="text-xs font-bold text-[#2F3438]">Loại Hình Phạt</FormLabel>
                     <FormControl>
                         <RadioGroup
                         onValueChange={field.onChange}
@@ -172,13 +172,13 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                             <FormControl>
                             <RadioGroupItem value="fine" />
                             </FormControl>
-                            <FormLabel className="font-normal text-xs text-[#212529]">Phạt tiền</FormLabel>
+                            <FormLabel className="font-normal text-xs text-[#2F3438]">Phạt tiền</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                             <FormControl>
                             <RadioGroupItem value="restriction" />
                             </FormControl>
-                            <FormLabel className="font-normal text-xs text-[#212529]">Hạn chế</FormLabel>
+                            <FormLabel className="font-normal text-xs text-[#2F3438]">Hạn chế</FormLabel>
                         </FormItem>
                         </RadioGroup>
                     </FormControl>
@@ -192,15 +192,15 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                     name="penaltyAmount"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel className="text-xs font-bold text-[#212529]">Số Tiền Phạt</FormLabel>
+                        <FormLabel className="text-xs font-bold text-[#2F3438]">Số Tiền Phạt</FormLabel>
                         <FormControl>
                             <div className="relative">
-                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs h-9 pr-8" />
-                                <span className="absolute inset-y-0 right-3 flex items-center text-[#6C757D] text-xs font-medium">đ</span>
+                                <Input type="number" placeholder="ví dụ: 50000" {...field} value={field.value ?? ''} className="bg-white border-[#D3D3D0] text-[#2F3438] focus-visible:ring-[#2F3438] text-xs h-9 pr-8" />
+                                <span className="absolute inset-y-0 right-3 flex items-center text-[#787774] text-xs font-medium">đ</span>
                             </div>
                         </FormControl>
                         {field.value && Number(field.value) > 0 && (
-                          <p className="text-xs text-[#28A745] font-semibold mt-1">
+                          <p className="text-xs text-[#2F3438] font-semibold mt-1">
                             Xem trước: {new Intl.NumberFormat('vi-VN').format(Number(field.value))} đ
                           </p>
                         )}
@@ -215,9 +215,9 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                     name="penaltyDetails"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel className="text-xs font-bold text-[#212529]">Chi Tiết Hạn Chế</FormLabel>
+                        <FormLabel className="text-xs font-bold text-[#2F3438]">Chi Tiết Hạn Chế</FormLabel>
                         <FormControl>
-                        <Textarea placeholder="Mô tả chi tiết hạn chế..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#DEE2E6] text-[#212529] focus-visible:ring-[#017E84] text-xs" />
+                        <Textarea placeholder="Mô tả chi tiết hạn chế..." {...field} value={field.value || ''} rows={4} className="bg-white border-[#D3D3D0] text-[#2F3438] focus-visible:ring-[#2F3438] text-xs" />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -226,13 +226,13 @@ export function RegulationForm({ onSave, onClose, regulation }: RegulationFormPr
                 )}
             </div>
         </ScrollArea>
-        <div className="flex-shrink-0 pt-4 border-t border-[#DEE2E6] flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs border-[#DEE2E6] text-[#212529]">
+        <div className="flex-shrink-0 pt-4 border-t border-[#E9E9E7] flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs border-[#E9E9E7] text-[#2F3438] hover:bg-[#F7F7F5]">
                 Hủy
             </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting} className="h-8 text-xs bg-[#714B67] hover:bg-[#5f3e56] text-white font-bold">
+            <button type="submit" disabled={form.formState.isSubmitting} className="btn-token-primary h-8 text-xs">
                 {form.formState.isSubmitting ? "Đang lưu..." : "Lưu Quy Định"}
-            </Button>
+            </button>
         </div>
       </form>
     </Form>

@@ -115,27 +115,27 @@ export function VibeHostStatus() {
   };
 
   return (
-    <Card className="w-full bg-white border border-[#DEE2E6] shadow-sm rounded overflow-hidden">
-      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3.5 border-b border-[#DEE2E6] gap-3">
+    <Card className="w-full bg-white border border-[#E9E9E7] shadow-2xs rounded overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3.5 border-b border-[#E9E9E7] gap-3">
         <div className="space-y-0.5">
-          <CardTitle className="text-base font-bold flex items-center gap-2 text-[#212529]">
-            <Server className="w-4 h-4 text-[#017E84]" />
+          <CardTitle className="text-base font-bold flex items-center gap-2 text-[#2F3438]">
+            <Server className="w-4 h-4 text-[#2F3438]" />
             VibeHost MCP Technical Integration
           </CardTitle>
-          <CardDescription className="text-[#6C757D] text-xs">
+          <CardDescription className="text-[#787774] text-xs">
             MatBao VibeHost Agent MCP Server integration (`/api/agent/mcp`)
           </CardDescription>
         </div>
 
         <div className="flex items-center gap-2">
           {status === 'connected' && (
-            <Badge variant="outline" className="bg-[#28A745]/10 text-[#28A745] border-[#28A745]/30 flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
+            <Badge variant="outline" className="bg-[#F0F0EF] text-[#2F3438] border-[#E0E0DE] flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
               <CheckCircle2 className="w-3.5 h-3.5" />
               Connected
             </Badge>
           )}
           {status === 'error' && (
-            <Badge variant="outline" className="bg-rose-500/10 text-rose-600 border-rose-500/30 flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
+            <Badge variant="outline" className="bg-[#F7F7F5] text-[#787774] border-[#E0E0DE] flex gap-1 items-center px-2.5 py-0.5 text-xs font-semibold rounded">
               <XCircle className="w-3.5 h-3.5" />
               Disconnected
             </Badge>
@@ -143,7 +143,7 @@ export function VibeHostStatus() {
           <button
             onClick={testConnection}
             disabled={loading}
-            className="btn-odoo-purple text-xs"
+            className="btn-token-primary text-xs"
           >
             {loading ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -157,7 +157,7 @@ export function VibeHostStatus() {
 
       <CardContent className="space-y-4 pt-4">
         {errorMsg && (
-          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded text-xs">
+          <div className="p-3 bg-[#F7F7F5] border border-[#E0E0DE] text-[#2F3438] rounded text-xs">
             <strong>Error:</strong> {errorMsg}
           </div>
         )}
@@ -165,14 +165,14 @@ export function VibeHostStatus() {
         {status === 'connected' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-[#212529] uppercase tracking-wider flex items-center gap-1.5">
-                <Wrench className="w-3.5 h-3.5 text-[#017E84]" />
+              <h4 className="text-xs font-bold text-[#2F3438] uppercase tracking-wider flex items-center gap-1.5">
+                <Wrench className="w-3.5 h-3.5 text-[#2F3438]" />
                 Available MCP Tools ({tools.length})
               </h4>
             </div>
 
             {tools.length === 0 ? (
-              <p className="text-xs text-[#6C757D] italic">No tools returned by server yet.</p>
+              <p className="text-xs text-[#787774] italic">No tools returned by server yet.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {tools.map((tool) => (
@@ -180,17 +180,17 @@ export function VibeHostStatus() {
                     key={tool.name}
                     className={`p-3 rounded border text-xs transition-all cursor-pointer ${
                       selectedTool === tool.name
-                        ? 'border-[#714B67] bg-[#714B67]/10'
-                        : 'border-[#DEE2E6] bg-white hover:border-[#017E84]'
+                        ? 'border-[#2F3438] bg-[#F7F7F5]'
+                        : 'border-[#E9E9E7] bg-white hover:border-[#D3D3D0]'
                     }`}
                     onClick={() => selectToolWithTemplate(tool)}
                   >
-                    <div className="font-bold text-[#212529] flex items-center justify-between gap-2">
-                      <span className="font-mono text-[#017E84]">{tool.name}</span>
+                    <div className="font-bold text-[#2F3438] flex items-center justify-between gap-2">
+                      <span className="font-mono text-[#2F3438]">{tool.name}</span>
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-6 text-[11px] px-2 text-[#017E84] hover:bg-[#017E84]/10 rounded"
+                        className="h-6 text-[11px] px-2 text-[#2F3438] hover:bg-[#EFEFED] rounded"
                         onClick={(e) => {
                           e.stopPropagation();
                           selectToolWithTemplate(tool);
@@ -200,7 +200,7 @@ export function VibeHostStatus() {
                       </Button>
                     </div>
                     {tool.description && (
-                      <p className="text-[11px] text-[#6C757D] mt-1 line-clamp-2">{tool.description}</p>
+                      <p className="text-[11px] text-[#787774] mt-1 line-clamp-2">{tool.description}</p>
                     )}
                   </div>
                 ))}
@@ -208,19 +208,19 @@ export function VibeHostStatus() {
             )}
 
             {selectedTool && (
-              <div className="mt-4 p-4 border border-[#DEE2E6] bg-[#F8F9FA] rounded space-y-3">
-                <h5 className="text-xs font-bold text-[#212529] flex items-center gap-1.5">
-                  <Play className="w-3.5 h-3.5 text-[#714B67]" />
-                  Execute Tool: <code className="text-[#017E84] font-mono">{selectedTool}</code>
+              <div className="mt-4 p-4 border border-[#E9E9E7] bg-[#F7F7F5] rounded space-y-3">
+                <h5 className="text-xs font-bold text-[#2F3438] flex items-center gap-1.5">
+                  <Play className="w-3.5 h-3.5 text-[#2F3438]" />
+                  Execute Tool: <code className="text-[#2F3438] font-mono">{selectedTool}</code>
                 </h5>
 
                 <div>
-                  <label className="text-[11px] text-[#6C757D] block mb-1 font-medium">Arguments (JSON format):</label>
+                  <label className="text-[11px] text-[#787774] block mb-1 font-medium">Arguments (JSON format):</label>
                   <textarea
                     rows={4}
                     value={toolArgs}
                     onChange={(e) => setToolArgs(e.target.value)}
-                    className="w-full font-mono text-xs p-2.5 border border-[#DEE2E6] rounded bg-white text-[#212529] focus:outline-none focus:border-[#714B67]"
+                    className="w-full font-mono text-xs p-2.5 border border-[#D3D3D0] rounded bg-white text-[#2F3438] focus:outline-none focus:border-[#2F3438]"
                     placeholder="{}"
                   />
                 </div>
@@ -228,7 +228,7 @@ export function VibeHostStatus() {
                 <button
                   onClick={() => handleCallTool(selectedTool)}
                   disabled={executing}
-                  className="btn-odoo-teal text-xs"
+                  className="btn-token-accent text-xs"
                 >
                   {executing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
                   Execute {selectedTool}
@@ -236,8 +236,8 @@ export function VibeHostStatus() {
 
                 {executionResult && (
                   <div className="mt-3 space-y-1">
-                    <label className="text-[11px] text-[#6C757D] block font-medium">Response Result:</label>
-                    <pre className="p-3 bg-[#212529] text-[#28A745] font-mono text-[11px] rounded border border-[#DEE2E6] overflow-x-auto max-h-60">
+                    <label className="text-[11px] text-[#787774] block font-medium">Response Result:</label>
+                    <pre className="p-3 bg-[#2F3438] text-white font-mono text-[11px] rounded border border-[#191919] overflow-x-auto max-h-60">
                       {JSON.stringify(executionResult, null, 2)}
                     </pre>
                   </div>
