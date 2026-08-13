@@ -63,7 +63,8 @@
 ### Radius nhanh
 | Element | Token | px |
 |---|---|---|
-| Button / chip / checkbox | `radius-sm` | 4px |
+| Button / chip / input | `radius-md` | 8px |
+| Checkbox / small badge | `radius-sm` | 4px |
 | Input / dropdown / tooltip | `radius-md` | 8px |
 | Card / panel / alert | `radius-lg` | 12px |
 | Modal / drawer | `radius-xl` | 16px |
